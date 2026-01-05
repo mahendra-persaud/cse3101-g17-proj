@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['teacher']);
 // Minimal score entry form. In a real app: validate, sanitize, check CSRF, use PDO prepared statements.
 $errors = [];
@@ -50,4 +50,4 @@ $terms = [1,2,3];
     <label>Score: <input name="score" value="<?php echo htmlspecialchars($_POST['score'] ?? '',ENT_QUOTES,'UTF-8'); ?>"></label><br>
     <button type="submit">Save Score</button>
 </form>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

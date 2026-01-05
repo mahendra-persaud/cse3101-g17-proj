@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['office_admin']);
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -29,4 +29,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     </label><br>
     <button type="submit">Create</button>
 </form>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

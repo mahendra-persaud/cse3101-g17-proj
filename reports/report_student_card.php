@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 // Reports accessible to both roles — but may be restricted further in real app
 // Minimal student report card by student and term
 $student_id = isset($_GET['student_id'])? (int)$_GET['student_id'] : 0;
 $term = isset($_GET['term'])? (int)$_GET['term'] : 0;
-if ($student_id <= 0 || $term < 1 || $term > 3) { echo '<p>Select a valid student and term.</p>'; require 'footer.php'; exit; }
+if ($student_id <= 0 || $term < 1 || $term > 3) { echo '<p>Select a valid student and term.</p>'; require __DIR__ . '/../includes/footer.php'; exit; }
 // TODO: Fetch student info and scores via PDO
 $student = null; // e.g. SELECT * FROM students WHERE id=?
 $scores = []; // e.g. SELECT subject_name, score FROM scores JOIN subjects ... WHERE student_id=? AND term=?
@@ -19,4 +19,4 @@ $scores = []; // e.g. SELECT subject_name, score FROM scores JOIN subjects ... W
         </tr>
     <?php endforeach; ?>
 </table>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['teacher']);
 // Minimal scores list view: filter by class/student/term
 $filters = [
@@ -28,4 +28,4 @@ $scores = [];
         </tr>
     <?php endforeach; ?>
 </table>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['office_admin']);
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -28,4 +28,4 @@ $years = [];
     <label>Term Label (e.g., Term 1): <input name="term_label" value="<?php echo htmlspecialchars($_POST['term_label'] ?? '',ENT_QUOTES,'UTF-8'); ?>"></label><br>
     <button type="submit">Create Term</button>
 </form>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

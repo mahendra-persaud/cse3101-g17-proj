@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['office_admin']);
 // List school years
 $years = []; // TODO: fetch from DB
@@ -16,4 +16,4 @@ $years = []; // TODO: fetch from DB
         </tr>
     <?php endforeach; ?>
 </table>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

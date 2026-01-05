@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 // Minimal average performance by grade and subject
 $grade = isset($_GET['grade'])? (int)$_GET['grade'] : 0;
 $subject_id = isset($_GET['subject_id'])? (int)$_GET['subject_id'] : 0;
 $term = isset($_GET['term'])? (int)$_GET['term'] : 0;
-if ($grade < 1 || $grade > 6) { echo '<p>Select a valid grade.</p>'; require 'footer.php'; exit; }
+if ($grade < 1 || $grade > 6) { echo '<p>Select a valid grade.</p>'; require __DIR__ . '/../includes/footer.php'; exit; }
 // TODO: Calculate averages using DB queries (AVG over scores per grade/subject/term)
 $averages = []; // Example: SELECT class_id, AVG(score) as avg_score FROM ... GROUP BY class_id
 ?>
@@ -19,4 +19,4 @@ $averages = []; // Example: SELECT class_id, AVG(score) as avg_score FROM ... GR
         </tr>
     <?php endforeach; ?>
 </table>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

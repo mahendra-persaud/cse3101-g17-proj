@@ -1,5 +1,5 @@
 <?php
-// Minimal shared header
+// Minimal shared header (moved to includes/)
 if (session_status() === PHP_SESSION_NONE) session_start();
 function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 function require_role(array $roles) {
@@ -33,7 +33,8 @@ $role = $_SESSION['role'] ?? 'guest';
     <?php endif; ?>
     <a href="report_student_card.php">Reports</a>
     <?php if (!empty($_SESSION['username'])): ?>
-        <span style="float:right">Logged in as <?php echo e($_SESSION['username']); ?> (<?php echo e($role); ?>)</span>
+        <a style="float:right;margin-left:8px" href="logout.php">Logout</a>
+        <span style="float:right;margin-right:12px">Logged in as <?php echo e($_SESSION['username']); ?> (<?php echo e($role); ?>)</span>
     <?php else: ?>
         <a style="float:right" href="loginPage.php">Login</a>
     <?php endif; ?>

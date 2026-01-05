@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) session_start();
 function sidebar_links($role){
     $links = [];
-    if ($role === 'office_admin'){
+require_once __DIR__ . '/includes/sidebar.php';
         $links = [
             'Subjects' => 'subjects_list.php',
             'Create Subject' => 'subject_create.php',

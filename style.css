@@ -63,6 +63,18 @@
   justify-content: center;
 }
 
+/* Allow using the same glass layout inside the site when a header is present */
+.page-glass {
+  margin: 24px auto;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9f9f9;
+  min-height: calc(100vh - 80px); /* leave room for header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
 .glass-card {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 0 12px 12px 0;

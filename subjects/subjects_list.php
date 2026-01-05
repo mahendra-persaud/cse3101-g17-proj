@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['office_admin']);
 // Minimal subjects list view
 // NOTE: Replace the following DB placeholder with your actual DB connection (PDO) and prepared statements.
@@ -20,4 +20,4 @@ $subjects = []; // e.g. $pdo->query('SELECT id, name, grade FROM subjects')->fet
         </tr>
     <?php endforeach; ?>
 </table>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>

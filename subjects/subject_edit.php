@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../header.php';
+require_once __DIR__ . '/../includes/header.php';
 require_role(['office_admin']);
 $id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if ($id <= 0) { header('Location: subjects_list.php'); exit; }
@@ -34,4 +34,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     </label><br>
     <button type="submit">Save</button>
 </form>
-<?php require __DIR__ . '/../footer.php'; ?>
+<?php require __DIR__ . '/../includes/footer.php'; ?>
