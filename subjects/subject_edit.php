@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/sidebar.php';
 require_role(['office_admin']);
 $id = isset($_GET['id'])? (int)$_GET['id'] : 0;
 if ($id <= 0) { header('Location: subjects_list.php'); exit; }

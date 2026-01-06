@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/sidebar.php';
 require_role(['teacher']);
 // Minimal score entry form. In a real app: validate, sanitize, check CSRF, use PDO prepared statements.
 $errors = [];

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/../includes/header.php';
 $users_file = __DIR__ . '/temp/users.json';
 $errors = [];
 $old = ['username'=>'','email'=>'','role'=>'teacher'];
@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'role' => $role,
         ];
         file_put_contents($users_file, json_encode($users, JSON_PRETTY_PRINT));
-        header('Location: loginPage.php?registered=1');
+        // Redirect to the login page using the project root computed in the header include
+        header('Location: ' . ($projectRoot ?? '') . '/auth/loginPage.php?registered=1');
         exit;
     }
 }
@@ -81,4 +82,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

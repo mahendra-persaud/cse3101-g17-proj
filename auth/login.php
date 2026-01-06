@@ -1,7 +1,10 @@
 <?php
 // Simple login handler
 if (session_status() === PHP_SESSION_NONE) session_start();
-$users_file = __DIR__ . '/temp/users.json';
+// users.json is located in the project root's temp/ folder
+$users_file = dirname(__DIR__) . '/temp/users.json';
+$parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
+$projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: loginPage.php'); exit;
 }
@@ -16,7 +19,7 @@ foreach ($users as $u) {
         if (password_verify($password, $u['password'])) {
             $_SESSION['username'] = $u['username'];
             $_SESSION['role'] = $u['role'];
-            header('Location: dashboard.php'); exit;
+            header('Location: ' . $projectRoot . '/dashboard/index.php'); exit;
         }
         break;
     }

@@ -1,9 +1,9 @@
-<?php $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/')); $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : ''); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Login — School Management System</title>
+  <?php $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/')); $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : ''); ?>
   <link rel="stylesheet" href="<?php echo $projectRoot; ?>/assets/css/style.css">
 </head>
 <body class="glass-bg">
@@ -21,7 +21,7 @@
     </div>
 
     <div class="glass-card">
-      <form method="post" action="<?php echo $projectRoot; ?>/auth/login.php">
+      <form method="post" action="login.php">
         <h2>Login</h2>
         <label>Email</label>
         <input type="email" name="email" placeholder="someone@example.com" required>

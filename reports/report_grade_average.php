@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/sidebar.php';
 // Minimal average performance by grade and subject
 $grade = isset($_GET['grade'])? (int)$_GET['grade'] : 0;
 $subject_id = isset($_GET['subject_id'])? (int)$_GET['subject_id'] : 0;

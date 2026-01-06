@@ -26,4 +26,4 @@ if (!$exists) {
     echo "<div style='max-width:700px;margin:20px auto;padding:12px;background:#fff3cd;border:1px solid #ffeeba'>User 'dave' already exists.</div>";
 }
 ?>
-<p style="max-width:700px;margin:8px auto">Run <a href="../loginPage.php">Login page</a> to sign in.</p>
+<p style="max-width:700px;margin:8px auto">Run <a href="../auth/loginPage.php">Login page</a> to sign in.</p>

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/sidebar.php';
 require_role(['office_admin']);
 $year_id = isset($_GET['year_id'])? (int)$_GET['year_id'] : 0;
 if ($year_id <= 0) { echo '<p>Select a valid school year to manage terms.</p>'; require __DIR__ . '/../includes/footer.php'; exit; }

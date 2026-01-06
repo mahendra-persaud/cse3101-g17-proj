@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../includes/sidebar.php';
 require_role(['office_admin']);
 // List school years
 $years = []; // TODO: fetch from DB

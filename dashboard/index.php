@@ -1,13 +1,13 @@
 <?php
-$headerPath = __DIR__ . '/includes/header.php';
-if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../includes/header.php';
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/assets/css/dashboard2.css">';
-require_once $headerPath;
+require_once __DIR__ . '/../includes/header.php';
+require_role(['office_admin']);
 ?>
+
 <div class="Main-Container">
-    <?php require_once dirname($headerPath) . '/sidebar.php'; ?>
+    <?php require_once __DIR__ . '/../includes/sidebar.php'; ?>
 
     <main class="dashboard">
         <!-- Top Bar -->
@@ -15,8 +15,8 @@ require_once $headerPath;
             <h2>Dashboard</h2>
 
             <div class="user-info">
-                <p>Logged in as: &nbsp<span><strong><?php echo e($_SESSION['username'] ?? 'Admin'); ?></strong></span></p>
-                <a href="<?php echo $projectRoot; ?>/auth/logout.php" class="logout-btn" style="text-decoration: none;">Logout</a>
+                <p>Logged in as: &nbsp;<span><strong><?php echo e($_SESSION['username'] ?? 'Admin'); ?></strong></span></p>
+                <a class="logout-btn" href="<?php echo $projectRoot; ?>/auth/logout.php" style="text-decoration: none;">Logout</a>
             </div>
         </div>
 
@@ -94,5 +94,5 @@ require_once $headerPath;
         </section>
     </main>
 </div>
-</body>
-</html>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
