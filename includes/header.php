@@ -17,26 +17,12 @@ $role = $_SESSION['role'] ?? 'guest';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>School Management System</title>
-    <style>/* Minimal styling */ body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0} .nav{background:#2c3e50;color:#fff;padding:10px} .nav a{color:#fff;margin-right:12px;text-decoration:none} .container{padding:16px}</style>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <?php
+    // Allow pages to inject extra head tags (e.g., per-page styles)
+    if (!empty($extra_head)) echo $extra_head;
+    ?>
+    <style>/* Minimal fallback styling */ body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0} .container{padding:16px}</style>
 </head>
 <body>
-<div class="nav">
-    <a href="index.php">Home</a>
-    <?php if ($role === 'office_admin'): ?>
-        <a href="subjects_list.php">Subjects</a>
-        <a href="school_years_list.php">School Years</a>
-        <a href="term_manage.php">Terms</a>
-    <?php endif; ?>
-    <?php if ($role === 'teacher'): ?>
-        <a href="scores_entry.php">Enter Scores</a>
-        <a href="scores_list.php">View Scores</a>
-    <?php endif; ?>
-    <a href="report_student_card.php">Reports</a>
-    <?php if (!empty($_SESSION['username'])): ?>
-        <a style="float:right;margin-left:8px" href="logout.php">Logout</a>
-        <span style="float:right;margin-right:12px">Logged in as <?php echo e($_SESSION['username']); ?> (<?php echo e($role); ?>)</span>
-    <?php else: ?>
-        <a style="float:right" href="loginPage.php">Login</a>
-    <?php endif; ?>
-</div>
 <div class="container">

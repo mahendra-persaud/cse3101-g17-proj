@@ -16,7 +16,7 @@ foreach ($users as $u) {
         if (password_verify($password, $u['password'])) {
             $_SESSION['username'] = $u['username'];
             $_SESSION['role'] = $u['role'];
-            header('Location: index.php'); exit;
+            header('Location: dashboard.php'); exit;
         }
         break;
     }

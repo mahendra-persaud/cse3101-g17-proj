@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Login — School Management System</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="glass-bg">
   <div class="login-container">

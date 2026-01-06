@@ -12,5 +12,5 @@ Notes:
 
 Next steps:
 - Migrate `temp/users.json` -> real database and remove `temp/` files
-- Optionally move CSS into `includes/` or `public/` for better separation
+- CSS and other static assets moved to `assets/css/` for better separation (update links if moving again)
 
