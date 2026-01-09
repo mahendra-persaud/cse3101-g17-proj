@@ -23,8 +23,8 @@ $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>School Management System</title>
-    <link rel="stylesheet" href="<?php echo $projectRoot; ?>/public/assets/css/style.css">
-    <link rel="stylesheet" href="<?php echo $projectRoot; ?>/public/assets/css/sidebar.css">
+    <link rel="stylesheet" href="<?php echo $projectRoot; ?>/public/assets/css/style.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="<?php echo $projectRoot; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
     <?php
     // Allow pages to inject extra head tags (e.g., per-page styles)
     if (!empty($extra_head)) echo $extra_head;

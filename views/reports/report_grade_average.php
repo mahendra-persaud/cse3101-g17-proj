@@ -3,7 +3,7 @@ $headerPath = __DIR__ . '/includes/header.php';
 if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../../includes/header.php';
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
-$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css">';
+$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
 require_once $headerPath;
 require_role(['office_admin', 'teacher']);
 

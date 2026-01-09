@@ -1,7 +1,7 @@
 <?php
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
-$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/dashboard2.css">';
+$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/dashboard2.css?v=' . time() . '">';
 require_once __DIR__ . '/../../includes/header.php';
 require_role(['office_admin']);
 ?>
@@ -23,25 +23,29 @@ require_role(['office_admin']);
         <section class="stats-grid">
             <a href="<?php echo $projectRoot; ?>/views/users/userManagement.php" class="stat-card-link">
                 <div class="stat-card">
-                    <h2>👤 Users</h2>
+                    <span class="icon icon-users stat-icon"></span>
+                    <h2>Users</h2>
                     <p>25 Active</p>
                 </div>
             </a>
             <a href="<?php echo $projectRoot; ?>/views/students/studentManagement.php" class="stat-card-link">
                 <div class="stat-card">
-                    <h2>🎓 Students</h2>
+                    <span class="icon icon-students stat-icon"></span>
+                    <h2>Students</h2>
                     <p>320 Enrolled</p>
                 </div>
             </a>
             <a href="<?php echo $projectRoot; ?>/views/classes/classManagement.php" class="stat-card-link">
                 <div class="stat-card">
-                    <h2>🧑‍🏫 Classes</h2>
+                    <span class="icon icon-classes stat-icon"></span>
+                    <h2>Classes</h2>
                     <p>18 Running</p>
                 </div>
             </a>
             <a href="<?php echo $projectRoot; ?>/views/scores/scores_list.php" class="stat-card-link">
                 <div class="stat-card">
-                    <h2>📝 Scores</h2>
+                    <span class="icon icon-score stat-icon"></span>
+                    <h2>Scores</h2>
                     <p>1,245 Recorded</p>
                 </div>
             </a>
