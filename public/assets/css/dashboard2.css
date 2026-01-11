@@ -119,6 +119,38 @@
     color: #1a1a1a;
 }
 
+.stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+.stat-trend svg {
+    width: 16px;
+    height: 16px;
+}
+
+.stat-trend-up {
+    color: #10b981;
+    background: #d1fae5;
+}
+
+.stat-trend-down {
+    color: #ef4444;
+    background: #fee2e2;
+}
+
+.stat-trend-neutral {
+    color: #6b7280;
+    background: #f3f4f6;
+}
+
 /* Icon Images for Stats */
 .icon {
     display: inline-block;

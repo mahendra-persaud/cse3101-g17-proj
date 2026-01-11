@@ -32,13 +32,28 @@ $subjects = [
             <h2>Subjects</h2>
         </div>
 
-        <h1>Guyanese Primary School Subjects</h1>
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb">
+            <div class="breadcrumb-item">
+                <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Home
+                </a>
+            </div>
+            <div class="breadcrumb-separator">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Subjects</span>
+            </div>
+        </nav>
 
-        <section style="padding: 0 40px 24px;">
-            <a href="subject_create.php" class="create-btn">
-                + Create New Subject
-            </a>
-        </section>
+        <h1>Guyanese Primary School Subjects</h1>
 
         <!-- Search and Filter Section -->
         <section class="search-filter-section">
@@ -62,6 +77,9 @@ $subjects = [
                         <line x1="8" y1="23" x2="16" y2="23"></line>
                     </svg>
                 </button>
+                <a href="subject_create.php" class="create-btn" style="margin-left: auto;">
+                    + Create New Subject
+                </a>
             </div>
 
             <div class="filter-chips-container">
@@ -183,8 +201,21 @@ $subjects = [
                 <tbody>
                 <?php if (empty($subjects)): ?>
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 30px; color: #999;">
-                        No subjects found. Click "Create New Subject" to add one.
+                    <td colspan="6" class="empty-state">
+                        <div class="empty-state-content">
+                            <svg class="empty-state-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                            <h3>No subjects found</h3>
+                            <p>Get started by creating your first subject for the school curriculum.</p>
+                            <a href="subject_create.php" class="empty-state-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Create First Subject
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 <?php else: ?>
