@@ -114,7 +114,7 @@
       transform: translateY(-1px);
     }
 
-    /* Main Content - Login Section */
+    /* main content area */
     .main-content {
       max-width: 1400px;
       margin: 0 auto;
@@ -125,7 +125,7 @@
       align-items: start;
     }
 
-    /* Left Side - Benefits */
+    /* left side - cool icons */
     .benefits-section {
       /* No additional padding needed */
     }
@@ -373,7 +373,7 @@
   </style>
 </head>
 <body>
-  <!-- Navigation -->
+  <!-- navbar stuff -->
   <nav class="navbar">
     <div class="logo">
       <img src="<?php echo $projectRoot; ?>/public/assets/img/logo.png" alt="Logo" class="logo-img">
@@ -388,9 +388,9 @@
     </div>
   </nav>
 
-  <!-- Main Content - Login -->
+  <!-- login form and info -->
   <main class="main-content">
-    <!-- Left Side - Benefits -->
+    <!-- left side -->
     <div class="benefits-section">
       <h2>Start managing your school efficiently today</h2>
 
@@ -427,7 +427,7 @@
       </div>
     </div>
 
-    <!-- Right Side - Login Form -->
+    <!-- right side - the actual form -->
     <div class="login-card">
       <h2>Welcome back</h2>
       <p class="subtitle">Log in to your account to continue</p>

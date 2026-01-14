@@ -1,8 +1,6 @@
 <?php
-/**
- * Student Controller
- * Handles all student CRUD operations
- */
+// student controller
+// crud for students
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/Student.php';
@@ -18,48 +16,29 @@ class StudentController extends BaseController {
         $this->classModel = new SchoolClass();
     }
 
-    /**
-     * Get all students
-     * @return array
-     */
+    // gets all students
     public function index() {
         $this->requireRole('office_admin');
         return $this->studentModel->getAll();
     }
 
-    /**
-     * Get single student
-     * @param int $id
-     * @return array|null
-     */
+    // gets one student
     public function show($id) {
         $this->requireRole('office_admin');
         return $this->studentModel->find($id);
     }
 
-    /**
-     * Get students by class
-     * @param int $classId
-     * @return array
-     */
+    // finds students in a class
     public function getByClass($classId) {
         return $this->studentModel->getByClass($classId);
     }
 
-    /**
-     * Get students by grade
-     * @param int $gradeId
-     * @return array
-     */
+    // finds students in a grade
     public function getByGrade($gradeId) {
         return $this->studentModel->getByGrade($gradeId);
     }
 
-    /**
-     * Create new student
-     * @param array $data
-     * @return array Result with success status
-     */
+    // adds a new student
     public function store($data) {
         $this->requireRole('office_admin');
 
@@ -93,12 +72,7 @@ class StudentController extends BaseController {
         ];
     }
 
-    /**
-     * Update student
-     * @param int $id
-     * @param array $data
-     * @return array Result with success status
-     */
+    // updates student info
     public function update($id, $data) {
         $this->requireRole('office_admin');
 
@@ -129,11 +103,7 @@ class StudentController extends BaseController {
         ];
     }
 
-    /**
-     * Delete student
-     * @param int $id
-     * @return array Result with success status
-     */
+    // deletes a student
     public function destroy($id) {
         $this->requireRole('office_admin');
 
@@ -150,11 +120,7 @@ class StudentController extends BaseController {
         ];
     }
 
-    /**
-     * Search students
-     * @param string $query
-     * @return array
-     */
+    // search function
     public function search($query) {
         return $this->studentModel->search($query);
     }

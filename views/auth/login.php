@@ -1,9 +1,9 @@
 <?php
-// Login handler - uses MySQL database
+// handles the login stuff, talks to the database
 require_once dirname(dirname(__DIR__)) . '/config/app.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Include database configuration
+// getting the database settings
 require_once dirname(dirname(__DIR__)) . '/config/database.php';
 
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
@@ -16,17 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $username = trim($_POST['username'] ?? '');
 $password = $_POST['password'] ?? '';
 
-// Get database connection
+// connecting to the database
 $pdo = getDBConnection();
 if (!$pdo) {
     header('Location: loginPage.php?error=db'); exit;
 }
 
 try {
-    // DEBUG: Log the attempted username
+    // debug: checking the username
     error_log("Login attempt for username: " . $username);
 
-    // Query user by username and join with roles table
+    // find the user and their role
     $stmt = $pdo->prepare("
         SELECT u.user_id, u.username, u.password_hash, r.role_name
         FROM users u
@@ -36,7 +36,7 @@ try {
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch();
 
-    // DEBUG: Log if user was found
+    // debug: did we find them?
     if (!$user) {
         error_log("User not found in database: " . $username);
         header('Location: loginPage.php?error=1');
@@ -45,9 +45,9 @@ try {
 
     error_log("User found: " . $user['username'] . ", Role: " . $user['role_name']);
 
-    // Verify password
+    // check if password matches
     if (password_verify($password, $user['password_hash'])) {
-        // Login successful - set session variables
+        // yay login worked - saving session info
         error_log("Password verified successfully for: " . $username);
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username'];

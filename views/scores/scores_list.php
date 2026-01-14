@@ -6,9 +6,9 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 require_once $headerPath;
 require_role(['teacher', 'office_admin']);
 
-// Sample scores data
-// TODO: Replace with actual database queries
-// Fetch real scores using the controller
+// fake scores for now
+// TODO: hook up to real db later
+// grab real scores from controller
 require_once __DIR__ . '/../../controllers/ScoreController.php';
 $scoreController = new ScoreController();
 $scores = $scoreController->index();
@@ -43,7 +43,7 @@ $flash = ScoreController::getFlash();
             </a>
         </section>
 
-        <!-- Search and Filter Section -->
+        <!-- search and filters -->
         <section class="search-filter-section">
             <div class="search-bar-container">
                 <div class="search-bar">
@@ -107,8 +107,8 @@ $flash = ScoreController::getFlash();
             const rows = table.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                const termCell = rows[i].getElementsByTagName('td')[2]; // Term column
-                const gradeCell = rows[i].getElementsByTagName('td')[4]; // Grade column
+                const termCell = rows[i].getElementsByTagName('td')[2]; // checking the term
+                const gradeCell = rows[i].getElementsByTagName('td')[4]; // checking the grade
 
                 if (!termCell || !gradeCell) continue;
 

@@ -1,8 +1,5 @@
 <?php
-/**
- * Edit User View
- * Allows Office Admin to edit existing users
- */
+// editing an existing user
 
 require_once __DIR__ . '/../../controllers/UserController.php';
 

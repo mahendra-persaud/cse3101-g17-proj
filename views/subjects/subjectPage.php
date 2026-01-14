@@ -9,13 +9,13 @@ require_once dirname($headerPath) . '/sidebar.php';
 ?>
 
   <main class="dashboard">
-    <!-- 🔹 Top Bar -->
+    <!-- 🔹 header bar -->
      <div class = "header">
          <header>
            <h1>Manage Subjects</h1>
          </header></div>
 
-    <!-- Add Subject Form -->
+    <!-- form to add subjects -->
     <section class="form-card">
       <h2>Add New Subject</h2>
       <form>
@@ -32,7 +32,7 @@ require_once dirname($headerPath) . '/sidebar.php';
       </form>
     </section>
 
-    <!-- Subjects Table -->
+    <!-- table of all subjects -->
     <section class="table-card">
       <h2>All Subjects</h2>
       <table>

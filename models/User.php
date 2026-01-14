@@ -1,25 +1,18 @@
 <?php
 require_once __DIR__ . '/Model.php';
 
-/**
- * User Model
- * Handles all user-related database operations and authentication
- */
+// user model
+// handles logins and users
 class User extends Model {
     protected $table = 'users';
     protected $primaryKey = 'user_id';
 
-    /**
-     * Get allowed fields for this model
-     */
+    // allowed fields
     protected function getAllowedFields() {
         return ['username', 'password_hash', 'role_id'];
     }
 
-    /**
-     * Get all users with role information
-     * @return array
-     */
+    // get all users and their role names
     public function getAll() {
         $sql = "SELECT u.user_id, u.username, u.role_id, r.role_name 
                 FROM users u 
@@ -28,11 +21,7 @@ class User extends Model {
         return $this->query($sql);
     }
 
-    /**
-     * Find user by ID with role info
-     * @param int $id
-     * @return array|null
-     */
+    // find user by id
     public function find($id) {
         $sql = "SELECT u.user_id, u.username, u.role_id, r.role_name 
                 FROM users u 
@@ -41,11 +30,7 @@ class User extends Model {
         return $this->queryOne($sql, [$id]);
     }
 
-    /**
-     * Find user by username
-     * @param string $username
-     * @return array|null
-     */
+    // find user by username
     public function findByUsername($username) {
         $sql = "SELECT u.*, r.role_name 
                 FROM users u 
@@ -54,11 +39,7 @@ class User extends Model {
         return $this->queryOne($sql, [$username]);
     }
 
-    /**
-     * Get users by role
-     * @param int $roleId
-     * @return array
-     */
+    // get users who have a specific role
     public function getByRole($roleId) {
         $sql = "SELECT u.user_id, u.username, u.role_id, r.role_name 
                 FROM users u 
@@ -68,12 +49,7 @@ class User extends Model {
         return $this->query($sql, [$roleId]);
     }
 
-    /**
-     * Authenticate user
-     * @param string $username
-     * @param string $password
-     * @return array|false User data on success, false on failure
-     */
+    // checks username and password to log them in
     public function authenticate($username, $password) {
         $sql = "SELECT u.*, r.role_name 
                 FROM users u 
@@ -90,11 +66,8 @@ class User extends Model {
         return false;
     }
 
-    /**
-     * Create new user with password hashing
-     * @param array $data
-     * @return int|bool Insert ID or false on failure
-     */
+    // creates a new user
+    // hashes password so its secure
     public function createUser($data) {
         if (isset($data['password'])) {
             $data['password_hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -103,23 +76,13 @@ class User extends Model {
         return $this->create($data);
     }
 
-    /**
-     * Update user password
-     * @param int $userId
-     * @param string $newPassword
-     * @return bool
-     */
+    // changes user password
     public function updatePassword($userId, $newPassword) {
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
         return $this->update($userId, ['password_hash' => $hash]);
     }
 
-    /**
-     * Validate user data
-     * @param array $data
-     * @param bool $isUpdate
-     * @return array
-     */
+    // validates user input
     public function validateUser($data, $isUpdate = false) {
         $rules = [
             'username' => 'required|min:3|max:50',
@@ -133,12 +96,7 @@ class User extends Model {
         return $this->validate($data, $rules);
     }
 
-    /**
-     * Check if username already exists
-     * @param string $username
-     * @param int|null $excludeId
-     * @return bool
-     */
+    // checks if username is taken
     public function usernameExists($username, $excludeId = null) {
         $sql = "SELECT COUNT(*) as count FROM users WHERE username = ?";
         $params = [$username];
@@ -152,10 +110,7 @@ class User extends Model {
         return ($result['count'] ?? 0) > 0;
     }
 
-    /**
-     * Get all roles
-     * @return array
-     */
+    // gets list of roles
     public function getRoles() {
         $sql = "SELECT * FROM roles ORDER BY role_id";
         return $this->query($sql);

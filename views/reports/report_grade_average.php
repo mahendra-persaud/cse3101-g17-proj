@@ -7,7 +7,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 require_once $headerPath;
 require_role(['office_admin', 'teacher']);
 
-// Sample grade data
+// fake grade data just for show
 $grade_data = [
     1 => ['name' => 'Grade 1', 'classes' => ['Class A' => ['students' => 26, 'avg' => 87.5], 'Class B' => ['students' => 26, 'avg' => 85.2]], 'subjects' => ['Mathematics' => 86.8, 'English Language' => 88.3, 'Science' => 84.5, 'Social Studies' => 87.1, 'HFLE' => 89.2, 'Physical Education' => 91.5, 'Music' => 85.7, 'Arts and Crafts' => 88.9]],
     2 => ['name' => 'Grade 2', 'classes' => ['Class A' => ['students' => 24, 'avg' => 84.3], 'Class B' => ['students' => 24, 'avg' => 86.1]], 'subjects' => ['Mathematics' => 83.2, 'English Language' => 86.5, 'Science' => 82.7, 'Social Studies' => 85.9, 'HFLE' => 87.4, 'Physical Education' => 90.2, 'Music' => 84.1, 'Arts and Crafts' => 86.8]],
@@ -44,7 +44,7 @@ function getPerformanceRating($avg) {
         <?php if (!$show_report): ?>
         <h1>Generate Grade Average Report</h1>
         <section class="form-card">
-            <form method="GET">
+            <!-- form to pick grade and term -->
                 <label style="color: #fff; font-weight: 600;">Select Grade</label>
                 <select name="grade" required style="grid-column: span 2;">
                     <option value="">-- Choose a grade --</option>
@@ -73,7 +73,7 @@ function getPerformanceRating($avg) {
                 <p style="margin: 5px 0; color: rgba(255, 255, 255, 0.8);">Academic Year 2025-2026 | Term <?php echo $term; ?></p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <!-- stats boxes -->
                 <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; text-align: center;">
                     <p style="margin: 0; color: rgba(255, 255, 255, 0.7); font-size: 13px;">OVERALL AVERAGE</p>
                     <p style="margin: 5px 0 0; font-size: 32px; font-weight: 700; color: <?php echo $rating['color']; ?>;"><?php echo $overall_avg; ?>%</p>

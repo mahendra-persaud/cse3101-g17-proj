@@ -1,5 +1,5 @@
 <?php
-// Create new student
+// adding a new student
 require_once __DIR__ . '/../../config/database.php';
 
 $headerPath = __DIR__ . '/includes/header.php';
@@ -12,7 +12,7 @@ $pdo = getDBConnection();
 $success = '';
 $error = '';
 
-// Get all classes for the dropdown
+// grabbing classes for the select box
 $stmt = $pdo->query("
     SELECT c.class_id, c.class_name, g.grade_name
     FROM classes c
@@ -52,7 +52,7 @@ require_once $headerPath;
             <h2>Create New Student</h2>
         </div>
 
-        <!-- Breadcrumb -->
+        <!-- breadcrumbs -->
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
                 <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">

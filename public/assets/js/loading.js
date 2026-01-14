@@ -1,11 +1,9 @@
-/**
- * Loading States and Spinners
- * Shows loading indicators during async operations
- */
+// making things spin when it loads
+// basically shows the user something is happening
 
 // Global loading state
 const LoadingState = {
-    // Show full-page loading overlay
+    // shows the big loading screen covering everything
     showFullPage: function(message = 'Loading...') {
         let overlay = document.getElementById('loading-overlay');
 
@@ -27,7 +25,7 @@ const LoadingState = {
         overlay.classList.add('loading-show');
     },
 
-    // Hide full-page loading overlay
+    // hides the big loading screen
     hideFullPage: function() {
         const overlay = document.getElementById('loading-overlay');
         if (overlay) {
@@ -70,7 +68,7 @@ const LoadingState = {
         element.classList.remove('loading-container');
     },
 
-    // Show loading on a button
+    // puts a spinner on the button so they don't click it twice
     showOnButton: function(button, text = 'Loading...') {
         if (typeof button === 'string') {
             button = document.querySelector(button);
@@ -111,7 +109,7 @@ window.LoadingState = LoadingState;
 
 // Auto-show loading for forms
 document.addEventListener('DOMContentLoaded', function() {
-    // Add loading state to all forms with data-loading attribute
+    // find all forms and make them show loading when submitted
     const forms = document.querySelectorAll('form[data-loading]');
 
     forms.forEach(form => {

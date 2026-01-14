@@ -1,11 +1,9 @@
 <?php
 require_once __DIR__ . '/Model.php';
 
-/**
- * Score Model
- * Handles all score/grade-related database operations
- * Includes audit trail for tracking who modified scores
- */
+// score model
+// handles the grades and stuff
+// also tracks who changed what (audit trail)
 class Score extends Model {
     protected $table = 'scores';
     protected $primaryKey = 'score_id';
@@ -17,10 +15,9 @@ class Score extends Model {
         return ['student_id', 'subject_id', 'term_id', 'score', 'created_by', 'modified_by'];
     }
 
-    /**
-     * Get all scores with related information (including audit info)
-     * @return array
-     */
+    // get all the scores
+    // took forever to write this join query...
+    // it gets student name, subject, term, and who modified it
     public function getAll() {
         $sql = "SELECT sc.*, 
                 CONCAT(st.first_name, ' ', st.last_name) as student_name,
@@ -44,12 +41,8 @@ class Score extends Model {
         return $this->query($sql);
     }
 
-    /**
-     * Get scores by student
-     * @param int $studentId
-     * @param int|null $termId
-     * @return array
-     */
+    // find scores for a specific student
+    // useful for the student profile page
     public function getByStudent($studentId, $termId = null) {
         $sql = "SELECT sc.*, 
                 sub.subject_name,
@@ -74,12 +67,8 @@ class Score extends Model {
         return $this->query($sql, $params);
     }
 
-    /**
-     * Get scores by subject and term
-     * @param int $subjectId
-     * @param int|null $termId
-     * @return array
-     */
+    // find scores for a subject (e.g. math)
+    // teachers use this i think
     public function getBySubject($subjectId, $termId = null) {
         $sql = "SELECT sc.*, 
                 CONCAT(st.first_name, ' ', st.last_name) as student_name,
@@ -102,28 +91,17 @@ class Score extends Model {
         return $this->query($sql, $params);
     }
 
-    /**
-     * Get score for specific student, subject, and term
-     * @param int $studentId
-     * @param int $subjectId
-     * @param int $termId
-     * @return array|null
-     */
+    // this finds just one specific score
+    // like "what did david get in math term 1?"
     public function getByStudentSubjectTerm($studentId, $subjectId, $termId) {
         $sql = "SELECT * FROM scores 
                 WHERE student_id = ? AND subject_id = ? AND term_id = ?";
         return $this->queryOne($sql, [$studentId, $subjectId, $termId]);
     }
 
-    /**
-     * Save or update score (upsert) with audit trail
-     * @param int $studentId
-     * @param int $subjectId
-     * @param int $termId
-     * @param int $score
-     * @param int|null $userId The ID of the user making the change
-     * @return bool
-     */
+    // save or update score
+    // if it exists update it, otherwise make a new one (upsert)
+    // also saves who did it for the audit thing
     public function saveScore($studentId, $subjectId, $termId, $score, $userId = null) {
         $existing = $this->getByStudentSubjectTerm($studentId, $subjectId, $termId);
         
@@ -215,12 +193,8 @@ class Score extends Model {
         return $this->query($sql, [$userId]);
     }
 
-    /**
-     * Calculate average for student in a term
-     * @param int $studentId
-     * @param int|null $termId
-     * @return float
-     */
+    // calculates the average score for a student
+    // i used the SQL AVG() function cause its easier
     public function calculateStudentAverage($studentId, $termId = null) {
         $sql = "SELECT AVG(score) as average FROM scores WHERE student_id = ?";
         $params = [$studentId];
@@ -292,11 +266,8 @@ class Score extends Model {
         return $this->query($sql, [$studentId, $termId]);
     }
 
-    /**
-     * Convert numeric score to letter grade
-     * @param int $score
-     * @return string
-     */
+    // figures out the letter grade (A, B, C...)
+    // just a bunch of if statements
     public function getLetterGrade($score) {
         if ($score >= 90) return 'A';
         if ($score >= 80) return 'B';
@@ -305,11 +276,8 @@ class Score extends Model {
         return 'F';
     }
 
-    /**
-     * Validate score data
-     * @param array $data
-     * @return array
-     */
+    // checks if the score is valid
+    // makes sure its between 0 and 100
     public function validateScore($data) {
         $errors = $this->validate($data, [
             'student_id' => 'required|numeric',

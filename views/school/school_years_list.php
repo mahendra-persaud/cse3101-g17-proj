@@ -26,7 +26,7 @@ $years = $schoolModel->getYears();
             </a>
         </section>
 
-        <!-- Stats Cards -->
+        <!-- some numbers about the years -->
         <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 0 40px 32px;">
             <div class="card">
                 <h3>Total School Years</h3>

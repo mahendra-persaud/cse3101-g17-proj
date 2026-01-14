@@ -1,8 +1,6 @@
 <?php
-/**
- * Subject Controller
- * Handles all subject CRUD operations
- */
+// subject controller
+// manages subjects data
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/Subject.php';
@@ -18,19 +16,12 @@ class SubjectController extends BaseController {
         $this->classModel = new SchoolClass();
     }
 
-    /**
-     * Get all subjects
-     * @return array
-     */
+    // list all subjects
     public function index() {
         return $this->subjectModel->getAll();
     }
 
-    /**
-     * Get single subject
-     * @param int $id
-     * @return array|null
-     */
+    // get one subject
     public function show($id) {
         return $this->subjectModel->find($id);
     }
@@ -44,11 +35,8 @@ class SubjectController extends BaseController {
         return $this->subjectModel->getByGrade($gradeId);
     }
 
-    /**
-     * Create new subject
-     * @param array $data
-     * @return array Result with success status
-     */
+    // creates a subject
+    // checks for duplicates first
     public function store($data) {
         $this->requireRole('office_admin');
 
@@ -89,12 +77,7 @@ class SubjectController extends BaseController {
         ];
     }
 
-    /**
-     * Update subject
-     * @param int $id
-     * @param array $data
-     * @return array Result with success status
-     */
+    // updates subject name
     public function update($id, $data) {
         $this->requireRole('office_admin');
 
@@ -132,11 +115,7 @@ class SubjectController extends BaseController {
         ];
     }
 
-    /**
-     * Delete subject
-     * @param int $id
-     * @return array Result with success status
-     */
+    // deletes a subject
     public function destroy($id) {
         $this->requireRole('office_admin');
 

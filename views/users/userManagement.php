@@ -20,7 +20,7 @@ $flash = UserController::getFlash();
             <div class = "header">
                 <h2>User Management</h2></div>
 
-            <!-- Breadcrumb Navigation -->
+            <!-- breadcrumb nav -->
             <nav class="breadcrumb">
                 <div class="breadcrumb-item">
                     <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">Home</a>
@@ -39,7 +39,7 @@ $flash = UserController::getFlash();
                 </div>
             <?php endif; ?>
 
-            <!-- Search and Filter Section -->
+            <!-- search and filters -->
             <section class="search-filter-section">
                 <div class="search-bar-container">
                     <div class="search-bar">
@@ -105,7 +105,7 @@ $flash = UserController::getFlash();
                 const rows = table.getElementsByTagName('tr');
 
                 for (let i = 0; i < rows.length; i++) {
-                    const roleCell = rows[i].getElementsByTagName('td')[3]; // Role column
+                    const roleCell = rows[i].getElementsByTagName('td')[3]; // checking the role
 
                     if (!roleCell) continue;
 

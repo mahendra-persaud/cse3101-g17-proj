@@ -10,7 +10,7 @@ require_role(['office_admin']);
     <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
 
     <main class="dashboard">
-        <!-- Top Bar -->
+        <!-- top bar with search and profile -->
         <div class="header">
             <div class="top-search">
                 <span class="search-icon">🔍</span>
@@ -60,7 +60,7 @@ require_role(['office_admin']);
             </div>
         </header>
 
-        <!-- Quick Stats -->
+        <!-- quick stats summary -->
         <section class="stats-grid">
             <a href="<?php echo $projectRoot; ?>/views/users/userManagement.php" class="stat-card-link">
                 <div class="stat-card">
@@ -127,7 +127,7 @@ require_role(['office_admin']);
             </a>
         </section>
 
-        <!-- Recent Activity -->
+        <!-- recent stuff table -->
         <section class="table-card">
             <h2>Recent Activity</h2>
             <table>

@@ -1,8 +1,5 @@
 <?php
-/**
- * Create User View
- * Allows Office Admin to create new users
- */
+// page to create a new user
 
 require_once __DIR__ . '/../../controllers/UserController.php';
 
@@ -17,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $userController->store($_POST);
     if ($result['success']) {
         $success = true;
-        // The controller sets a flash message, but we can also handle it here if not redirecting
+        // flash message set in controller, but redirecting anyway
         header('Location: userManagement.php');
         exit;
     } else {

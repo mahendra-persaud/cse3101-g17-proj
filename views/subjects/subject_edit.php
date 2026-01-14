@@ -1,7 +1,5 @@
 <?php
-/**
- * Edit Subject View
- */
+// editing a subject
 
 require_once __DIR__ . '/../../controllers/SubjectController.php';
 

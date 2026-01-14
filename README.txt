@@ -1,51 +1,41 @@
-# School Management System (SMS) - Setup Instructions
+# My School Project (SMS)
 
-## Project Overview
-A comprehensive PHP-based School Management System built using pure OOP and MVC architecture. It handles students, teachers, classes, subjects, and academic performance tracking with a secure MySQL backend.
+hey this is my group project for the cse3101 database class. its a school management system that i made with php and mysql. i tried to use MVC like the professor asked but its kinda hard lol.
 
-## Prerequisites
-- **XAMPP** (or any LAMP/WAMP stack with PHP 7.4+ and MySQL)
-- **Web Browser** (Chrome/Firefox/Edge)
+## How to run it
+stuff you need:
+- xampp (i used the newest one)
+- google chrome
 
-## Installation Steps
+1. put the folder inside `htdocs` in xampp
+2. turn on apache and mysql on the control panel
+3. go to `http://localhost/phpmyadmin` and make a database called `School_Management` (make sure its spelled exactly like that!)
+4. click import and choose the `database.sql` file i included
+5. hit go
 
-### 1. Project Files
-Extract the project folder and move it to your XAMPP web root:
-`C:\xampp\htdocs\cse3101-g17-proj\`
+then just go to `http://localhost/cse3101-g17-proj/` in your browser.
 
-### 2. Database Setup
-1. Start **Apache** and **MySQL** in your XAMPP Control Panel.
-2. Open **phpMyAdmin** (`http://localhost/phpmyadmin`).
-3. Create a new database named: **`School_Management`**
-4. Click on the database name on the left.
-5. Go to the **Import** tab.
-6. Choose the file: `database.sql` from the project root.
-7. Click **Go** at the bottom.
+## Logins
+i made some accounts to test it:
 
-### 3. Accessing the System
-Open your browser and navigate to:
-`http://localhost/cse3101-g17-proj/`
+**Admin login:** (can do everything)
+user: `admin`
+pass: `password123`
 
-## Test Credentials
-
-### 🛡️ Office Admin (Full Access)
-- **Username:** `admin`
-- **Password:** `password123`
-
-### 🍎 Teacher (Score Management)
-- **Username:** `sarah_teacher`
-- **Password:** `password123`
+**Teacher login:** (only grades)
+user: `sarah_teacher`
+pass: `password123`
 
 ## Features
-- **MVC Architecture:** Structured with Models, Views, and Controllers.
-- **Security:** Uses PDO prepared statements for SQL injection prevention and CSRF protection.
-- **Audit Trail:** Tracks which user modified student scores and when.
-- **Reports:** Generates student report cards and grade average analytics.
-- **RBAC:** Role-Based Access Control enforcing permissions for Teachers and Admins.
+- login works
+- i think the grades work okay
+- creating users works
+- looks pretty good (i used some css)
 
-## Project Structure
-- `/models/` - Database logic and data validation.
-- `/controllers/` - Request handling and business logic.
-- `/views/` - UI pages and templates.
-- `/public/` - Static assets (CSS, Icons, JS).
-- `/config/` - App and Database configurations.
+## Folders
+- `/models/` - database stuff
+- `/controllers/` - php logic stuff
+- `/views/` - html pages
+- `/public/` - css and images
+
+let me know if something breaks, it worked on my laptop.

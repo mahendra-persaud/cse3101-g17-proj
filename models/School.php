@@ -1,8 +1,6 @@
 <?php
-/**
- * School Model
- * Handles general school settings like terms and years
- */
+// general school settings
+// handles terms and years and stuff
 
 require_once __DIR__ . '/Model.php';
 
@@ -13,9 +11,8 @@ class School extends Model {
         $this->primaryKey = 'term_id';
     }
 
-    /**
-     * Get allowed fields based on current table
-     */
+    // checks which fields i can use
+    // depends on which table im looking at
     protected function getAllowedFields() {
         if ($this->table === 'school_years') {
             return ['year_name', 'start_date', 'end_date', 'status'];
@@ -23,31 +20,25 @@ class School extends Model {
         return ['term_name', 'school_year_id', 'start_date', 'end_date', 'status'];
     }
 
-    /**
-     * Create a new school year
-     */
+    // makes a new school year (e.g. 2025/2026)
     public function createYear($data) {
         $this->table = 'school_years';
         $this->primaryKey = 'school_year_id';
         return $this->create($data);
     }
 
-    /**
-     * Create a new term
-     */
+    // makes a new term (e.g. Term 1)
     public function createTerm($data) {
         $this->table = 'terms';
         $this->primaryKey = 'term_id';
         return $this->create($data);
     }
 
-    /**
-     * Get the current active term and year
-     * @return array
-     */
+    // finds out what term/year we are in right now
+    // grabs the latest one from the db
     public function getCurrentAcademicContext() {
-        // In a real app, this might come from a settings table.
-        // For now, we'll fetch the latest term from the DB.
+        // fetching the latest term
+        // hope this logic is right
         $sql = "SELECT t.term_name, y.year_name 
                 FROM terms t 
                 JOIN school_years y ON t.school_year_id = y.school_year_id 
@@ -66,19 +57,13 @@ class School extends Model {
         return $context;
     }
 
-    /**
-     * Get all school years
-     * @return array
-     */
+    // gets all the years
     public function getYears() {
         $this->table = 'school_years';
         return $this->getAll();
     }
 
-    /**
-     * Get all terms with year info
-     * @return array
-     */
+    // gets terms and puts the year next to them
     public function getTermsWithYears() {
         $sql = "SELECT t.*, y.year_name 
                 FROM terms t 

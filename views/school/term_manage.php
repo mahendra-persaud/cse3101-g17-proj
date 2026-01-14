@@ -8,7 +8,7 @@ require_role(['office_admin']);
 
 $year_id = isset($_GET['year_id']) ? (int)$_GET['year_id'] : 3; // Default to current year
 
-// Sample year data
+// fake years data
 $years_data = [
     1 => ['label' => '2023-2024'],
     2 => ['label' => '2024-2025'],
@@ -17,8 +17,8 @@ $years_data = [
 
 $current_year = isset($years_data[$year_id]) ? $years_data[$year_id]['label'] : 'Unknown';
 
-// Sample terms for the selected year
-// TODO: Replace with actual database queries
+// fake terms data
+// TODO: hook this up to the db later
 $terms = [
     ['id' => '1', 'label' => 'Term 1', 'start_date' => '2025-09-01', 'end_date' => '2025-12-20', 'status' => 'Completed', 'total_students' => 320, 'avg_attendance' => '94%'],
     ['id' => '2', 'label' => 'Term 2', 'start_date' => '2026-01-06', 'end_date' => '2026-04-15', 'status' => 'Current', 'total_students' => 320, 'avg_attendance' => '96%'],
@@ -44,7 +44,7 @@ $terms = [
             </a>
         </div>
 
-        <!-- Stats Cards -->
+        <!-- stats overview -->
         <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 0 40px 32px;">
             <div class="card">
                 <h3>Total Terms</h3>
@@ -117,7 +117,7 @@ $terms = [
             <?php endif; ?>
         </section>
 
-        <!-- Term Information -->
+        <!-- info block -->
         <section class="table-card">
             <h2>About Academic Terms</h2>
             <p style="color: #6b7280; line-height: 1.6;">

@@ -1,7 +1,5 @@
-/**
- * Sortable Table Columns
- * Makes table headers clickable to sort data
- */
+// making table headers clickable to sort rows
+// because sorting is useful
 
 class SortableTable {
     constructor(tableSelector) {
@@ -28,7 +26,7 @@ class SortableTable {
     }
 
     init() {
-        // Find all sortable headers (exclude Actions, Select, etc.)
+        // grab all the table headers
         const headers = this.thead.querySelectorAll('th');
 
         headers.forEach((header, index) => {
@@ -69,7 +67,7 @@ class SortableTable {
             // Toggle direction
             this.currentSort.direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
         } else {
-            // New column, default to ascending
+            // clicking a new column, start with A-Z
             this.currentSort.column = columnIndex;
             this.currentSort.direction = 'asc';
         }
@@ -90,7 +88,7 @@ class SortableTable {
             let valueA = cellA.textContent.trim();
             let valueB = cellB.textContent.trim();
 
-            // Try to parse as number
+            // checking if it's a number to sort correctly
             const numA = parseFloat(valueA.replace(/[^0-9.-]/g, ''));
             const numB = parseFloat(valueB.replace(/[^0-9.-]/g, ''));
 
@@ -120,8 +118,8 @@ class SortableTable {
     }
 }
 
-// Auto-initialize sortable tables
-document.addEventListener('DOMContentLoaded', function() {
+// find all tables that should be sortable
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize for all tables with data-sortable attribute
     const sortableTables = document.querySelectorAll('table[data-sortable]');
 

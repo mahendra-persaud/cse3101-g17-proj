@@ -1,10 +1,8 @@
-/**
- * Toast Notification System
- * Shows non-blocking success, error, info, and warning messages
- */
+// little notification popups
+// like toast popping out of a toaster involved
 
 // Initialize toast container when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     if (!document.getElementById('toast-container')) {
         const container = document.createElement('div');
         container.id = 'toast-container';
@@ -13,12 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-/**
- * Show a toast notification
- * @param {string} message - The message to display
- * @param {string} type - Type: 'success', 'error', 'info', 'warning'
- * @param {number} duration - Duration in milliseconds (default: 4000)
- */
+// function to show a message
+// pops up in the corner
 function showToast(message, type = 'info', duration = 4000) {
     const container = document.getElementById('toast-container');
     if (!container) {
@@ -66,10 +60,10 @@ function showToast(message, type = 'info', duration = 4000) {
 
     container.appendChild(toast);
 
-    // Trigger animation
+    // animate it in
     setTimeout(() => toast.classList.add('toast-show'), 10);
 
-    // Auto remove after duration
+    // disappear after a while
     const timeoutId = setTimeout(() => {
         removeToast(toast);
     }, duration);
@@ -104,9 +98,7 @@ function removeToast(toast) {
     }, 300);
 }
 
-/**
- * Convenience functions for specific toast types
- */
+// shortcuts for different types of messages
 function showSuccessToast(message, duration) {
     showToast(message, 'success', duration);
 }
@@ -123,8 +115,8 @@ function showInfoToast(message, duration) {
     showToast(message, 'info', duration);
 }
 
-// Check for URL parameters to show toasts (for redirects after form submissions)
-document.addEventListener('DOMContentLoaded', function() {
+// if the url has ?success=... showing it as a toast
+document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
 
     if (urlParams.has('success')) {

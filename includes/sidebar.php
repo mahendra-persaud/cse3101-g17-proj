@@ -1,10 +1,10 @@
 <?php
-// Sidebar with active page detection
+// sidebar logic
 $role = $_SESSION['role'] ?? 'guest';
 $currentPage = basename($_SERVER['PHP_SELF']);
 $currentPath = $_SERVER['PHP_SELF'];
 
-// Helper function to check if link is active
+// checks if we are on this page to highlight the link
 function isActive($pagePatterns) {
     global $currentPage, $currentPath;
     if (!is_array($pagePatterns)) {
@@ -19,7 +19,7 @@ function isActive($pagePatterns) {
 }
 ?>
 <div class="sidebar">
-    <!-- Sidebar Header -->
+    <!-- Logo stuff -->
     <div class="sidebar-header">
         <img src="<?php echo $projectRoot; ?>/public/assets/img/logo.png" alt="SMS Logo" class="sidebar-logo">
         <div class="header-text">

@@ -9,13 +9,13 @@ require_once dirname($headerPath) . '/sidebar.php';
 ?>
 
   <main class="dashboard">
-    <!-- 🔹 Top Bar -->
+    <!-- 🔹 top header part -->
      <div class = "header">
          <header>
            <h1>Manage Classes</h1>
          </header></div>
 
-    <!-- Add Class Form -->
+    <!-- form to add a class -->
     <section class="form-card">
       <h2>Add New Class</h2>
       <form>
@@ -41,7 +41,7 @@ require_once dirname($headerPath) . '/sidebar.php';
       </form>
     </section>
 
-    <!-- Classes Table -->
+    <!-- table showing all classes -->
     <section class="table-card">
       <h2>All Classes</h2>
       <table>

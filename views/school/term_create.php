@@ -1,7 +1,5 @@
 <?php
-/**
- * Create Term View
- */
+// create a new term for a school year
 
 require_once __DIR__ . '/../../models/School.php';
 require_once __DIR__ . '/../../includes/header.php';

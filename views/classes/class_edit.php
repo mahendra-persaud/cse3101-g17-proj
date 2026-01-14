@@ -16,7 +16,7 @@ if (empty($classId)) {
 
 $pdo = getDBConnection();
 
-// Get class data
+// get the class info
 $stmt = $pdo->prepare("SELECT * FROM classes WHERE class_id = ?");
 $stmt->execute([$classId]);
 $class = $stmt->fetch();
@@ -26,7 +26,7 @@ if (!$class) {
     exit;
 }
 
-// Get all grades for the dropdown
+// get grades for the select box
 $stmt = $pdo->query("SELECT grade_id, grade_name FROM grades ORDER BY grade_id");
 $grades = $stmt->fetchAll();
 
@@ -36,21 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $className = trim($_POST['class_name'] ?? '');
     $gradeId = $_POST['grade_id'] ?? '';
 
-    // Validation
+    // validation check
     if (empty($className)) {
         $error = 'Class name is required.';
     } elseif (empty($gradeId)) {
         $error = 'Grade is required.';
     } else {
         try {
-            // Check if class name already exists for this grade (excluding current class)
+            // make sure we don't duplicate names (except for this one)
             $stmt = $pdo->prepare("SELECT class_id FROM classes WHERE class_name = ? AND grade_id = ? AND class_id != ?");
             $stmt->execute([$className, $gradeId, $classId]);
 
             if ($stmt->fetch()) {
                 $error = 'A class with this name already exists for the selected grade.';
             } else {
-                // Update class
+                // saving changes
                 $stmt = $pdo->prepare("UPDATE classes SET class_name = ?, grade_id = ? WHERE class_id = ?");
                 $stmt->execute([$className, $gradeId, $classId]);
 
@@ -73,7 +73,7 @@ require_once $headerPath;
             <h2>Edit Class</h2>
         </div>
 
-        <!-- Breadcrumb -->
+        <!-- breadcrumbs -->
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
                 <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">

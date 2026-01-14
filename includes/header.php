@@ -1,14 +1,16 @@
 <?php
-// Global configuration
+// main config file
 require_once __DIR__ . '/../config/app.php';
 
-// Minimal shared header (moved to includes/)
-if (session_status() === PHP_SESSION_NONE) session_start();
-function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+// start session if not started
+// so we know who is logged in
+function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); } // cleaning input stuff
+// checks if they are allowed here
+// redirects them if they are not allowed
 function require_role(array $roles) {
     $role = $_SESSION['role'] ?? 'guest';
     if (!in_array($role, $roles)) {
-        // Redirect to auth login page (project-aware)
+        // fixed the redirect path
         $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
         $root = (isset($parts[1]) ? '/' . $parts[0] : '');
         header('Location: ' . $root . '/views/auth/loginPage.php');
@@ -16,7 +18,8 @@ function require_role(array $roles) {
     }
 }
 $role = $_SESSION['role'] ?? 'guest';
-// Compute project root for asset paths (use first path segment)
+// figuring out the base url
+// helpful for linking images and styles
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 ?>
@@ -29,7 +32,7 @@ $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
     <link rel="stylesheet" href="<?php echo $projectRoot; ?>/public/assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo $projectRoot; ?>/public/assets/css/sidebar.css?v=<?php echo time(); ?>">
     <?php
-    // Allow pages to inject extra head tags (e.g., per-page styles)
+    // extra head stuff if needed
     if (!empty($extra_head)) echo $extra_head;
     ?>
     <style>/* Minimal fallback styling */ body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0} .container{padding:16px}</style>

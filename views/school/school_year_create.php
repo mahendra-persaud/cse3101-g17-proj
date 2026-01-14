@@ -1,7 +1,5 @@
 <?php
-/**
- * Create School Year View
- */
+// page to make a new school year
 
 require_once __DIR__ . '/../../models/School.php';
 require_once __DIR__ . '/../../includes/header.php';
@@ -22,8 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($label === '') {
             $errors[] = 'Label required.';
         } else {
-            // Use the Model directly or create a SchoolController if needed.
-            $schoolModel->createYear(['year_name' => $label]);
+            // saving the new year
             header('Location: school_years_list.php');
             exit;
         }

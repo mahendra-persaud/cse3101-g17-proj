@@ -16,7 +16,7 @@ require_once $headerPath;
 
             <h1>Classes</h1>
 
-            <!-- Search and Filter Section -->
+            <!-- search bar and filters stuff -->
             <section class="search-filter-section">
                 <div class="search-bar-container">
                     <div class="search-bar">
@@ -108,7 +108,7 @@ require_once $headerPath;
                 const rows = table.getElementsByTagName('tr');
 
                 for (let i = 0; i < rows.length; i++) {
-                    const gradeCell = rows[i].getElementsByTagName('td')[2]; // Grade column
+                    const gradeCell = rows[i].getElementsByTagName('td')[2]; // checking the grade column
 
                     if (!gradeCell) continue;
 

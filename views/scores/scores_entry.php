@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
 require_role(['teacher']);
-// Minimal score entry form. In a real app: validate, sanitize, check CSRF, use PDO prepared statements.
+// simple form to add scores. normally you'd validate better etc
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $student_id = (int)($_POST['student_id'] ?? 0);
@@ -14,12 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     if ($term < 1 || $term > 3) $errors[] = 'Invalid term.';
     if ($score < 0 || $score > 100) $errors[] = 'Score must be between 0 and 100.';
     if (empty($errors)){
-        // TODO: INSERT or UPDATE score for student-term-subject using PDO
-        // Example: $stmt = $pdo->prepare('REPLACE INTO scores (student_id, subject_id, term_id, score) VALUES (?,?,?,?)');
+        // TODO: save the score to the db
+        // e.g. $stmt = $pdo->prepare('REPLACE INTO scores ...');
         header('Location: scores_list.php'); exit;
     }
 }
-// TODO: Populate students and subjects lists from DB
+// TODO: get student and subject lists from db
 $students = [];
 $subjects = [];
 $terms = [1,2,3];

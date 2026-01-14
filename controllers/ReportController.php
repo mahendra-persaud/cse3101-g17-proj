@@ -1,8 +1,6 @@
 <?php
-/**
- * Report Controller
- * Handles report generation (Student Report Card, Grade Averages)
- */
+// handles reports
+// generates report cards and averages
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/Score.php';
@@ -24,12 +22,8 @@ class ReportController extends BaseController {
         $this->classModel = new SchoolClass();
     }
 
-    /**
-     * Generate student report card
-     * @param int $studentId
-     * @param int $termId
-     * @return array
-     */
+    // makes the report card for a student
+    // calculates averages and stuff
     public function studentReportCard($studentId, $termId) {
         // Get student info
         $student = $this->studentModel->find($studentId);
@@ -83,13 +77,8 @@ class ReportController extends BaseController {
         ];
     }
 
-    /**
-     * Generate average performance report by grade and subject
-     * @param int $gradeId
-     * @param int|null $subjectId
-     * @param int|null $termId
-     * @return array
-     */
+    // shows how a grade is doing in a subject
+    // e.g. how is grade 1 doing in math?
     public function gradeAverageReport($gradeId, $subjectId = null, $termId = null) {
         // Get grade info
         $grades = $this->classModel->getGrades();
@@ -164,12 +153,8 @@ class ReportController extends BaseController {
         ];
     }
 
-    /**
-     * Get class performance report
-     * @param int $classId
-     * @param int|null $termId
-     * @return array
-     */
+    // shows how a class is doing
+    // ranks students by average
     public function classPerformanceReport($classId, $termId = null) {
         // Get class info
         $class = $this->classModel->find($classId);
@@ -199,7 +184,7 @@ class ReportController extends BaseController {
             ];
         }
 
-        // Sort by average descending
+        // sort best to worst
         usort($report, function($a, $b) {
             return $b['average'] <=> $a['average'];
         });
@@ -219,18 +204,12 @@ class ReportController extends BaseController {
         ];
     }
 
-    /**
-     * Get all students for report selection
-     * @return array
-     */
+    // get list of students for the report form
     public function getStudents() {
         return $this->studentModel->getAll();
     }
 
-    /**
-     * Get all terms for report selection
-     * @return array
-     */
+    // get terms for dropdown
     public function getTerms() {
         return $this->scoreModel->getTerms();
     }

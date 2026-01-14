@@ -16,7 +16,7 @@ require_role(['office_admin', 'teacher']);
 
         <h1>Academic Reports & Analytics</h1>
 
-        <!-- Report Type Cards -->
+        <!-- cards for different report types -->
         <section style="margin: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
             <a href="report_student_card.php" style="text-decoration: none; color: inherit;">
                 <div style="background: rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 30px; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; cursor: pointer;">
@@ -47,7 +47,7 @@ require_role(['office_admin', 'teacher']);
             </a>
         </section>
 
-        <!-- Quick Stats -->
+        <!-- some quick stats -->
         <h2 class='heading subjects' style="margin: 40px 0 20px 30px; font-size: 28px; color: #fff;">Quick Statistics</h2>
 
         <section class="table-card" style="margin: 30px;">
@@ -110,7 +110,7 @@ require_role(['office_admin', 'teacher']);
             </table>
         </section>
 
-        <!-- Subject Performance -->
+        <!-- subject performance table -->
         <h2 class='heading subjects' style="margin: 40px 0 20px 30px; font-size: 28px; color: #fff;">Top Performing Subjects</h2>
 
         <section class="table-card" style="margin: 30px;">

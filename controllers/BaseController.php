@@ -1,8 +1,6 @@
 <?php
-/**
- * Base Controller
- * Provides common functionality for all controllers
- */
+// main controller stuff
+// helper functions for all the other controllers
 
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
@@ -21,9 +19,8 @@ class BaseController {
         return isset($_SESSION['user_id']) && isset($_SESSION['username']);
     }
 
-    /**
-     * Require authentication - redirect to login if not authenticated
-     */
+    // makes sure they are logged in
+    // kicks them out if not
     public function requireAuth() {
         if (!$this->isAuthenticated()) {
             $this->redirect('/views/auth/loginPage.php');
@@ -31,10 +28,8 @@ class BaseController {
         }
     }
 
-    /**
-     * Require specific role
-     * @param string|array $roles
-     */
+    // checks if they have the right permission
+    // redirects to dashboard if they try to be sneaky
     public function requireRole($roles) {
         $this->requireAuth();
         
@@ -82,11 +77,8 @@ class BaseController {
         return $_SESSION['role'] ?? null;
     }
 
-    /**
-     * Set a flash message
-     * @param string $type (success, error, warning, info)
-     * @param string $message
-     */
+    // show a message to the user
+    // like "success" or "error"
     public static function setFlash($type, $message) {
         $_SESSION['flash'] = [
             'type' => $type,
@@ -107,10 +99,8 @@ class BaseController {
         return null;
     }
 
-    /**
-     * Redirect to a URL
-     * @param string $url
-     */
+    // redirect to another page
+    // fixes the path so it works on xampp
     public function redirect($url) {
         // Get project root for proper redirects
         $projectRoot = '/cse3101-g17-proj';
@@ -123,11 +113,7 @@ class BaseController {
         exit;
     }
 
-    /**
-     * Send JSON response
-     * @param mixed $data
-     * @param int $statusCode
-     */
+    // sends data back as json (for javascript stuff)
     public function json($data, $statusCode = 200) {
         http_response_code($statusCode);
         header('Content-Type: application/json');
@@ -135,12 +121,8 @@ class BaseController {
         exit;
     }
 
-    /**
-     * Get POST data with sanitization
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
+    // gets data from $_POST safely
+    // cleans it up so no hacks
     public function getPost($key, $default = null) {
         if (!isset($_POST[$key])) {
             return $default;
@@ -204,10 +186,8 @@ class BaseController {
                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
 
-    /**
-     * Validate CSRF token
-     * @return bool
-     */
+    // checks the csrf token
+    // security stuff i guess
     public function validateCsrf() {
         if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token'])) {
             return false;

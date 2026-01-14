@@ -9,7 +9,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 
 $pdo = getDBConnection();
 
-// Get all grades for the dropdown
+// get grades for the dropdown menu
 $stmt = $pdo->query("SELECT grade_id, grade_name FROM grades ORDER BY grade_id");
 $grades = $stmt->fetchAll();
 
@@ -20,21 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $className = trim($_POST['class_name'] ?? '');
     $gradeId = $_POST['grade_id'] ?? '';
 
-    // Validation
+    // validation usually happens here
     if (empty($className)) {
         $error = 'Class name is required.';
     } elseif (empty($gradeId)) {
         $error = 'Grade is required.';
     } else {
         try {
-            // Check if class name already exists for this grade
+            // checking if we already have this class in this grade
             $stmt = $pdo->prepare("SELECT class_id FROM classes WHERE class_name = ? AND grade_id = ?");
             $stmt->execute([$className, $gradeId]);
 
             if ($stmt->fetch()) {
                 $error = 'A class with this name already exists for the selected grade.';
             } else {
-                // Insert new class
+                // making the new class
                 $stmt = $pdo->prepare("INSERT INTO classes (class_name, grade_id) VALUES (?, ?)");
                 $stmt->execute([$className, $gradeId]);
 
@@ -57,7 +57,7 @@ require_once $headerPath;
             <h2>Create New Class</h2>
         </div>
 
-        <!-- Breadcrumb -->
+        <!-- breadcrumb nav -->
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
                 <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">

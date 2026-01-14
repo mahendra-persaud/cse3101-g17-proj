@@ -1,7 +1,5 @@
 <?php
-/**
- * Create Subject View
- */
+// page to make a new subject
 
 require_once __DIR__ . '/../../controllers/SubjectController.php';
 
@@ -12,7 +10,7 @@ $errors = [];
 $grades = $subjectController->getGrades();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Controller expects 'subject_name' and 'grade_id'
+    // expecting subject name and grade id
     $data = [
         'subject_name' => $_POST['subject_name'] ?? '',
         'grade_id' => $_POST['grade_id'] ?? ''

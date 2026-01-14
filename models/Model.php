@@ -1,9 +1,7 @@
 <?php
-/**
- * Base Model Class
- * All models extend this class for common database operations
- * Uses PDO for secure database connections with prepared statements
- */
+// this is the base model thing
+// basic db stuff goes here so i dont have to copy paste it everywhere
+// using pdo cause the professor said its safer
 
 require_once __DIR__ . '/../config/database.php';
 
@@ -12,10 +10,8 @@ abstract class Model {
     protected $primaryKey = 'id';
     protected static $pdo = null;
 
-    /**
-     * Get database connection
-     * @return PDO|null
-     */
+    // connects to the database
+    // hope this works
     protected function getConnection() {
         if (self::$pdo === null) {
             self::$pdo = getDBConnection();
@@ -23,10 +19,8 @@ abstract class Model {
         return self::$pdo;
     }
 
-    /**
-     * Get all records
-     * @return array
-     */
+    // gets everything from the table
+    // simple select * query
     public function getAll() {
         $pdo = $this->getConnection();
         if (!$pdo) {
@@ -43,11 +37,8 @@ abstract class Model {
         }
     }
 
-    /**
-     * Find record by ID
-     * @param mixed $id
-     * @return array|null
-     */
+    // find something by id
+    // returns null if not found
     public function find($id) {
         $pdo = $this->getConnection();
         if (!$pdo) {
@@ -65,12 +56,8 @@ abstract class Model {
         }
     }
 
-    /**
-     * Find records by field value
-     * @param string $field
-     * @param mixed $value
-     * @return array
-     */
+    // find stuff by a specific field
+    // useful for finding users by username and stuff
     public function findBy($field, $value) {
         $pdo = $this->getConnection();
         if (!$pdo) {
@@ -94,11 +81,8 @@ abstract class Model {
         }
     }
 
-    /**
-     * Create new record
-     * @param array $data
-     * @return int|bool Insert ID or false on failure
-     */
+    // adds a new row
+    // filters data first so we don't break anything
     public function create($data) {
         $pdo = $this->getConnection();
         if (!$pdo) {
@@ -128,12 +112,8 @@ abstract class Model {
         }
     }
 
-    /**
-     * Update record by ID
-     * @param mixed $id
-     * @param array $data
-     * @return bool
-     */
+    // updates a row
+    // needs the id and the new data
     public function update($id, $data) {
         $pdo = $this->getConnection();
         if (!$pdo) {
@@ -162,11 +142,8 @@ abstract class Model {
         }
     }
 
-    /**
-     * Delete record by ID
-     * @param mixed $id
-     * @return bool
-     */
+    // deletes stuff
+    // be careful with this one!!
     public function delete($id) {
         $pdo = $this->getConnection();
         if (!$pdo) {
@@ -182,12 +159,8 @@ abstract class Model {
         }
     }
 
-    /**
-     * Execute a raw query with prepared statements
-     * @param string $sql
-     * @param array $params
-     * @return array
-     */
+    // runs a manual query if the other functions aren't enough
+    // learned this from stackoverflow
     protected function query($sql, $params = []) {
         $pdo = $this->getConnection();
         if (!$pdo) {

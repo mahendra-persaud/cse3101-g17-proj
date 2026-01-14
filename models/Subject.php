@@ -1,25 +1,18 @@
 <?php
 require_once __DIR__ . '/Model.php';
 
-/**
- * Subject Model
- * Handles all subject-related database operations
- */
+// subject model
+// for subjects like math, english, etc
 class Subject extends Model {
     protected $table = 'subjects';
     protected $primaryKey = 'subject_id';
 
-    /**
-     * Get allowed fields for this model
-     */
+    // allowed fields
     protected function getAllowedFields() {
         return ['subject_name', 'grade_id'];
     }
 
-    /**
-     * Get all subjects with grade information
-     * @return array
-     */
+    // get all subjects with their grade level
     public function getAll() {
         $sql = "SELECT s.*, g.grade_name 
                 FROM subjects s 
@@ -28,11 +21,7 @@ class Subject extends Model {
         return $this->query($sql);
     }
 
-    /**
-     * Get subjects by grade ID
-     * @param int $gradeId
-     * @return array
-     */
+    // get subjects for a specific grade
     public function getByGrade($gradeId) {
         $sql = "SELECT s.*, g.grade_name 
                 FROM subjects s 
@@ -42,11 +31,7 @@ class Subject extends Model {
         return $this->query($sql, [$gradeId]);
     }
 
-    /**
-     * Find subject by ID with grade info
-     * @param int $id
-     * @return array|null
-     */
+    // find subject by id
     public function find($id) {
         $sql = "SELECT s.*, g.grade_name 
                 FROM subjects s 
@@ -55,11 +40,7 @@ class Subject extends Model {
         return $this->queryOne($sql, [$id]);
     }
 
-    /**
-     * Validate subject data
-     * @param array $data
-     * @return array
-     */
+    // validates subject info
     public function validateSubject($data) {
         return $this->validate($data, [
             'subject_name' => 'required|min:3|max:50',
@@ -67,13 +48,8 @@ class Subject extends Model {
         ]);
     }
 
-    /**
-     * Check if subject name already exists for grade
-     * @param string $name
-     * @param int $gradeId
-     * @param int|null $excludeId
-     * @return bool
-     */
+    // checks if we already have this subject for this grade
+    // avoids duplicates
     public function nameExistsForGrade($name, $gradeId, $excludeId = null) {
         $sql = "SELECT COUNT(*) as count FROM subjects 
                 WHERE subject_name = ? AND grade_id = ?";

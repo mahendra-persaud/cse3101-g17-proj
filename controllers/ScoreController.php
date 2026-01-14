@@ -1,8 +1,6 @@
 <?php
-/**
- * Score Controller
- * Handles score entry and management (Teacher access)
- */
+// controls the scores page
+// only teachers should be here
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/Score.php';
@@ -52,11 +50,8 @@ class ScoreController extends BaseController {
         return $this->scoreModel->getBySubject($subjectId, $termId);
     }
 
-    /**
-     * Save score (create or update)
-     * @param array $data
-     * @return array Result with success status
-     */
+    // save a single score
+    // checks security token and validation first
     public function store($data) {
         $this->requireRole(['teacher', 'office_admin']);
 
@@ -99,11 +94,9 @@ class ScoreController extends BaseController {
         ];
     }
 
-    /**
-     * Bulk save scores for a class
-     * @param array $scores Array of score data
-     * @return array Result with success status
-     */
+    // save a bunch of scores at once
+    // loops through them and saves one by one
+    // this handles the whole class list form
     public function bulkSave($scores) {
         $this->requireRole(['teacher', 'office_admin']);
 
@@ -139,11 +132,8 @@ class ScoreController extends BaseController {
         ];
     }
 
-    /**
-     * Delete score
-     * @param int $id
-     * @return array Result with success status
-     */
+    // delete a score
+    // why would you delete a score though? maybe a mistake
     public function destroy($id) {
         $this->requireRole(['teacher', 'office_admin']);
 
@@ -250,11 +240,8 @@ class ScoreController extends BaseController {
         return $this->classModel->getGrades();
     }
 
-    /**
-     * Get recent score modifications (audit log)
-     * @param int $limit
-     * @return array
-     */
+    // shows who changed what
+    // audit log for admins only
     public function getAuditLog($limit = 50) {
         $this->requireRole('office_admin');
         return $this->scoreModel->getRecentModifications($limit);

@@ -9,7 +9,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 
 $pdo = getDBConnection();
 
-// Get all students with their class and grade information
+// getting all the students join with class/grade info
 $stmt = $pdo->query("
     SELECT
         s.student_id,
@@ -34,7 +34,7 @@ require_once $headerPath;
             <h2>Student Management</h2>
         </div>
 
-        <!-- Breadcrumb -->
+        <!-- breadcrumbs -->
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
                 <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">
@@ -69,7 +69,7 @@ require_once $headerPath;
 
         <h1>Students</h1>
 
-        <!-- Search and Filter Section -->
+        <!-- search stuff -->
         <section class="search-filter-section">
             <div class="search-bar-container">
                 <div class="search-bar">
@@ -139,7 +139,7 @@ require_once $headerPath;
             const rows = table.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                const gradeCell = rows[i].getElementsByTagName('td')[3]; // Grade column
+                const gradeCell = rows[i].getElementsByTagName('td')[3]; // checking the grade
 
                 if (!gradeCell) continue;
 

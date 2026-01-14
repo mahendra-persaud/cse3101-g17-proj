@@ -1,8 +1,6 @@
 <?php
-/**
- * Class Controller
- * Handles all class CRUD operations
- */
+// class controller
+// manages classes (like grade 1, grade 2 etc)
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/SchoolClass.php';
@@ -15,37 +13,22 @@ class ClassController extends BaseController {
         $this->classModel = new SchoolClass();
     }
 
-    /**
-     * Get all classes
-     * @return array
-     */
+    // get list of all classes
     public function index() {
         return $this->classModel->getAll();
     }
 
-    /**
-     * Get single class
-     * @param int $id
-     * @return array|null
-     */
+    // get one class by id
     public function show($id) {
         return $this->classModel->find($id);
     }
 
-    /**
-     * Get classes by grade
-     * @param int $gradeId
-     * @return array
-     */
+    // get classes for a certain grade
     public function getByGrade($gradeId) {
         return $this->classModel->getByGrade($gradeId);
     }
 
-    /**
-     * Create new class
-     * @param array $data
-     * @return array Result with success status
-     */
+    // make a new class
     public function store($data) {
         $this->requireRole('office_admin');
 
@@ -58,7 +41,7 @@ class ClassController extends BaseController {
             ];
         }
 
-        // Check for duplicates
+        // make sure we don't have duplicates
         if ($this->classModel->nameExistsForGrade($data['class_name'], $data['grade_id'])) {
             return [
                 'success' => false,
@@ -66,7 +49,7 @@ class ClassController extends BaseController {
             ];
         }
 
-        // Check if grade already has 6 classes (max)
+        // limit to 6 classes per grade (assignment rule)
         $existingClasses = $this->classModel->getByGrade($data['grade_id']);
         if (count($existingClasses) >= 6) {
             return [
@@ -95,13 +78,8 @@ class ClassController extends BaseController {
         ];
     }
 
-    /**
-     * Update class
-     * Note: grade_id cannot be changed per assignment requirements
-     * @param int $id
-     * @param array $data
-     * @return array Result with success status
-     */
+    // update class info
+    // cant change the grade though, only the name
     public function update($id, $data) {
         $this->requireRole('office_admin');
 
@@ -114,7 +92,7 @@ class ClassController extends BaseController {
             ];
         }
 
-        // Prevent grade change (classes cannot switch grades per assignment)
+        // stop them from changing the grade
         if (isset($data['grade_id']) && $data['grade_id'] != $existing['grade_id']) {
             return [
                 'success' => false,
@@ -144,7 +122,7 @@ class ClassController extends BaseController {
             ];
         }
 
-        // Update class (only name can be changed)
+        // fix the class name
         $success = $this->classModel->update($id, [
             'class_name' => $data['class_name'] ?? $existing['class_name']
         ]);
@@ -160,11 +138,8 @@ class ClassController extends BaseController {
         ];
     }
 
-    /**
-     * Delete class
-     * @param int $id
-     * @return array Result with success status
-     */
+    // delete a class
+    // cant delete if it has students
     public function destroy($id) {
         $this->requireRole('office_admin');
 
@@ -190,19 +165,12 @@ class ClassController extends BaseController {
         ];
     }
 
-    /**
-     * Get all grades
-     * @return array
-     */
+    // info for dropdowns
     public function getGrades() {
         return $this->classModel->getGrades();
     }
 
-    /**
-     * Get class display name
-     * @param int $classId
-     * @return string
-     */
+    // formats the name nicely
     public function getDisplayName($classId) {
         return $this->classModel->getDisplayName($classId);
     }

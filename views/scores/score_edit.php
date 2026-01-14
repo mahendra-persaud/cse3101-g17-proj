@@ -1,7 +1,5 @@
 <?php
-/**
- * Edit Score View
- */
+// page to edit a score
 
 require_once __DIR__ . '/../../controllers/ScoreController.php';
 
@@ -14,7 +12,7 @@ if (!$scoreId) {
     exit;
 }
 
-// Score model has getScoreAudit which returns detail including names
+// getting the score with all the extra info like names
 $score = (new Score())->getScoreAudit($scoreId);
 if (!$score) {
     header('Location: scores_list.php');

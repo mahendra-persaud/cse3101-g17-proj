@@ -1,7 +1,5 @@
-/**
- * Client-Side Table Pagination
- * Adds pagination controls to tables with many rows
- */
+// splits tables into pages so they aren't super long
+// all happens in the browser
 
 class TablePagination {
     constructor(tableSelector, options = {}) {
@@ -32,7 +30,7 @@ class TablePagination {
 
     init() {
         if (this.allRows.length <= this.options.itemsPerPage) {
-            // No pagination needed
+            // table is short enough, don't need pages
             return;
         }
 
@@ -47,7 +45,7 @@ class TablePagination {
 
         if (!container) return;
 
-        // Create pagination wrapper
+        // wrapper around the pagination stuff
         const paginationWrapper = document.createElement('div');
         paginationWrapper.className = 'pagination-wrapper';
 
@@ -57,7 +55,7 @@ class TablePagination {
         paginationInfo.id = `pagination-info-${this.getTableId()}`;
         this.updatePaginationInfo(paginationInfo);
 
-        // Create pagination controls
+        // buttons container
         const paginationControls = document.createElement('div');
         paginationControls.className = 'pagination-controls';
         paginationControls.id = `pagination-controls-${this.getTableId()}`;
@@ -163,7 +161,7 @@ class TablePagination {
 
         this.currentPage = pageNum;
 
-        // Hide all rows
+        // hide everything first
         this.allRows.forEach(row => {
             row.style.display = 'none';
         });
@@ -232,8 +230,8 @@ class TablePagination {
     }
 }
 
-// Auto-initialize pagination for tables with data-pagination attribute
-document.addEventListener('DOMContentLoaded', function() {
+// look for tables that want pagination and turn it on
+document.addEventListener('DOMContentLoaded', function () {
     const tables = document.querySelectorAll('table[data-pagination]');
 
     tables.forEach(table => {

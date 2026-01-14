@@ -1,8 +1,6 @@
 <?php
-/**
- * Auth Controller
- * Handles user authentication (login, logout, session management)
- */
+// auth controller
+// handles login, logout, and session stuff
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/User.php';
@@ -15,14 +13,10 @@ class AuthController extends BaseController {
         $this->userModel = new User();
     }
 
-    /**
-     * Handle login request
-     * @param string $username
-     * @param string $password
-     * @return array Result with success status and message
-     */
+    // logs the user in
+    // checks username and password against the db
     public function login($username, $password) {
-        // Validate input
+        // making sure they actually typed something
         if (empty($username) || empty($password)) {
             return [
                 'success' => false,
@@ -30,11 +24,11 @@ class AuthController extends BaseController {
             ];
         }
 
-        // Attempt authentication
+        // check if creds are valid
         $user = $this->userModel->authenticate($username, $password);
 
         if ($user) {
-            // Set session variables
+            // save user info in session so they stay logged in
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role_name'];
@@ -52,19 +46,16 @@ class AuthController extends BaseController {
         ];
     }
 
-    /**
-     * Handle logout
-     */
+    // logs the user out
     public function logout() {
-        // Clear all session data
-        $_SESSION = [];
+        // empty the session array
         
         // Destroy the session cookie
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
         }
         
-        // Destroy the session
+        // kill the session completely
         session_destroy();
 
         return [
@@ -73,10 +64,7 @@ class AuthController extends BaseController {
         ];
     }
 
-    /**
-     * Get current logged in user info
-     * @return array|null
-     */
+    // gets the user who is currently logged in
     public function getCurrentUser() {
         if (!$this->isAuthenticated()) {
             return null;
@@ -89,29 +77,17 @@ class AuthController extends BaseController {
         ];
     }
 
-    /**
-     * Check if user is office admin
-     * @return bool
-     */
+    // checks if user is an admin
     public function isAdmin() {
         return $this->hasRole('office_admin');
     }
 
-    /**
-     * Check if user is teacher
-     * @return bool
-     */
+    // checks if user is a teacher
     public function isTeacher() {
         return $this->hasRole('teacher');
     }
 
-    /**
-     * Handle password change
-     * @param int $userId
-     * @param string $currentPassword
-     * @param string $newPassword
-     * @return array
-     */
+    // lets users change their password
     public function changePassword($userId, $currentPassword, $newPassword) {
         // Validate new password
         if (strlen($newPassword) < 6) {

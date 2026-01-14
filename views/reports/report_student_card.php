@@ -25,7 +25,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 require_once $headerPath;
 require_role(['office_admin', 'teacher']);
 
-// Sample students data
+// fake student data
 $students = [
     1 => ['id' => 1, 'name' => 'Olivia Parker', 'grade' => '4', 'class' => 'Class A', 'reg_number' => 'ST2023001'],
     2 => ['id' => 2, 'name' => 'Liam Johnson', 'grade' => '5', 'class' => 'Class B', 'reg_number' => 'ST2023002'],
@@ -34,7 +34,7 @@ $students = [
     5 => ['id' => 5, 'name' => 'Emma Davis', 'grade' => '4', 'class' => 'Class B', 'reg_number' => 'ST2023005'],
 ];
 
-// Sample scores data (student_id => [subject => [term => score]])
+// fake scores data (student_id => [subject => [term => score]])
 $sample_scores = [
     1 => [ // Olivia Parker - Grade 4
         'Mathematics' => [1 => 92, 2 => 88, 3 => 95],
@@ -62,11 +62,11 @@ $sample_scores = [
     ],
 ];
 
-// Get parameters
+// get url params
 $student_id = isset($_GET['student_id']) ? (int)$_GET['student_id'] : 0;
 $term = isset($_GET['term']) ? (int)$_GET['term'] : 1;
 
-// Validate
+// check if student exists
 if ($student_id > 0 && isset($students[$student_id])) {
     $student = $students[$student_id];
     $scores = isset($sample_scores[$student_id]) ? $sample_scores[$student_id] : [];
@@ -75,7 +75,7 @@ if ($student_id > 0 && isset($students[$student_id])) {
     $scores = [];
 }
 
-// Calculate grade from score
+// figure out the letter grade
 function getGrade($score) {
     if ($score >= 90) return 'A';
     if ($score >= 80) return 'B';
@@ -84,12 +84,12 @@ function getGrade($score) {
     return 'F';
 }
 
-// Get grade CSS class
+// css class for colors
 function getGradeClass($grade) {
     return 'grade-' . strtolower($grade);
 }
 
-// Calculate statistics
+// do the math for averages
 function calculateStats($scores, $term) {
     $term_scores = [];
     foreach ($scores as $subject => $terms) {
@@ -119,7 +119,7 @@ function calculateStats($scores, $term) {
             <h2>Student Report Card</h2></div>
 
         <?php if (!$student): ?>
-        <!-- Selection Form -->
+        <!-- form to pick student -->
         <h1 class="no-print">Generate Student Report Card</h1>
 
         <section class="form-card no-print">
@@ -147,7 +147,7 @@ function calculateStats($scores, $term) {
             $stats = calculateStats($scores, $term);
         ?>
 
-        <!-- Report Card Display -->
+        <!-- showing the actual card -->
         <div class="no-print" style="margin: 30px; display: flex; gap: 15px;">
             <button onclick="window.print()" style="background: rgba(35, 140, 246, 0.8); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">🖨️ Print Report Card</button>
             <button onclick="exportPDF()" style="background: rgba(220, 38, 38, 0.8); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">📄 Export as PDF</button>
@@ -155,7 +155,7 @@ function calculateStats($scores, $term) {
         </div>
 
         <section class="table-card report-card" style="margin: 30px; max-width: 900px;">
-            <!-- School Header -->
+            <!-- school name header -->
             <div style="text-align: center; border-bottom: 2px solid rgba(255, 255, 255, 0.2); padding-bottom: 20px; margin-bottom: 30px;">
                 <h1 style="margin: 0 0 5px; font-size: 32px; color: #a5d8ff;">St. Joseph Primary School</h1>
                 <p style="margin: 5px 0; color: rgba(255, 255, 255, 0.8); font-size: 14px;">123 Main Street, Georgetown, Guyana</p>
@@ -163,7 +163,7 @@ function calculateStats($scores, $term) {
                 <p style="margin: 5px 0; color: rgba(255, 255, 255, 0.8);">Academic Year 2025-2026 | Term <?php echo $term; ?></p>
             </div>
 
-            <!-- Student Information -->
+            <!-- student details -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px;">
                 <div>
                     <p style="margin: 5px 0; color: rgba(255, 255, 255, 0.7); font-size: 13px;">STUDENT NAME</p>
@@ -183,7 +183,7 @@ function calculateStats($scores, $term) {
                 </div>
             </div>
 
-            <!-- Scores Table -->
+            <!-- table of grades -->
             <table style="margin-bottom: 30px;">
                 <thead>
                     <tr>
@@ -224,7 +224,7 @@ function calculateStats($scores, $term) {
                 </tbody>
             </table>
 
-            <!-- Statistics Summary -->
+            <!-- summary box -->
             <?php if ($stats['count'] > 0): ?>
             <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
                 <h3 style="margin: 0 0 15px; color: #a5d8ff; font-size: 18px;">Performance Summary</h3>
@@ -249,7 +249,7 @@ function calculateStats($scores, $term) {
             </div>
             <?php endif; ?>
 
-            <!-- Teacher Comments -->
+            <!-- teacher says... -->
             <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
                 <h3 style="margin: 0 0 10px; color: #a5d8ff; font-size: 18px;">Class Teacher's Remarks</h3>
                 <p style="margin: 0; color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
@@ -265,7 +265,7 @@ function calculateStats($scores, $term) {
                 </p>
             </div>
 
-            <!-- Signatures -->
+            <!-- sign here -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.2);">
                 <div style="text-align: center;">
                     <div style="border-bottom: 1px solid rgba(255, 255, 255, 0.3); margin-bottom: 8px; height: 40px;"></div>

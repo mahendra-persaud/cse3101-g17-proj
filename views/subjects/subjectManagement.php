@@ -6,8 +6,8 @@ $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
 require_once $headerPath;
 
-// Sample subjects for Guyana's primary school system
-// TODO: Replace with actual database queries
+// fake subjects list for guyana schools
+// TODO: get real data later
 $subjects = [
     // Core subjects offered across all grades
     ['code' => 'MATH', 'name' => 'Mathematics', 'grade' => 'All Grades', 'teacher' => 'Various', 'description' => 'Core mathematics curriculum'],

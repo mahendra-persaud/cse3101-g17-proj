@@ -6,7 +6,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 require_once $headerPath;
 require_role(['office_admin']);
 
-// Fetch real subjects using the controller
+// getting the list of subjects from the controller
 require_once __DIR__ . '/../../controllers/SubjectController.php';
 $subjectController = new SubjectController();
 $subjects = $subjectController->index();
@@ -40,7 +40,7 @@ $flash = SubjectController::getFlash();
             </div>
         <?php endif; ?>
 
-        <!-- Search and Filter Section -->
+        <!-- search and filters -->
         <section class="search-filter-section">
             <div class="search-bar-container">
                 <div class="search-bar">
@@ -107,7 +107,7 @@ $flash = SubjectController::getFlash();
             const rows = table.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                const gradeCell = rows[i].getElementsByTagName('td')[2]; // Grade column
+                const gradeCell = rows[i].getElementsByTagName('td')[2]; // checking the grade
 
                 if (!gradeCell) continue;
 

@@ -1,53 +1,51 @@
 <?php
-/**
- * Application Configuration
- *
- * General application settings and constants
- */
+// main settings for the app
+// stuff like name and timezone
 
-// Application name
+// name of the website
 define('APP_NAME', 'School Management System');
 
-// Application version
+// version number
 define('APP_VERSION', '1.0.0');
 
-// Timezone
+// setting the time to guyana time
 date_default_timezone_set('America/Guyana');
 
-// Error reporting (set to 0 in production)
+// show all errors (good for debugging)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Session settings - only set if session hasn't started yet
+// session settings
+// makes cookies safer
 if (session_status() === PHP_SESSION_NONE) {
     @ini_set('session.cookie_httponly', 1);
     @ini_set('session.use_only_cookies', 1);
     @ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
     
-    // Session lifetime (24 hours)
+    // session lasts for 1 day
     @ini_set('session.gc_maxlifetime', 86400);
 }
 
 // Grades available
 define('AVAILABLE_GRADES', ['1', '2', '3', '4', '5', '6']);
 
-// Terms per year
+// how many terms we have
 define('TERMS_PER_YEAR', 3);
 
-// Term names
+// names of the terms
 define('TERM_NAMES', [
     1 => 'Term 1 (Sept - Dec)',
     2 => 'Term 2 (Jan - Apr)',
     3 => 'Term 3 (May - Aug)'
 ]);
 
-// User roles
+// who can log in
 define('USER_ROLES', [
     'office_admin' => 'Office Administrator',
     'teacher' => 'Teacher'
 ]);
 
-// Grading scale
+// score to grade conversion
 define('GRADING_SCALE', [
     'A' => ['min' => 90, 'max' => 100, 'description' => 'Excellent'],
     'B' => ['min' => 80, 'max' => 89, 'description' => 'Very Good'],

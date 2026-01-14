@@ -1,8 +1,6 @@
 <?php
-/**
- * User Controller
- * Handles user management (Office Admin only)
- */
+// user controller
+// only office admin should access this
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../models/User.php';
@@ -15,20 +13,13 @@ class UserController extends BaseController {
         $this->userModel = new User();
     }
 
-    /**
-     * Get all users
-     * @return array
-     */
+    // list all users
     public function index() {
         $this->requireRole('office_admin');
         return $this->userModel->getAll();
     }
 
-    /**
-     * Get single user
-     * @param int $id
-     * @return array|null
-     */
+    // show user details
     public function show($id) {
         $this->requireRole('office_admin');
         return $this->userModel->find($id);
@@ -44,11 +35,7 @@ class UserController extends BaseController {
         return $this->userModel->getByRole($roleId);
     }
 
-    /**
-     * Create new user
-     * @param array $data
-     * @return array Result with success status
-     */
+    // create a new user account
     public function store($data) {
         $this->requireRole('office_admin');
 
@@ -61,7 +48,7 @@ class UserController extends BaseController {
             ];
         }
 
-        // Check for duplicate username
+        // username must be unique
         if ($this->userModel->usernameExists($data['username'])) {
             return [
                 'success' => false,
@@ -90,12 +77,7 @@ class UserController extends BaseController {
         ];
     }
 
-    /**
-     * Update user
-     * @param int $id
-     * @param array $data
-     * @return array Result with success status
-     */
+    // update user account
     public function update($id, $data) {
         $this->requireRole('office_admin');
 
@@ -141,15 +123,11 @@ class UserController extends BaseController {
         ];
     }
 
-    /**
-     * Delete user
-     * @param int $id
-     * @return array Result with success status
-     */
+    // delete user account
     public function destroy($id) {
         $this->requireRole('office_admin');
 
-        // Prevent deleting own account
+        // cant delete yourself lol (safety check)
         if ($id == $this->getUserId()) {
             return [
                 'success' => false,
@@ -178,12 +156,7 @@ class UserController extends BaseController {
         return $this->userModel->getRoles();
     }
 
-    /**
-     * Reset user password
-     * @param int $id
-     * @param string $newPassword
-     * @return array
-     */
+    // admin can reset passwords here
     public function resetPassword($id, $newPassword) {
         $this->requireRole('office_admin');
 

@@ -1,10 +1,8 @@
-/**
- * Custom Modal System
- * Replaces browser confirm() with beautiful custom modals
- */
+// my own popup boxes because the browser ones look old
+// replaces window.confirm
 
-// Initialize modal container when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+// setting up the modal div when the page loads
+document.addEventListener('DOMContentLoaded', function () {
     if (!document.getElementById('modal-overlay')) {
         const overlay = document.createElement('div');
         overlay.id = 'modal-overlay';
@@ -26,17 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-/**
- * Show a confirmation modal
- * @param {Object} options - Modal options
- * @param {string} options.title - Modal title
- * @param {string} options.message - Modal message
- * @param {string} options.confirmText - Confirm button text (default: "Confirm")
- * @param {string} options.cancelText - Cancel button text (default: "Cancel")
- * @param {string} options.type - Modal type: 'danger', 'warning', 'info' (default: 'danger')
- * @param {Function} options.onConfirm - Callback when confirmed
- * @param {Function} options.onCancel - Callback when cancelled
- */
+// function to show the popup
+// takes a bunch of options like title and message
 function showConfirmModal(options) {
     const {
         title = 'Confirm Action',
@@ -44,8 +33,8 @@ function showConfirmModal(options) {
         confirmText = 'Confirm',
         cancelText = 'Cancel',
         type = 'danger',
-        onConfirm = () => {},
-        onCancel = () => {}
+        onConfirm = () => { },
+        onCancel = () => { }
     } = options;
 
     const overlay = document.getElementById('modal-overlay');
@@ -56,7 +45,7 @@ function showConfirmModal(options) {
     const confirmBtn = overlay.querySelector('.modal-btn-confirm');
     const cancelBtn = overlay.querySelector('.modal-btn-cancel');
 
-    // Set content
+    // putting the text where it belongs
     modalTitle.textContent = title;
     modalMessage.textContent = message;
     confirmBtn.textContent = confirmText;
@@ -89,7 +78,7 @@ function showConfirmModal(options) {
     overlay.classList.add('modal-show');
     modalContent.classList.add('modal-content-show');
 
-    // Handle confirm
+    // when they say yes
     const handleConfirm = () => {
         closeModal();
         onConfirm();
@@ -111,14 +100,14 @@ function showConfirmModal(options) {
     newCancelBtn.addEventListener('click', handleCancel);
 
     // Close on overlay click
-    overlay.addEventListener('click', function(e) {
+    overlay.addEventListener('click', function (e) {
         if (e.target === overlay) {
             handleCancel();
         }
     });
 
     // Close on Escape key
-    const escapeHandler = function(e) {
+    const escapeHandler = function (e) {
         if (e.key === 'Escape') {
             handleCancel();
             document.removeEventListener('keydown', escapeHandler);
@@ -156,10 +145,8 @@ function confirmDelete(itemName, onConfirm) {
     });
 }
 
-/**
- * Replace all onclick="return confirm(...)" with custom modals
- */
-document.addEventListener('DOMContentLoaded', function() {
+// find all the boring confirm() clicks and make them use my cool modal
+document.addEventListener('DOMContentLoaded', function () {
     // Find all delete buttons with confirm
     const deleteButtons = document.querySelectorAll('.delete-btn, [onclick*="confirm"]');
 
@@ -173,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.removeAttribute('onclick');
 
             // Add new click handler
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', function (e) {
                 e.preventDefault();
 
                 // Determine what's being deleted

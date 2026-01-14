@@ -1,5 +1,5 @@
 <?php
-// Edit student
+// editing a student
 require_once __DIR__ . '/../../config/database.php';
 
 $headerPath = __DIR__ . '/includes/header.php';
@@ -18,7 +18,7 @@ if (empty($studentId)) {
     exit;
 }
 
-// Get student data
+// finding the student
 $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = ?");
 $stmt->execute([$studentId]);
 $student = $stmt->fetch();
@@ -28,7 +28,7 @@ if (!$student) {
     exit;
 }
 
-// Get all classes for the dropdown
+// grabbing classes for the dropdown
 $stmt = $pdo->query("
     SELECT c.class_id, c.class_name, g.grade_name
     FROM classes c
@@ -71,7 +71,7 @@ require_once $headerPath;
             <h2>Edit Student</h2>
         </div>
 
-        <!-- Breadcrumb -->
+        <!-- breadcrumbs -->
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
                 <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">

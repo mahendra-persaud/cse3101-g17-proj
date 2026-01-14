@@ -1,25 +1,19 @@
 <?php
 require_once __DIR__ . '/Model.php';
 
-/**
- * Student Model
- * Handles all student-related database operations
- */
+// student model
+// does everything for students table
 class Student extends Model {
     protected $table = 'students';
     protected $primaryKey = 'student_id';
 
-    /**
-     * Get allowed fields for this model
-     */
+    // fields we can use
     protected function getAllowedFields() {
         return ['first_name', 'last_name', 'class_id'];
     }
 
-    /**
-     * Get all students with class and grade information
-     * @return array
-     */
+    // get all students
+    // joins with class and grade to show nice names
     public function getAll() {
         $sql = "SELECT s.*, c.class_name, g.grade_name, g.grade_id,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
@@ -30,11 +24,8 @@ class Student extends Model {
         return $this->query($sql);
     }
 
-    /**
-     * Find student by ID with class and grade info
-     * @param int $id
-     * @return array|null
-     */
+    // find a student by id
+    // also gets their class info
     public function find($id) {
         $sql = "SELECT s.*, c.class_name, g.grade_name, g.grade_id,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
@@ -45,11 +36,7 @@ class Student extends Model {
         return $this->queryOne($sql, [$id]);
     }
 
-    /**
-     * Get students by grade
-     * @param int $gradeId
-     * @return array
-     */
+    // find students in a certain grade
     public function getByGrade($gradeId) {
         $sql = "SELECT s.*, c.class_name, g.grade_name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
@@ -61,11 +48,7 @@ class Student extends Model {
         return $this->query($sql, [$gradeId]);
     }
 
-    /**
-     * Get students by class
-     * @param int $classId
-     * @return array
-     */
+    // find students in a specific class
     public function getByClass($classId) {
         $sql = "SELECT s.*, c.class_name, g.grade_name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name
@@ -77,20 +60,12 @@ class Student extends Model {
         return $this->query($sql, [$classId]);
     }
 
-    /**
-     * Get students count by class
-     * @param int $classId
-     * @return int
-     */
+    // counts how many students in a class
     public function countByClass($classId) {
         return $this->count('class_id', $classId);
     }
 
-    /**
-     * Validate student data
-     * @param array $data
-     * @return array
-     */
+    // checks if student data is ok
     public function validateStudent($data) {
         return $this->validate($data, [
             'first_name' => 'required|min:2|max:50',
@@ -99,11 +74,7 @@ class Student extends Model {
         ]);
     }
 
-    /**
-     * Search students by name
-     * @param string $search
-     * @return array
-     */
+    // searchs for students by their name
     public function search($search) {
         $sql = "SELECT s.*, c.class_name, g.grade_name,
                 CONCAT(s.first_name, ' ', s.last_name) as full_name

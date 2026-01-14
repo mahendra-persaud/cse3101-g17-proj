@@ -1,10 +1,6 @@
 <?php
-/**
- * Database Configuration
- *
- * This file contains database connection settings
- * When you're ready to use MySQL, update these settings
- */
+// database connection info
+// change this if you move to a live server
 
 // Database configuration
 define('DB_HOST', 'localhost');
@@ -13,10 +9,8 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
-/**
- * Get database connection
- * @return PDO|null
- */
+// connects to mysql using pdo
+// returns the connection object
 function getDBConnection() {
     static $pdo = null;
 
@@ -31,7 +25,7 @@ function getDBConnection() {
 
             $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         } catch (PDOException $e) {
-            // Log error and return null
+            // something went wrong connecting
             error_log("Database connection failed: " . $e->getMessage());
             return null;
         }

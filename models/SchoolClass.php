@@ -1,25 +1,18 @@
 <?php
 require_once __DIR__ . '/Model.php';
 
-/**
- * SchoolClass Model (named SchoolClass to avoid PHP reserved word 'Class')
- * Handles all class-related database operations
- */
+// class model
+// named SchoolClass because Class is a reserved word in php (annoying)
 class SchoolClass extends Model {
     protected $table = 'classes';
     protected $primaryKey = 'class_id';
 
-    /**
-     * Get allowed fields for this model
-     */
+    // fields list
     protected function getAllowedFields() {
         return ['class_name', 'grade_id'];
     }
 
-    /**
-     * Get all classes with grade information and student count
-     * @return array
-     */
+    // get all classes and count how many students are in them
     public function getAll() {
         $sql = "SELECT c.*, g.grade_name,
                 (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
@@ -29,11 +22,7 @@ class SchoolClass extends Model {
         return $this->query($sql);
     }
 
-    /**
-     * Find class by ID with grade info
-     * @param int $id
-     * @return array|null
-     */
+    // find class by id
     public function find($id) {
         $sql = "SELECT c.*, g.grade_name,
                 (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
@@ -43,11 +32,7 @@ class SchoolClass extends Model {
         return $this->queryOne($sql, [$id]);
     }
 
-    /**
-     * Get classes by grade
-     * @param int $gradeId
-     * @return array
-     */
+    // get classes for a specific grade
     public function getByGrade($gradeId) {
         $sql = "SELECT c.*, g.grade_name,
                 (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
@@ -58,12 +43,7 @@ class SchoolClass extends Model {
         return $this->query($sql, [$gradeId]);
     }
 
-    /**
-     * Get class by grade and name
-     * @param int $gradeId
-     * @param string $name
-     * @return array|null
-     */
+    // helper to find class by name + grade
     public function getByGradeAndName($gradeId, $name) {
         $sql = "SELECT c.*, g.grade_name 
                 FROM classes c 
@@ -72,22 +52,13 @@ class SchoolClass extends Model {
         return $this->queryOne($sql, [$gradeId, $name]);
     }
 
-    /**
-     * Get all grades
-     * @return array
-     */
+    // get list of all grades
     public function getGrades() {
         $sql = "SELECT * FROM grades ORDER BY grade_id";
         return $this->query($sql);
     }
 
-    /**
-     * Check if class name exists for grade
-     * @param string $name
-     * @param int $gradeId
-     * @param int|null $excludeId
-     * @return bool
-     */
+    // checks for duplicate class names
     public function nameExistsForGrade($name, $gradeId, $excludeId = null) {
         $sql = "SELECT COUNT(*) as count FROM classes 
                 WHERE class_name = ? AND grade_id = ?";
@@ -102,11 +73,7 @@ class SchoolClass extends Model {
         return ($result['count'] ?? 0) > 0;
     }
 
-    /**
-     * Validate class data
-     * @param array $data
-     * @return array
-     */
+    // validate class info
     public function validateClass($data) {
         return $this->validate($data, [
             'class_name' => 'required|min:1|max:2',
@@ -114,11 +81,7 @@ class SchoolClass extends Model {
         ]);
     }
 
-    /**
-     * Get class display name (e.g., "Grade 1 - Class A")
-     * @param int $classId
-     * @return string
-     */
+    // formats a nice name for the class (e.g. Grade 1 - Class A)
     public function getDisplayName($classId) {
         $class = $this->find($classId);
         if ($class) {
