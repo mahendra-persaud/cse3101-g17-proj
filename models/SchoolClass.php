@@ -7,73 +7,99 @@ require_once __DIR__ . '/Model.php';
  */
 class SchoolClass extends Model {
     protected $table = 'classes';
+    protected $primaryKey = 'class_id';
 
     /**
-     * Get sample data for testing
+     * Get allowed fields for this model
      */
-    protected function getSampleData() {
-        if (isset($_SESSION[$this->table]) && !empty($_SESSION[$this->table])) {
-            return $_SESSION[$this->table];
-        }
+    protected function getAllowedFields() {
+        return ['class_name', 'grade_id'];
+    }
 
-        return [
-            ['id' => 1, 'name' => 'Class A', 'grade' => '1', 'teacher_id' => 2, 'teacher_name' => 'Ms. Johnson', 'room' => '101', 'capacity' => 30, 'current_students' => 26],
-            ['id' => 2, 'name' => 'Class B', 'grade' => '1', 'teacher_id' => 3, 'teacher_name' => 'Mr. Williams', 'room' => '102', 'capacity' => 30, 'current_students' => 26],
-            ['id' => 3, 'name' => 'Class A', 'grade' => '2', 'teacher_id' => 4, 'teacher_name' => 'Mrs. Brown', 'room' => '201', 'capacity' => 30, 'current_students' => 24],
-            ['id' => 4, 'name' => 'Class B', 'grade' => '2', 'teacher_id' => 5, 'teacher_name' => 'Ms. Davis', 'room' => '202', 'capacity' => 30, 'current_students' => 24],
-            ['id' => 5, 'name' => 'Class A', 'grade' => '3', 'teacher_id' => 6, 'teacher_name' => 'Mr. Miller', 'room' => '301', 'capacity' => 30, 'current_students' => 27],
-            ['id' => 6, 'name' => 'Class B', 'grade' => '3', 'teacher_id' => 7, 'teacher_name' => 'Mrs. Wilson', 'room' => '302', 'capacity' => 30, 'current_students' => 28],
-        ];
+    /**
+     * Get all classes with grade information and student count
+     * @return array
+     */
+    public function getAll() {
+        $sql = "SELECT c.*, g.grade_name,
+                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
+                FROM classes c 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                ORDER BY g.grade_id, c.class_name";
+        return $this->query($sql);
+    }
+
+    /**
+     * Find class by ID with grade info
+     * @param int $id
+     * @return array|null
+     */
+    public function find($id) {
+        $sql = "SELECT c.*, g.grade_name,
+                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
+                FROM classes c 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE c.class_id = ?";
+        return $this->queryOne($sql, [$id]);
     }
 
     /**
      * Get classes by grade
-     * @param string $grade
+     * @param int $gradeId
      * @return array
      */
-    public function getByGrade($grade) {
-        return $this->findBy('grade', $grade);
-    }
-
-    /**
-     * Get classes by teacher
-     * @param int $teacherId
-     * @return array
-     */
-    public function getByTeacher($teacherId) {
-        return $this->findBy('teacher_id', $teacherId);
-    }
-
-    /**
-     * Check if class has available capacity
-     * @param int $classId
-     * @return bool
-     */
-    public function hasCapacity($classId) {
-        $class = $this->find($classId);
-        if (!$class) {
-            return false;
-        }
-
-        return $class['current_students'] < $class['capacity'];
+    public function getByGrade($gradeId) {
+        $sql = "SELECT c.*, g.grade_name,
+                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
+                FROM classes c 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE c.grade_id = ? 
+                ORDER BY c.class_name";
+        return $this->query($sql, [$gradeId]);
     }
 
     /**
      * Get class by grade and name
-     * @param string $grade
+     * @param int $gradeId
      * @param string $name
      * @return array|null
      */
-    public function getByGradeAndName($grade, $name) {
-        $classes = $this->getAll();
+    public function getByGradeAndName($gradeId, $name) {
+        $sql = "SELECT c.*, g.grade_name 
+                FROM classes c 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE c.grade_id = ? AND c.class_name = ?";
+        return $this->queryOne($sql, [$gradeId, $name]);
+    }
 
-        foreach ($classes as $class) {
-            if ($class['grade'] === $grade && $class['name'] === $name) {
-                return $class;
-            }
+    /**
+     * Get all grades
+     * @return array
+     */
+    public function getGrades() {
+        $sql = "SELECT * FROM grades ORDER BY grade_id";
+        return $this->query($sql);
+    }
+
+    /**
+     * Check if class name exists for grade
+     * @param string $name
+     * @param int $gradeId
+     * @param int|null $excludeId
+     * @return bool
+     */
+    public function nameExistsForGrade($name, $gradeId, $excludeId = null) {
+        $sql = "SELECT COUNT(*) as count FROM classes 
+                WHERE class_name = ? AND grade_id = ?";
+        $params = [$name, $gradeId];
+        
+        if ($excludeId !== null) {
+            $sql .= " AND class_id != ?";
+            $params[] = $excludeId;
         }
-
-        return null;
+        
+        $result = $this->queryOne($sql, $params);
+        return ($result['count'] ?? 0) > 0;
     }
 
     /**
@@ -83,11 +109,21 @@ class SchoolClass extends Model {
      */
     public function validateClass($data) {
         return $this->validate($data, [
-            'name' => 'required|min:3|max:50',
-            'grade' => 'required',
-            'teacher_id' => 'required|numeric',
-            'room' => 'required',
-            'capacity' => 'required|numeric'
+            'class_name' => 'required|min:1|max:2',
+            'grade_id' => 'required|numeric'
         ]);
+    }
+
+    /**
+     * Get class display name (e.g., "Grade 1 - Class A")
+     * @param int $classId
+     * @return string
+     */
+    public function getDisplayName($classId) {
+        $class = $this->find($classId);
+        if ($class) {
+            return $class['grade_name'] . ' - Class ' . $class['class_name'];
+        }
+        return '';
     }
 }

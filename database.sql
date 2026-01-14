@@ -120,12 +120,17 @@ CREATE TABLE IF NOT EXISTS teacher_subjects (
 ) ENGINE=InnoDB;
 
 -- ===================== SCORES =====================
+-- Includes audit columns for tracking who modified scores
 CREATE TABLE IF NOT EXISTS scores (
     score_id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     subject_id INT NOT NULL,
     term_id INT NOT NULL,
     score INT NOT NULL CHECK (score BETWEEN 0 AND 100),
+    created_by INT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_by INT NULL,
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE (student_id, subject_id, term_id),
     CONSTRAINT fk_scores_student
         FOREIGN KEY (student_id) REFERENCES students(student_id)
@@ -135,8 +140,18 @@ CREATE TABLE IF NOT EXISTS scores (
         ON DELETE CASCADE,
     CONSTRAINT fk_scores_term
         FOREIGN KEY (term_id) REFERENCES terms(term_id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT fk_scores_created_by
+        FOREIGN KEY (created_by) REFERENCES users(user_id)
+        ON DELETE SET NULL,
+    CONSTRAINT fk_scores_modified_by
+        FOREIGN KEY (modified_by) REFERENCES users(user_id)
+        ON DELETE SET NULL
 ) ENGINE=InnoDB;
+
+-- Create index for faster audit queries
+CREATE INDEX idx_scores_modified_by ON scores(modified_by);
+CREATE INDEX idx_scores_modified_at ON scores(modified_at);
 
 -- ===================== STUDENT ENROLLMENTS =====================
 CREATE TABLE IF NOT EXISTS student_enrollments (

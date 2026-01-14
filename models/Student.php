@@ -7,59 +7,83 @@ require_once __DIR__ . '/Model.php';
  */
 class Student extends Model {
     protected $table = 'students';
+    protected $primaryKey = 'student_id';
 
     /**
-     * Get sample data for testing
+     * Get allowed fields for this model
      */
-    protected function getSampleData() {
-        if (isset($_SESSION[$this->table]) && !empty($_SESSION[$this->table])) {
-            return $_SESSION[$this->table];
-        }
+    protected function getAllowedFields() {
+        return ['first_name', 'last_name', 'class_id'];
+    }
 
-        return [
-            ['id' => 1, 'reg_number' => 'ST2023001', 'name' => 'Olivia Parker', 'grade' => '4', 'class' => 'Class A', 'email' => 'olivia.parker@example.com', 'phone' => '592-123-4567', 'dob' => '2012-05-15', 'gender' => 'Female', 'address' => '123 Main St, Georgetown'],
-            ['id' => 2, 'reg_number' => 'ST2023002', 'name' => 'Liam Johnson', 'grade' => '5', 'class' => 'Class B', 'email' => 'liam.johnson@example.com', 'phone' => '592-234-5678', 'dob' => '2011-08-22', 'gender' => 'Male', 'address' => '456 Church St, Georgetown'],
-            ['id' => 3, 'reg_number' => 'ST2023003', 'name' => 'Ava Williams', 'grade' => '6', 'class' => 'Class A', 'email' => 'ava.williams@example.com', 'phone' => '592-345-6789', 'dob' => '2010-11-10', 'gender' => 'Female', 'address' => '789 Water St, Georgetown'],
-            ['id' => 4, 'reg_number' => 'ST2023004', 'name' => 'Noah Brown', 'grade' => '3', 'class' => 'Class C', 'email' => 'noah.brown@example.com', 'phone' => '592-456-7890', 'dob' => '2013-03-18', 'gender' => 'Male', 'address' => '321 High St, Georgetown'],
-            ['id' => 5, 'reg_number' => 'ST2023005', 'name' => 'Emma Davis', 'grade' => '4', 'class' => 'Class B', 'email' => 'emma.davis@example.com', 'phone' => '592-567-8901', 'dob' => '2012-07-25', 'gender' => 'Female', 'address' => '654 Market St, Georgetown'],
-        ];
+    /**
+     * Get all students with class and grade information
+     * @return array
+     */
+    public function getAll() {
+        $sql = "SELECT s.*, c.class_name, g.grade_name, g.grade_id,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+                FROM students s 
+                JOIN classes c ON s.class_id = c.class_id 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                ORDER BY g.grade_id, c.class_name, s.last_name, s.first_name";
+        return $this->query($sql);
+    }
+
+    /**
+     * Find student by ID with class and grade info
+     * @param int $id
+     * @return array|null
+     */
+    public function find($id) {
+        $sql = "SELECT s.*, c.class_name, g.grade_name, g.grade_id,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+                FROM students s 
+                JOIN classes c ON s.class_id = c.class_id 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE s.student_id = ?";
+        return $this->queryOne($sql, [$id]);
     }
 
     /**
      * Get students by grade
-     * @param string $grade
+     * @param int $gradeId
      * @return array
      */
-    public function getByGrade($grade) {
-        return $this->findBy('grade', $grade);
+    public function getByGrade($gradeId) {
+        $sql = "SELECT s.*, c.class_name, g.grade_name,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+                FROM students s 
+                JOIN classes c ON s.class_id = c.class_id 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE g.grade_id = ? 
+                ORDER BY c.class_name, s.last_name, s.first_name";
+        return $this->query($sql, [$gradeId]);
     }
 
     /**
      * Get students by class
-     * @param string $class
+     * @param int $classId
      * @return array
      */
-    public function getByClass($class) {
-        return $this->findBy('class', $class);
+    public function getByClass($classId) {
+        $sql = "SELECT s.*, c.class_name, g.grade_name,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+                FROM students s 
+                JOIN classes c ON s.class_id = c.class_id 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE s.class_id = ? 
+                ORDER BY s.last_name, s.first_name";
+        return $this->query($sql, [$classId]);
     }
 
     /**
-     * Get students by grade and class
-     * @param string $grade
-     * @param string $class
-     * @return array
+     * Get students count by class
+     * @param int $classId
+     * @return int
      */
-    public function getByGradeAndClass($grade, $class) {
-        $students = $this->getAll();
-        $filtered = [];
-
-        foreach ($students as $student) {
-            if ($student['grade'] === $grade && $student['class'] === $class) {
-                $filtered[] = $student;
-            }
-        }
-
-        return $filtered;
+    public function countByClass($classId) {
+        return $this->count('class_id', $classId);
     }
 
     /**
@@ -69,54 +93,26 @@ class Student extends Model {
      */
     public function validateStudent($data) {
         return $this->validate($data, [
-            'reg_number' => 'required|min:5|max:20',
-            'name' => 'required|min:3|max:100',
-            'grade' => 'required',
-            'class' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'dob' => 'required',
-            'gender' => 'required'
+            'first_name' => 'required|min:2|max:50',
+            'last_name' => 'required|min:2|max:50',
+            'class_id' => 'required|numeric'
         ]);
     }
 
     /**
-     * Check if registration number already exists
-     * @param string $regNumber
-     * @param int|null $excludeId
-     * @return bool
+     * Search students by name
+     * @param string $search
+     * @return array
      */
-    public function regNumberExists($regNumber, $excludeId = null) {
-        $students = $this->getAll();
-
-        foreach ($students as $student) {
-            if ($student['reg_number'] === $regNumber && $student['id'] != $excludeId) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Generate next registration number
-     * @return string
-     */
-    public function generateRegNumber() {
-        $students = $this->getAll();
-        $year = date('Y');
-        $maxNumber = 0;
-
-        foreach ($students as $student) {
-            if (preg_match('/ST' . $year . '(\d{3})/', $student['reg_number'], $matches)) {
-                $number = (int)$matches[1];
-                if ($number > $maxNumber) {
-                    $maxNumber = $number;
-                }
-            }
-        }
-
-        $nextNumber = $maxNumber + 1;
-        return 'ST' . $year . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+    public function search($search) {
+        $sql = "SELECT s.*, c.class_name, g.grade_name,
+                CONCAT(s.first_name, ' ', s.last_name) as full_name
+                FROM students s 
+                JOIN classes c ON s.class_id = c.class_id 
+                JOIN grades g ON c.grade_id = g.grade_id 
+                WHERE s.first_name LIKE ? OR s.last_name LIKE ? 
+                ORDER BY s.last_name, s.first_name";
+        $searchTerm = "%{$search}%";
+        return $this->query($sql, [$searchTerm, $searchTerm]);
     }
 }

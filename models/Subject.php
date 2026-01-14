@@ -7,48 +7,52 @@ require_once __DIR__ . '/Model.php';
  */
 class Subject extends Model {
     protected $table = 'subjects';
+    protected $primaryKey = 'subject_id';
 
     /**
-     * Get sample data for testing (will be replaced with database queries)
+     * Get allowed fields for this model
      */
-    protected function getSampleData() {
-        // Check if session data exists first
-        if (isset($_SESSION[$this->table]) && !empty($_SESSION[$this->table])) {
-            return $_SESSION[$this->table];
-        }
-
-        // Return default sample data
-        return [
-            ['id' => 1, 'code' => 'MATH', 'name' => 'Mathematics', 'grade' => 'All Grades', 'description' => 'Core mathematics curriculum'],
-            ['id' => 2, 'code' => 'ENG', 'name' => 'English Language', 'grade' => 'All Grades', 'description' => 'Reading, writing, grammar and comprehension'],
-            ['id' => 3, 'code' => 'SCI', 'name' => 'Science', 'grade' => 'All Grades', 'description' => 'General science and scientific inquiry'],
-            ['id' => 4, 'code' => 'SOC', 'name' => 'Social Studies', 'grade' => 'All Grades', 'description' => 'History, geography, and civics'],
-            ['id' => 5, 'code' => 'HFLE', 'name' => 'Health and Family Life Education', 'grade' => 'All Grades', 'description' => 'Health, wellness, and life skills'],
-            ['id' => 6, 'code' => 'PE', 'name' => 'Physical Education', 'grade' => 'All Grades', 'description' => 'Sports, fitness, and physical activities'],
-            ['id' => 7, 'code' => 'MUS', 'name' => 'Music', 'grade' => 'All Grades', 'description' => 'Music theory and practice'],
-            ['id' => 8, 'code' => 'ART', 'name' => 'Arts and Crafts', 'grade' => 'All Grades', 'description' => 'Visual arts, drawing, and crafts'],
-            ['id' => 9, 'code' => 'SPAN', 'name' => 'Spanish', 'grade' => 'Grades 4-6', 'description' => 'Spanish language instruction'],
-            ['id' => 10, 'code' => 'ICT', 'name' => 'Information Technology', 'grade' => 'Grades 4-6', 'description' => 'Computer literacy and technology'],
-            ['id' => 11, 'code' => 'REL', 'name' => 'Religious Education', 'grade' => 'All Grades', 'description' => 'Moral and religious studies'],
-        ];
+    protected function getAllowedFields() {
+        return ['subject_name', 'grade_id'];
     }
 
     /**
-     * Get subjects by grade
-     * @param string $grade
+     * Get all subjects with grade information
      * @return array
      */
-    public function getByGrade($grade) {
-        $subjects = $this->getAll();
-        $filtered = [];
+    public function getAll() {
+        $sql = "SELECT s.*, g.grade_name 
+                FROM subjects s 
+                JOIN grades g ON s.grade_id = g.grade_id 
+                ORDER BY g.grade_id, s.subject_name";
+        return $this->query($sql);
+    }
 
-        foreach ($subjects as $subject) {
-            if ($subject['grade'] === 'All Grades' || $subject['grade'] === $grade) {
-                $filtered[] = $subject;
-            }
-        }
+    /**
+     * Get subjects by grade ID
+     * @param int $gradeId
+     * @return array
+     */
+    public function getByGrade($gradeId) {
+        $sql = "SELECT s.*, g.grade_name 
+                FROM subjects s 
+                JOIN grades g ON s.grade_id = g.grade_id 
+                WHERE s.grade_id = ? 
+                ORDER BY s.subject_name";
+        return $this->query($sql, [$gradeId]);
+    }
 
-        return $filtered;
+    /**
+     * Find subject by ID with grade info
+     * @param int $id
+     * @return array|null
+     */
+    public function find($id) {
+        $sql = "SELECT s.*, g.grade_name 
+                FROM subjects s 
+                JOIN grades g ON s.grade_id = g.grade_id 
+                WHERE s.subject_id = ?";
+        return $this->queryOne($sql, [$id]);
     }
 
     /**
@@ -58,28 +62,29 @@ class Subject extends Model {
      */
     public function validateSubject($data) {
         return $this->validate($data, [
-            'code' => 'required|min:2|max:10',
-            'name' => 'required|min:3|max:100',
-            'grade' => 'required',
-            'description' => 'required|min:10|max:255'
+            'subject_name' => 'required|min:3|max:50',
+            'grade_id' => 'required|numeric'
         ]);
     }
 
     /**
-     * Check if subject code already exists
-     * @param string $code
+     * Check if subject name already exists for grade
+     * @param string $name
+     * @param int $gradeId
      * @param int|null $excludeId
      * @return bool
      */
-    public function codeExists($code, $excludeId = null) {
-        $subjects = $this->getAll();
-
-        foreach ($subjects as $subject) {
-            if ($subject['code'] === $code && $subject['id'] != $excludeId) {
-                return true;
-            }
+    public function nameExistsForGrade($name, $gradeId, $excludeId = null) {
+        $sql = "SELECT COUNT(*) as count FROM subjects 
+                WHERE subject_name = ? AND grade_id = ?";
+        $params = [$name, $gradeId];
+        
+        if ($excludeId !== null) {
+            $sql .= " AND subject_id != ?";
+            $params[] = $excludeId;
         }
-
-        return false;
+        
+        $result = $this->queryOne($sql, $params);
+        return ($result['count'] ?? 0) > 0;
     }
 }

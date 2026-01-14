@@ -1,0 +1,6 @@
+# YouTube Project Demo Link
+
+Project Video Link: [REPLACE_THIS_WITH_YOUR_VIDEO_URL]
+
+---
+Note: Please ensure the video covers all functional requirements including Login, Student Management, Score Entry, and Report Generation.
