@@ -166,14 +166,15 @@ INSERT INTO roles (role_name) VALUES
 ('teacher');
 
 -- ===================== USERS =====================
--- Password for all users: 'password123' (hashed with PASSWORD_DEFAULT)
+-- Password for all users: 'password123' (hashed with bcrypt)
+-- Generated with: password_hash('password123', PASSWORD_DEFAULT)
 INSERT INTO users (username, password_hash, role_id) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1),
-('john_admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1),
-('sarah_teacher', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2),
-('mike_teacher', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2),
-('emily_teacher', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2),
-('david_teacher', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2);
+('admin', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 1),
+('john_admin', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 1),
+('sarah_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('mike_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('emily_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('david_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2);
 
 -- ===================== GRADES =====================
 INSERT INTO grades (grade_name) VALUES
@@ -193,11 +194,11 @@ INSERT INTO classes (class_name, grade_id) VALUES
 -- Grade 3
 ('A', 3), ('B', 3), ('C', 3),
 -- Grade 4
-('A', 4), ('B', 4), ('C', 4), ('D', 4),
+('A', 4), ('B', 4), ('C', 4),
 -- Grade 5
-('A', 5), ('B', 5), ('C', 5), ('D', 5),
+('A', 5), ('B', 5), ('C', 5),
 -- Grade 6
-('A', 6), ('B', 6), ('C', 6), ('D', 6);
+('A', 6), ('B', 6), ('C', 6);
 
 -- ===================== STUDENTS =====================
 INSERT INTO students (first_name, last_name, class_id) VALUES
@@ -225,24 +226,18 @@ INSERT INTO students (first_name, last_name, class_id) VALUES
 ('Gabriel', 'Rogers', 11), ('Penelope', 'Reed', 11), ('Anthony', 'Cook', 11), ('Lily', 'Morgan', 11), ('Julian', 'Bell', 11),
 -- Grade 4C
 ('Levi', 'Murphy', 12), ('Layla', 'Bailey', 12), ('Christopher', 'Rivera', 12), ('Zoey', 'Cooper', 12), ('Joshua', 'Richardson', 12),
--- Grade 4D
-('Andrew', 'Cox', 13), ('Nora', 'Howard', 13), ('Lincoln', 'Ward', 13), ('Hannah', 'Torres', 13), ('Mateo', 'Peterson', 13),
 -- Grade 5A
-('Ryan', 'Gray', 14), ('Lillian', 'Ramirez', 14), ('Jaxon', 'James', 14), ('Addison', 'Watson', 14), ('Nathan', 'Brooks', 14),
+('Ryan', 'Gray', 13), ('Lillian', 'Ramirez', 13), ('Jaxon', 'James', 13), ('Addison', 'Watson', 13), ('Nathan', 'Brooks', 13),
 -- Grade 5B
-('Aaron', 'Kelly', 15), ('Ellie', 'Sanders', 15), ('Isaiah', 'Price', 15), ('Aubrey', 'Bennett', 15), ('Thomas', 'Wood', 15),
+('Aaron', 'Kelly', 14), ('Ellie', 'Sanders', 14), ('Isaiah', 'Price', 14), ('Aubrey', 'Bennett', 14), ('Thomas', 'Wood', 14),
 -- Grade 5C
-('Charles', 'Barnes', 16), ('Brooklyn', 'Ross', 16), ('Caleb', 'Henderson', 16), ('Aria', 'Coleman', 16), ('Josiah', 'Jenkins', 16),
--- Grade 5D
-('Christian', 'Perry', 17), ('Violet', 'Powell', 17), ('Hunter', 'Long', 17), ('Savannah', 'Patterson', 17), ('Eli', 'Hughes', 17),
+('Charles', 'Barnes', 15), ('Brooklyn', 'Ross', 15), ('Caleb', 'Henderson', 15), ('Aria', 'Coleman', 15), ('Josiah', 'Jenkins', 15),
 -- Grade 6A
-('Jonathan', 'Flores', 18), ('Claire', 'Washington', 18), ('Connor', 'Butler', 18), ('Skylar', 'Simmons', 18), ('Landon', 'Foster', 18),
+('Jonathan', 'Flores', 16), ('Claire', 'Washington', 16), ('Connor', 'Butler', 16), ('Skylar', 'Simmons', 16), ('Landon', 'Foster', 16),
 -- Grade 6B
-('Adrian', 'Gonzales', 19), ('Bella', 'Bryant', 19), ('Asher', 'Alexander', 19), ('Lucy', 'Russell', 19), ('Nolan', 'Griffin', 19),
+('Adrian', 'Gonzales', 17), ('Bella', 'Bryant', 17), ('Asher', 'Alexander', 17), ('Lucy', 'Russell', 17), ('Nolan', 'Griffin', 17),
 -- Grade 6C
-('Cameron', 'Diaz', 20), ('Paisley', 'Hayes', 20), ('Ezra', 'Myers', 20), ('Aaliyah', 'Ford', 20), ('Colton', 'Hamilton', 20),
--- Grade 6D
-('Bentley', 'Graham', 21), ('Sadie', 'Sullivan', 21), ('Jason', 'Wallace', 21), ('Kennedy', 'Woods', 21), ('Jordan', 'Cole', 21);
+('Cameron', 'Diaz', 18), ('Paisley', 'Hayes', 18), ('Ezra', 'Myers', 18), ('Aaliyah', 'Ford', 18), ('Colton', 'Hamilton', 18);
 
 -- ===================== SCHOOL YEARS =====================
 INSERT INTO school_years (year_name) VALUES
@@ -325,17 +320,17 @@ INSERT INTO scores (student_id, subject_id, term_id, score) VALUES
 (49, 19, 5, 87), (49, 20, 5, 89), (49, 21, 5, 86), (49, 22, 5, 88),
 (50, 19, 5, 92), (50, 20, 5, 94), (50, 21, 5, 91), (50, 22, 5, 93),
 -- Grade 5A students
-(61, 28, 5, 85), (61, 29, 5, 87), (61, 30, 5, 90), (61, 31, 5, 86),
-(62, 28, 5, 91), (62, 29, 5, 89), (62, 30, 5, 93), (62, 31, 5, 92),
-(63, 28, 5, 78), (63, 29, 5, 81), (63, 30, 5, 79), (63, 31, 5, 83),
-(64, 28, 5, 88), (64, 29, 5, 91), (64, 30, 5, 87), (64, 31, 5, 89),
-(65, 28, 5, 94), (65, 29, 5, 92), (65, 30, 5, 95), (65, 31, 5, 93),
+(56, 28, 5, 85), (56, 29, 5, 87), (56, 30, 5, 90), (56, 31, 5, 86),
+(57, 28, 5, 91), (57, 29, 5, 89), (57, 30, 5, 93), (57, 31, 5, 92),
+(58, 28, 5, 78), (58, 29, 5, 81), (58, 30, 5, 79), (58, 31, 5, 83),
+(59, 28, 5, 88), (59, 29, 5, 91), (59, 30, 5, 87), (59, 31, 5, 89),
+(60, 28, 5, 94), (60, 29, 5, 92), (60, 30, 5, 95), (60, 31, 5, 93),
 -- Grade 6A students
-(76, 37, 5, 86), (76, 38, 5, 88), (76, 39, 5, 91), (76, 40, 5, 87),
-(77, 37, 5, 92), (77, 38, 5, 90), (77, 39, 5, 94), (77, 40, 5, 93),
-(78, 37, 5, 80), (78, 38, 5, 83), (78, 39, 5, 81), (78, 40, 5, 84),
-(79, 37, 5, 89), (79, 38, 5, 92), (79, 39, 5, 88), (79, 40, 5, 90),
-(80, 37, 5, 95), (80, 38, 5, 93), (80, 39, 5, 96), (80, 40, 5, 94);
+(71, 37, 5, 86), (71, 38, 5, 88), (71, 39, 5, 91), (71, 40, 5, 87),
+(72, 37, 5, 92), (72, 38, 5, 90), (72, 39, 5, 94), (72, 40, 5, 93),
+(73, 37, 5, 80), (73, 38, 5, 83), (73, 39, 5, 81), (73, 40, 5, 84),
+(74, 37, 5, 89), (74, 38, 5, 92), (74, 39, 5, 88), (74, 40, 5, 90),
+(75, 37, 5, 95), (75, 38, 5, 93), (75, 39, 5, 96), (75, 40, 5, 94);
 
 -- ===================== STUDENT ENROLLMENTS =====================
 -- Enroll all students for 2024-2025 school year
@@ -364,24 +359,18 @@ INSERT INTO student_enrollments (student_id, class_id, school_year_id) VALUES
 (51, 11, 2), (52, 11, 2), (53, 11, 2), (54, 11, 2), (55, 11, 2),
 -- Grade 4C
 (56, 12, 2), (57, 12, 2), (58, 12, 2), (59, 12, 2), (60, 12, 2),
--- Grade 4D
-(61, 13, 2), (62, 13, 2), (63, 13, 2), (64, 13, 2), (65, 13, 2),
 -- Grade 5A
-(66, 14, 2), (67, 14, 2), (68, 14, 2), (69, 14, 2), (70, 14, 2),
+(61, 13, 2), (62, 13, 2), (63, 13, 2), (64, 13, 2), (65, 13, 2),
 -- Grade 5B
-(71, 15, 2), (72, 15, 2), (73, 15, 2), (74, 15, 2), (75, 15, 2),
+(66, 14, 2), (67, 14, 2), (68, 14, 2), (69, 14, 2), (70, 14, 2),
 -- Grade 5C
-(76, 16, 2), (77, 16, 2), (78, 16, 2), (79, 16, 2), (80, 16, 2),
--- Grade 5D
-(81, 17, 2), (82, 17, 2), (83, 17, 2), (84, 17, 2), (85, 17, 2),
+(71, 15, 2), (72, 15, 2), (73, 15, 2), (74, 15, 2), (75, 15, 2),
 -- Grade 6A
-(86, 18, 2), (87, 18, 2), (88, 18, 2), (89, 18, 2), (90, 18, 2),
+(76, 16, 2), (77, 16, 2), (78, 16, 2), (79, 16, 2), (80, 16, 2),
 -- Grade 6B
-(91, 19, 2), (92, 19, 2), (93, 19, 2), (94, 19, 2), (95, 19, 2),
+(81, 17, 2), (82, 17, 2), (83, 17, 2), (84, 17, 2), (85, 17, 2),
 -- Grade 6C
-(96, 20, 2), (97, 20, 2), (98, 20, 2), (99, 20, 2), (100, 20, 2),
--- Grade 6D
-(101, 21, 2), (102, 21, 2), (103, 21, 2), (104, 21, 2), (105, 21, 2);
+(86, 18, 2), (87, 18, 2), (88, 18, 2), (89, 18, 2), (90, 18, 2);
 
 -- =====================================================
 -- SUMMARY
@@ -396,11 +385,11 @@ INSERT INTO student_enrollments (student_id, class_id, school_year_id) VALUES
 -- - 2 roles (office_admin, teacher)
 -- - 6 users (2 admins, 4 teachers)
 -- - 6 grades (Grade 1-6)
--- - 21 classes (3-4 classes per grade)
--- - 105 students (5 students per class)
+-- - 18 classes (Grades 1-6, Classes A, B, C each)
+-- - 90 students (5 students per class)
 -- - 3 school years (2023-2024, 2024-2025, 2025-2026)
 -- - 9 terms (3 per year)
 -- - 46 subjects (distributed across grades)
 -- - 4 teachers
--- - 100+ score records (for current term)
--- - 105 student enrollments
+-- - 120 score records (for current term)
+-- - 90 student enrollments

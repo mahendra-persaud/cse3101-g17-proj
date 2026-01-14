@@ -497,6 +497,16 @@
       <h2>Welcome back</h2>
       <p class="subtitle">Log in to your account to continue</p>
 
+      <?php if (isset($_GET['error'])): ?>
+        <div style="background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+          <?php if ($_GET['error'] === 'db'): ?>
+            ⚠️ Database connection failed. Please check your database settings.
+          <?php else: ?>
+            ⚠️ Invalid username or password. Please try again.
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
+
       <form method="post" action="login.php">
         <div class="form-group">
           <label for="username">Username</label>

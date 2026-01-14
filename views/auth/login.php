@@ -22,6 +22,9 @@ if (!$pdo) {
 }
 
 try {
+    // DEBUG: Log the attempted username
+    error_log("Login attempt for username: " . $username);
+
     // Query user by username and join with roles table
     $stmt = $pdo->prepare("
         SELECT u.user_id, u.username, u.password_hash, r.role_name
@@ -32,19 +35,30 @@ try {
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password_hash'])) {
+    // DEBUG: Log if user was found
+    if (!$user) {
+        error_log("User not found in database: " . $username);
+        header('Location: loginPage.php?error=1');
+        exit;
+    }
+
+    error_log("User found: " . $user['username'] . ", Role: " . $user['role_name']);
+
+    // Verify password
+    if (password_verify($password, $user['password_hash'])) {
         // Login successful - set session variables
+        error_log("Password verified successfully for: " . $username);
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role_name'];
 
         header('Location: ' . $projectRoot . '/views/dashboard/index.php');
         exit;
+    } else {
+        error_log("Password verification failed for: " . $username);
+        header('Location: loginPage.php?error=1');
+        exit;
     }
-
-    // Login failed
-    header('Location: loginPage.php?error=1');
-    exit;
 
 } catch (PDOException $e) {
     error_log("Login error: " . $e->getMessage());
