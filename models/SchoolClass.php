@@ -89,4 +89,62 @@ class SchoolClass extends Model {
         }
         return '';
     }
+
+    // gets all subjects assigned to this specific class
+    public function getSubjects($classId) {
+        $sql = "SELECT s.* 
+                FROM subjects s 
+                JOIN class_subjects cs ON s.subject_id = cs.subject_id 
+                WHERE cs.class_id = ? 
+                ORDER BY s.subject_name";
+        return $this->query($sql, [$classId]);
+    }
+
+    // links a subject to a class
+    public function assignSubject($classId, $subjectId) {
+        $sql = "INSERT INTO class_subjects (class_id, subject_id) VALUES (?, ?)";
+        try {
+            $this->query($sql, [$classId, $subjectId]);
+            return true;
+        } catch (PDOException $e) {
+            return false; // probably already exists
+        }
+    }
+
+    // removes a subject from a class
+    public function removeSubject($classId, $subjectId) {
+        $sql = "DELETE FROM class_subjects WHERE class_id = ? AND subject_id = ?";
+        $this->query($sql, [$classId, $subjectId]);
+        return true;
+    }
+
+    // updates the list of subjects for a class
+    // deletes old ones and adds new ones
+    public function syncSubjects($classId, $subjectIds) {
+        $pdo = $this->getPDO();
+        $pdo->beginTransaction();
+
+        try {
+            // clear existing
+            $sqlDelete = "DELETE FROM class_subjects WHERE class_id = ?";
+            $stmtDelete = $pdo->prepare($sqlDelete);
+            $stmtDelete->execute([$classId]);
+
+            // add new ones
+            if (!empty($subjectIds)) {
+                $sqlInsert = "INSERT INTO class_subjects (class_id, subject_id) VALUES (?, ?)";
+                $stmtInsert = $pdo->prepare($sqlInsert);
+                
+                foreach ($subjectIds as $subjectId) {
+                    $stmtInsert->execute([$classId, $subjectId]);
+                }
+            }
+
+            $pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            return false;
+        }
+    }
 }

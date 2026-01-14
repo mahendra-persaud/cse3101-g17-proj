@@ -10,6 +10,13 @@ abstract class Model {
     protected $primaryKey = 'id';
     protected static $pdo = null;
 
+    // constructor
+    public function __construct($pdo = null) {
+        if ($pdo !== null) {
+            self::$pdo = $pdo;
+        }
+    }
+
     // connects to the database
     // hope this works
     protected function getConnection() {

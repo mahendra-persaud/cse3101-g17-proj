@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../models/SchoolClass.php';
+require_once __DIR__ . '/../../models/Subject.php';
 
 $headerPath = __DIR__ . '/includes/header.php';
 if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../../includes/header.php';
@@ -15,11 +17,10 @@ if (empty($classId)) {
 }
 
 $pdo = getDBConnection();
+$classModel = new SchoolClass($pdo); // using the model now
+$subjectModel = new Subject($pdo);
 
-// get the class info
-$stmt = $pdo->prepare("SELECT * FROM classes WHERE class_id = ?");
-$stmt->execute([$classId]);
-$class = $stmt->fetch();
+$class = $classModel->find($classId);
 
 if (!$class) {
     header('Location: classManagement.php?error=Class+not+found');
@@ -27,8 +28,14 @@ if (!$class) {
 }
 
 // get grades for the select box
-$stmt = $pdo->query("SELECT grade_id, grade_name FROM grades ORDER BY grade_id");
-$grades = $stmt->fetchAll();
+$grades = $classModel->getGrades();
+
+// get potential subjects for this grade
+$availableSubjects = $subjectModel->getByGrade($class['grade_id']);
+
+// get currently assigned subjects
+$currentSubjects = $classModel->getSubjects($classId);
+$currentSubjectIds = array_column($currentSubjects, 'subject_id');
 
 $error = '';
 
@@ -53,6 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // saving changes
                 $stmt = $pdo->prepare("UPDATE classes SET class_name = ?, grade_id = ? WHERE class_id = ?");
                 $stmt->execute([$className, $gradeId, $classId]);
+
+                // update subjects
+                $selectedSubjects = $_POST['subjects'] ?? [];
+                $classModel->syncSubjects($classId, $selectedSubjects);
 
                 header('Location: classManagement.php?success=Class+updated+successfully');
                 exit;
@@ -141,6 +152,24 @@ require_once $headerPath;
                         maxlength="10"
                         style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
                     <small style="color: #6b7280; font-size: 12px;">Enter a single letter or name for the class (e.g., A, B, C)</small>
+                </div>
+
+                <!-- Subject Assignment Section -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Assigned Subjects</label>
+                    <div style="border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; max-height: 200px; overflow-y: auto; background: #fff;">
+                        <?php if (empty($availableSubjects)): ?>
+                            <p style="color: #6b7280; font-size: 14px; margin: 0;">No subjects found for this grade.</p>
+                        <?php else: ?>
+                            <?php foreach ($availableSubjects as $subject): ?>
+                                <label style="display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f3f4f6; cursor: pointer;">
+                                    <input type="checkbox" name="subjects[]" value="<?php echo $subject['subject_id']; ?>"
+                                        <?php echo in_array($subject['subject_id'], $currentSubjectIds) ? 'checked' : ''; ?>>
+                                    <span style="font-size: 14px; color: #374151;"><?php echo htmlspecialchars($subject['subject_name']); ?></span>
+                                </label>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 30px;">
