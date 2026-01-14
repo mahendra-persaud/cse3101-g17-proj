@@ -3,16 +3,12 @@ $headerPath = __DIR__ . '/../../includes/header.php';
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+require_once __DIR__ . '/../../models/School.php';
 require_once $headerPath;
 require_role(['office_admin']);
 
-// Sample school years for Guyanese primary school
-// TODO: Replace with actual database queries
-$years = [
-    ['id' => '3', 'label' => '2025-2026', 'start_date' => '2025-09-01', 'end_date' => '2026-07-15', 'status' => 'Current', 'total_students' => 320, 'total_terms' => 3],
-    ['id' => '2', 'label' => '2024-2025', 'start_date' => '2024-09-01', 'end_date' => '2025-07-15', 'status' => 'Completed', 'total_students' => 298, 'total_terms' => 3],
-    ['id' => '1', 'label' => '2023-2024', 'start_date' => '2023-09-01', 'end_date' => '2024-07-15', 'status' => 'Archived', 'total_students' => 285, 'total_terms' => 3],
-];
+$schoolModel = new School();
+$years = $schoolModel->getYears();
 ?>
 <div class="Main-Container">
     <?php require_once dirname($headerPath) . '/sidebar.php'; ?>
@@ -67,23 +63,24 @@ $years = [
                     <tbody>
                         <?php foreach ($years as $y): ?>
                             <tr>
-                                <td><strong><?php echo e($y['label']); ?></strong></td>
-                                <td><?php echo date('M d, Y', strtotime($y['start_date'])); ?></td>
-                                <td><?php echo date('M d, Y', strtotime($y['end_date'])); ?></td>
+                                <td><strong><?php echo e($y['year_name']); ?></strong></td>
+                                <td><?php echo !empty($y['start_date']) ? date('M d, Y', strtotime($y['start_date'])) : 'TBD'; ?></td>
+                                <td><?php echo !empty($y['end_date']) ? date('M d, Y', strtotime($y['end_date'])) : 'TBD'; ?></td>
                                 <td>
                                     <?php
+                                    $status = $y['status'] ?? 'Current';
                                     $badgeClass = '';
-                                    if ($y['status'] === 'Current') $badgeClass = 'badge-info';
-                                    elseif ($y['status'] === 'Completed') $badgeClass = 'badge-success';
+                                    if ($status === 'Current') $badgeClass = 'badge-info';
+                                    elseif ($status === 'Completed') $badgeClass = 'badge-success';
                                     else $badgeClass = 'badge-warning';
                                     ?>
-                                    <span class="badge <?php echo $badgeClass; ?>"><?php echo e($y['status']); ?></span>
+                                    <span class="badge <?php echo $badgeClass; ?>"><?php echo e($status); ?></span>
                                 </td>
-                                <td><?php echo e($y['total_students']); ?></td>
-                                <td><?php echo e($y['total_terms']); ?></td>
+                                <td><?php echo e($y['total_students'] ?? 0); ?></td>
+                                <td><?php echo e($y['total_terms'] ?? 0); ?></td>
                                 <td>
-                                    <a href="term_manage.php?year_id=<?php echo urlencode($y['id']); ?>" class="action-btn edit-btn">Manage Terms</a>
-                                    <a href="school_year_edit.php?id=<?php echo urlencode($y['id']); ?>" class="action-btn edit-btn">Edit</a>
+                                    <a href="term_manage.php?year_id=<?php echo urlencode($y['school_year_id']); ?>" class="action-btn edit-btn">Manage Terms</a>
+                                    <a href="school_year_edit.php?id=<?php echo urlencode($y['school_year_id']); ?>" class="action-btn edit-btn">Edit</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

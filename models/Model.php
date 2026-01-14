@@ -268,7 +268,7 @@ abstract class Model {
             $ruleList = explode('|', $rule);
 
             foreach ($ruleList as $r) {
-                if ($r === 'required' && empty($data[$field])) {
+                if ($r === 'required' && (!isset($data[$field]) || strlen((string)$data[$field]) === 0)) {
                     $errors[$field] = ucfirst($field) . ' is required';
                     break;
                 }

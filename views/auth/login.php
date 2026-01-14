@@ -1,5 +1,6 @@
 <?php
 // Login handler - uses MySQL database
+require_once dirname(dirname(__DIR__)) . '/config/app.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Include database configuration

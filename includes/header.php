@@ -1,4 +1,7 @@
 <?php
+// Global configuration
+require_once __DIR__ . '/../config/app.php';
+
 // Minimal shared header (moved to includes/)
 if (session_status() === PHP_SESSION_NONE) session_start();
 function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
@@ -8,7 +11,7 @@ function require_role(array $roles) {
         // Redirect to auth login page (project-aware)
         $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
         $root = (isset($parts[1]) ? '/' . $parts[0] : '');
-        header('Location: ' . $root . '/auth/loginPage.php');
+        header('Location: ' . $root . '/views/auth/loginPage.php');
         exit;
     }
 }

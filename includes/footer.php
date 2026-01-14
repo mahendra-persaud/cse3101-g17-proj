@@ -1,5 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+// Session handled by header or controller
 ?>
 </div> <!-- end main content wrapper -->
 <footer style="clear:both;padding:12px;border-top:1px solid #eee;margin-top:16px;text-align:center">

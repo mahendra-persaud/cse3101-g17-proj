@@ -18,13 +18,15 @@ date_default_timezone_set('America/Guyana');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Session settings
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
-
-// Session lifetime (24 hours)
-ini_set('session.gc_maxlifetime', 86400);
+// Session settings - only set if session hasn't started yet
+if (session_status() === PHP_SESSION_NONE) {
+    @ini_set('session.cookie_httponly', 1);
+    @ini_set('session.use_only_cookies', 1);
+    @ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
+    
+    // Session lifetime (24 hours)
+    @ini_set('session.gc_maxlifetime', 86400);
+}
 
 // Grades available
 define('AVAILABLE_GRADES', ['1', '2', '3', '4', '5', '6']);

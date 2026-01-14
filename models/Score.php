@@ -27,10 +27,14 @@ class Score extends Model {
                 sub.subject_name,
                 t.term_name,
                 sy.year_name,
+                g.grade_name,
+                c.class_name,
                 creator.username as created_by_username,
                 modifier.username as modified_by_username
                 FROM scores sc
                 JOIN students st ON sc.student_id = st.student_id
+                JOIN classes c ON st.class_id = c.class_id
+                JOIN grades g ON c.grade_id = g.grade_id
                 JOIN subjects sub ON sc.subject_id = sub.subject_id
                 JOIN terms t ON sc.term_id = t.term_id
                 JOIN school_years sy ON t.school_year_id = sy.school_year_id

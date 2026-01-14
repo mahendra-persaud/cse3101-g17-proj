@@ -4,6 +4,7 @@ if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../../includes/header.p
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/years.css">';
+require_once __DIR__ . '/../../models/School.php';
 require_once $headerPath;
 require_once dirname($headerPath) . '/sidebar.php';
 ?>
@@ -15,29 +16,18 @@ require_once dirname($headerPath) . '/sidebar.php';
 
     <section class="form-card">
       <h2>Add New Term</h2>
-      <form>
-        <label>Year</label>
-        <input type="text" placeholder="e.g., 2026" required>
-
-        <label>Term Name</label>
-        <input type="text" placeholder="e.g., Term 1" required>
-
-        <label>Start Date</label>
-        <input type="date" required>
-
-        <label>End Date</label>
-        <input type="date" required>
-
-        <button type="submit">Add Term</button>
-      </form>
+      <a href="term_create.php" class="create-btn" style="text-decoration: none; display: inline-block; background: #0891b2; color: white; padding: 10px 20px; border-radius: 6px; font-weight: 500;">+ Open Term Creation Form</a>
     </section>
 
     <section class="table-card">
       <h2>Years & Terms</h2>
+      <?php
+      $schoolModel = new School();
+      $terms = $schoolModel->getTermsWithYears();
+      ?>
       <table>
         <thead>
           <tr>
-            <th>Select</th>
             <th>Year</th>
             <th>Term Name</th>
             <th>Start Date</th>
@@ -46,25 +36,24 @@ require_once dirname($headerPath) . '/sidebar.php';
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>2026</td>
-            <td>Term 1</td>
-            <td>2026-01-10</td>
-            <td>2026-04-15</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-          </tr>
-          <tr>
-            <td><input type="checkbox"></td>
-            <td>2026</td>
-            <td>Term 2</td>
-            <td>2026-05-01</td>
-            <td>2026-08-15</td>
-            <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
-          </tr>
+          <?php if (empty($terms)): ?>
+            <tr><td colspan="5" style="text-align: center; padding: 20px;">No terms found.</td></tr>
+          <?php else: ?>
+            <?php foreach ($terms as $t): ?>
+              <tr>
+                <td><?php echo e($t['year_name']); ?></td>
+                <td><strong><?php echo e($t['term_name']); ?></strong></td>
+                <td><?php echo !empty($t['start_date']) ? date('M d, Y', strtotime($t['start_date'])) : 'TBD'; ?></td>
+                <td><?php echo !empty($t['end_date']) ? date('M d, Y', strtotime($t['end_date'])) : 'TBD'; ?></td>
+                <td>
+                  <a href="term_edit.php?id=<?php echo $t['term_id']; ?>">Edit</a> | 
+                  <a href="term_delete.php?id=<?php echo $t['term_id']; ?>" onclick="return confirm('Delete this term?');">Delete</a>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </tbody>
       </table>
-      <button class="delete-btn">Delete Selected</button>
     </section>
   </main>
 </body>

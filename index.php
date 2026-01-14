@@ -1,6 +1,10 @@
 <?php
 // index.php — Main entry point for the application
-session_start();
+require_once __DIR__ . '/config/app.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check if user is logged in
 if (isset($_SESSION['username']) && isset($_SESSION['role'])) {

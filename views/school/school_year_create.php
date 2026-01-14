@@ -1,21 +1,73 @@
 <?php
+/**
+ * Create School Year View
+ */
+
+require_once __DIR__ . '/../../models/School.php';
 require_once __DIR__ . '/../../includes/header.php';
 require_once __DIR__ . '/../../includes/sidebar.php';
+
 require_role(['office_admin']);
+
 $errors = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $label = trim($_POST['label'] ?? '');
-    if ($label === '') $errors[] = 'Label required.';
-    if (empty($errors)){
-        // TODO: insert school year into DB using PDO
-        header('Location: school_years_list.php'); exit;
+require_once __DIR__ . '/../../controllers/BaseController.php';
+$schoolModel = new School();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $baseController = new BaseController();
+    if (!$baseController->validateCsrf()) {
+        $errors[] = 'Invalid security token (CSRF).';
+    } else {
+        $label = trim($_POST['label'] ?? '');
+        if ($label === '') {
+            $errors[] = 'Label required.';
+        } else {
+            // Use the Model directly or create a SchoolController if needed.
+            $schoolModel->createYear(['year_name' => $label]);
+            header('Location: school_years_list.php');
+            exit;
+        }
     }
 }
 ?>
-<h2>Create School Year</h2>
-<?php if ($errors): ?><div style="color:red"><?php echo implode('<br>', array_map('htmlspecialchars',$errors)); ?></div><?php endif; ?>
-<form method="post">
-    <label>Label (e.g., 2025/2026): <input name="label" value="<?php echo htmlspecialchars($_POST['label'] ?? '',ENT_QUOTES,'UTF-8'); ?>"></label><br>
-    <button type="submit">Create</button>
-</form>
+
+<div class="Main-Container">
+    <main class="main-dashboard">
+        <div class="header">
+            <h2>School Settings</h2>
+        </div>
+
+        <nav class="breadcrumb">
+            <div class="breadcrumb-item"><a href="<?php echo $projectRoot; ?>/views/dashboard/index.php">Home</a></div>
+            <div class="breadcrumb-separator">></div>
+            <div class="breadcrumb-item"><a href="school_years_list.php">School Years</a></div>
+            <div class="breadcrumb-separator">></div>
+            <div class="breadcrumb-item"><span class="breadcrumb-current">Create Year</span></div>
+        </nav>
+
+        <h1>Create School Year</h1>
+
+        <?php if ($errors): ?>
+            <div class="alert alert-error">
+                <?php echo implode('<br>', array_map('htmlspecialchars', $errors)); ?>
+            </div>
+        <?php endif; ?>
+
+        <section class="form-card">
+            <h2>Year Information</h2>
+            <form method="post">
+                <?php echo BaseController::csrfField(); ?>
+                <div class="form-group">
+                    <label>Label (e.g., 2025/2026)</label>
+                    <input name="label" value="<?php echo e($_POST['label'] ?? ''); ?>" required placeholder="YYYY/YYYY">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Create Year</button>
+                    <a href="school_years_list.php" class="btn" style="background: #9ca3af; text-decoration: none;">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+
 <?php require __DIR__ . '/../../includes/footer.php'; ?>

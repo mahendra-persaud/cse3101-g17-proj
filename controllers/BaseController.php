@@ -4,10 +4,12 @@
  * Provides common functionality for all controllers
  */
 
-session_start();
-
 require_once __DIR__ . '/../config/app.php';
 require_once __DIR__ . '/../config/database.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class BaseController {
     
@@ -15,14 +17,14 @@ class BaseController {
      * Check if user is authenticated
      * @return bool
      */
-    protected function isAuthenticated() {
+    public function isAuthenticated() {
         return isset($_SESSION['user_id']) && isset($_SESSION['username']);
     }
 
     /**
      * Require authentication - redirect to login if not authenticated
      */
-    protected function requireAuth() {
+    public function requireAuth() {
         if (!$this->isAuthenticated()) {
             $this->redirect('/views/auth/loginPage.php');
             exit;
@@ -33,7 +35,7 @@ class BaseController {
      * Require specific role
      * @param string|array $roles
      */
-    protected function requireRole($roles) {
+    public function requireRole($roles) {
         $this->requireAuth();
         
         if (!is_array($roles)) {
@@ -85,7 +87,7 @@ class BaseController {
      * @param string $type (success, error, warning, info)
      * @param string $message
      */
-    protected function setFlash($type, $message) {
+    public static function setFlash($type, $message) {
         $_SESSION['flash'] = [
             'type' => $type,
             'message' => $message
@@ -109,7 +111,7 @@ class BaseController {
      * Redirect to a URL
      * @param string $url
      */
-    protected function redirect($url) {
+    public function redirect($url) {
         // Get project root for proper redirects
         $projectRoot = '/cse3101-g17-proj';
         
@@ -126,7 +128,7 @@ class BaseController {
      * @param mixed $data
      * @param int $statusCode
      */
-    protected function json($data, $statusCode = 200) {
+    public function json($data, $statusCode = 200) {
         http_response_code($statusCode);
         header('Content-Type: application/json');
         echo json_encode($data);
@@ -139,7 +141,7 @@ class BaseController {
      * @param mixed $default
      * @return mixed
      */
-    protected function getPost($key, $default = null) {
+    public function getPost($key, $default = null) {
         if (!isset($_POST[$key])) {
             return $default;
         }
@@ -189,7 +191,7 @@ class BaseController {
      * Check if request is POST
      * @return bool
      */
-    protected function isPost() {
+    public function isPost() {
         return $_SERVER['REQUEST_METHOD'] === 'POST';
     }
 
@@ -206,7 +208,7 @@ class BaseController {
      * Validate CSRF token
      * @return bool
      */
-    protected function validateCsrf() {
+    public function validateCsrf() {
         if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token'])) {
             return false;
         }

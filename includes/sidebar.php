@@ -56,6 +56,11 @@ function isActive($pagePatterns) {
             <span class="label">Subjects</span>
         </a>
 
+        <a href="<?php echo $projectRoot; ?>/views/scores/scores_list.php" class="<?php echo isActive(['scores/']); ?>">
+            <span class="icon icon-score-new" aria-hidden="true"></span>
+            <span class="label">Scores</span>
+        </a>
+
         <div class="sidebar-divider"></div>
 
         <a href="<?php echo $projectRoot; ?>/views/school/school_years_list.php" class="<?php echo isActive(['school_years', 'school_year', 'years_terms']); ?>">

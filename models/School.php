@@ -10,6 +10,35 @@ class School extends Model {
     
     public function __construct() {
         $this->table = 'terms'; // Default to terms
+        $this->primaryKey = 'term_id';
+    }
+
+    /**
+     * Get allowed fields based on current table
+     */
+    protected function getAllowedFields() {
+        if ($this->table === 'school_years') {
+            return ['year_name', 'start_date', 'end_date', 'status'];
+        }
+        return ['term_name', 'school_year_id', 'start_date', 'end_date', 'status'];
+    }
+
+    /**
+     * Create a new school year
+     */
+    public function createYear($data) {
+        $this->table = 'school_years';
+        $this->primaryKey = 'school_year_id';
+        return $this->create($data);
+    }
+
+    /**
+     * Create a new term
+     */
+    public function createTerm($data) {
+        $this->table = 'terms';
+        $this->primaryKey = 'term_id';
+        return $this->create($data);
     }
 
     /**

@@ -1,38 +1,110 @@
 <?php
-require_once __DIR__ . '/../../includes/header.php';
-require_once __DIR__ . '/../../includes/sidebar.php';
-require_role(['office_admin']);
-$id = isset($_GET['id'])? (int)$_GET['id'] : 0;
-if ($id <= 0) { header('Location: subjects_list.php'); exit; }
-// TODO: fetch existing subject by id using PDO
-$subject = null; // e.g. $stmt = $pdo->prepare('SELECT * FROM subjects WHERE id=?'); $stmt->execute([$id]); $subject = $stmt->fetch();
-if (!$subject) { header('Location: subjects_list.php'); exit; }
+/**
+ * Edit Subject View
+ */
+
+require_once __DIR__ . '/../../controllers/SubjectController.php';
+
+$subjectController = new SubjectController();
+$subjectController->requireRole('office_admin');
+
+$id = $_GET['id'] ?? null;
+if (!$id) {
+    header('Location: subjects_list.php');
+    exit;
+}
+
+$subject = $subjectController->show($id);
+if (!$subject) {
+    header('Location: subjects_list.php');
+    exit;
+}
+
 $errors = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $name = trim($_POST['name'] ?? '');
-    $grade = (int)($_POST['grade'] ?? 0);
-    if ($name === '') $errors[] = 'Name is required.';
-    if ($grade < 1 || $grade > 6) $errors[] = 'Invalid grade.';
-    if (empty($errors)){
-        // TODO: update DB using PDO prepared statements
-        // Example: $stmt = $pdo->prepare('UPDATE subjects SET name=?,grade=? WHERE id=?'); $stmt->execute([$name,$grade,$id]);
-        header('Location: subjects_list.php'); exit;
+$grades = $subjectController->getGrades();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = [
+        'subject_name' => $_POST['subject_name'] ?? '',
+        'grade_id' => $_POST['grade_id'] ?? ''
+    ];
+    
+    $result = $subjectController->update($id, $data);
+    if ($result['success']) {
+        header('Location: subjects_list.php');
+        exit;
+    } else {
+        $errors = $result['errors'] ?? [$result['message'] ?? 'An error occurred.'];
     }
 }
+
+$projectRoot = '/cse3101-g17-proj';
+$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+require_once __DIR__ . '/../../includes/header.php';
 ?>
-<h2>Edit Subject</h2>
-<?php if ($errors): ?>
-    <div style="color:red"><?php echo implode('<br>', array_map('htmlspecialchars',$errors)); ?></div>
-<?php endif; ?>
-<form method="post">
-    <label>Name: <input name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? $subject['name'] ?? '', ENT_QUOTES,'UTF-8'); ?>"></label><br>
-    <label>Grade: 
-        <select name="grade">
-            <?php for ($g=1;$g<=6;$g++): ?>
-                <option value="<?php echo $g; ?>" <?php echo (((int)($_POST['grade'] ?? $subject['grade'] ?? 0)) === $g)?'selected':''; ?>><?php echo $g; ?></option>
-            <?php endfor; ?>
-        </select>
-    </label><br>
-    <button type="submit">Save</button>
-</form>
-<?php require __DIR__ . '/../../includes/footer.php'; ?>
+
+<div class="Main-Container">
+    <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
+
+    <main class="main-dashboard">
+        <div class="header">
+            <h2>Subject Management</h2>
+        </div>
+
+        <nav class="breadcrumb">
+            <div class="breadcrumb-item">
+                <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="breadcrumb-link">Home</a>
+            </div>
+            <div class="breadcrumb-separator">></div>
+            <div class="breadcrumb-item">
+                <a href="subjects_list.php" class="breadcrumb-link">Subjects</a>
+            </div>
+            <div class="breadcrumb-separator">></div>
+            <div class="breadcrumb-item">
+                <span class="breadcrumb-current">Edit Subject</span>
+            </div>
+        </nav>
+
+        <h1>Edit Subject: <?php echo e($subject['subject_name']); ?></h1>
+
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-error">
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <section class="form-card">
+            <h2>Subject Details</h2>
+            <form method="POST" action="">
+                <?php echo SubjectController::csrfField(); ?>
+                
+                <div class="form-group">
+                    <label for="subject_name">Subject Name</label>
+                    <input type="text" id="subject_name" name="subject_name" value="<?php echo e($subject['subject_name']); ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="grade_id">Grade</label>
+                    <select id="grade_id" name="grade_id" required>
+                        <?php foreach ($grades as $grade): ?>
+                            <option value="<?php echo $grade['grade_id']; ?>" <?php echo ($subject['grade_id'] == $grade['grade_id']) ? 'selected' : ''; ?>>
+                                Grade <?php echo e($grade['grade_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Update Subject</button>
+                    <a href="subjects_list.php" class="btn" style="background: #9ca3af; text-decoration: none;">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

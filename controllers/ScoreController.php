@@ -60,6 +60,14 @@ class ScoreController extends BaseController {
     public function store($data) {
         $this->requireRole(['teacher', 'office_admin']);
 
+        // CSRF check
+        if (!$this->validateCsrf()) {
+            return [
+                'success' => false,
+                'message' => 'Invalid security token (CSRF).'
+            ];
+        }
+
         // Validate
         $errors = $this->scoreModel->validateScore($data);
         if (!empty($errors)) {

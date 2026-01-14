@@ -8,13 +8,11 @@ require_role(['teacher', 'office_admin']);
 
 // Sample scores data
 // TODO: Replace with actual database queries
-$scores = [
-    ['id' => '1', 'student_name' => 'John Smith', 'subject_name' => 'Mathematics', 'term' => 'Term 1', 'score' => '85', 'grade' => 'Grade 1'],
-    ['id' => '2', 'student_name' => 'Sarah Johnson', 'subject_name' => 'English Language', 'term' => 'Term 1', 'score' => '92', 'grade' => 'Grade 2'],
-    ['id' => '3', 'student_name' => 'Michael Brown', 'subject_name' => 'Science', 'term' => 'Term 2', 'score' => '78', 'grade' => 'Grade 3'],
-    ['id' => '4', 'student_name' => 'Emily Davis', 'subject_name' => 'Social Studies', 'term' => 'Term 2', 'score' => '88', 'grade' => 'Grade 4'],
-    ['id' => '5', 'student_name' => 'David Wilson', 'subject_name' => 'Mathematics', 'term' => 'Term 1', 'score' => '95', 'grade' => 'Grade 5'],
-];
+// Fetch real scores using the controller
+require_once __DIR__ . '/../../controllers/ScoreController.php';
+$scoreController = new ScoreController();
+$scores = $scoreController->index();
+$flash = ScoreController::getFlash();
 ?>
 <div class="Main-Container">
     <?php require_once dirname($headerPath) . '/sidebar.php'; ?>
@@ -25,7 +23,19 @@ $scores = [
             <h2>Scores Management</h2>
         </div>
 
-        <h1>Student Scores</h1>
+        <nav class="breadcrumb">
+            <div class="breadcrumb-item"><a href="<?php echo $projectRoot; ?>/views/dashboard/index.php">Home</a></div>
+            <div class="breadcrumb-separator">></div>
+            <div class="breadcrumb-item"><span class="breadcrumb-current">Scores</span></div>
+        </nav>
+
+        <h1>Student Academic Performance</h1>
+
+        <?php if ($flash): ?>
+            <div class="alert alert-<?php echo $flash['type']; ?>">
+                <?php echo e($flash['message']); ?>
+            </div>
+        <?php endif; ?>
 
         <section style="padding: 0 40px 24px;">
             <a href="score_create.php" class="create-btn">
@@ -47,41 +57,17 @@ $scores = [
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
                 </div>
-                <button class="voice-search-btn" title="Voice search">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                        <line x1="12" y1="19" x2="12" y2="23"></line>
-                        <line x1="8" y1="23" x2="16" y2="23"></line>
-                    </svg>
-                </button>
             </div>
 
             <div class="filter-chips-container">
-                <div class="filter-chip active" onclick="filterScores('all')">All</div>
-                <div class="filter-chip" onclick="filterScores('term-1')">Term 1</div>
-                <div class="filter-chip" onclick="filterScores('term-2')">Term 2</div>
-                <div class="filter-chip" onclick="filterScores('term-3')">Term 3</div>
-                <div class="filter-chip" onclick="filterScores('grade-1')">Grade 1</div>
-                <div class="filter-chip" onclick="filterScores('grade-2')">Grade 2</div>
-                <div class="filter-chip" onclick="filterScores('grade-3')">Grade 3</div>
-                <div class="filter-chip" onclick="filterScores('grade-4')">Grade 4</div>
-                <div class="filter-chip" onclick="filterScores('grade-5')">Grade 5</div>
-                <div class="filter-chip" onclick="filterScores('grade-6')">Grade 6</div>
-                <button class="filters-menu-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="4" y1="21" x2="4" y2="14"></line>
-                        <line x1="4" y1="10" x2="4" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12" y2="3"></line>
-                        <line x1="20" y1="21" x2="20" y2="16"></line>
-                        <line x1="20" y1="12" x2="20" y2="3"></line>
-                        <line x1="1" y1="14" x2="7" y2="14"></line>
-                        <line x1="9" y1="8" x2="15" y2="8"></line>
-                        <line x1="17" y1="16" x2="23" y2="16"></line>
-                    </svg>
-                    Filters
-                </button>
+                <div class="filter-chip active" onclick="filterScores('all')">All Terms</div>
+                <?php for ($t=1; $t<=3; $t++): ?>
+                    <div class="filter-chip" onclick="filterScores('term-<?php echo $t; ?>')">Term <?php echo $t; ?></div>
+                <?php endfor; ?>
+                <div class="filter-chip" style="margin-left: 20px;" onclick="filterScores('grade-all')">All Grades</div>
+                <?php for ($g=1; $g<=6; $g++): ?>
+                    <div class="filter-chip" onclick="filterScores('grade-<?php echo $g; ?>')">Grade <?php echo $g; ?></div>
+                <?php endfor; ?>
             </div>
         </section>
 
@@ -117,10 +103,6 @@ $scores = [
         }
 
         function filterScores(category) {
-            const chips = document.querySelectorAll('.filter-chip');
-            chips.forEach(chip => chip.classList.remove('active'));
-            event.target.classList.add('active');
-
             const table = document.querySelector('.table-card table tbody');
             const rows = table.getElementsByTagName('tr');
 
@@ -132,39 +114,20 @@ $scores = [
 
                 const term = termCell.textContent.trim();
                 const grade = gradeCell.textContent.trim();
-                let show = false;
+                let show = true;
 
-                switch(category) {
-                    case 'all':
+                if (category === 'all') {
+                    show = true;
+                } else if (category.startsWith('term-')) {
+                    const termNum = category.split('-')[1];
+                    show = term.includes(termNum);
+                } else if (category.startsWith('grade-')) {
+                    if (category === 'grade-all') {
                         show = true;
-                        break;
-                    case 'term-1':
-                        show = term === 'Term 1';
-                        break;
-                    case 'term-2':
-                        show = term === 'Term 2';
-                        break;
-                    case 'term-3':
-                        show = term === 'Term 3';
-                        break;
-                    case 'grade-1':
-                        show = grade === 'Grade 1';
-                        break;
-                    case 'grade-2':
-                        show = grade === 'Grade 2';
-                        break;
-                    case 'grade-3':
-                        show = grade === 'Grade 3';
-                        break;
-                    case 'grade-4':
-                        show = grade === 'Grade 4';
-                        break;
-                    case 'grade-5':
-                        show = grade === 'Grade 5';
-                        break;
-                    case 'grade-6':
-                        show = grade === 'Grade 6';
-                        break;
+                    } else {
+                        const gradeNum = category.split('-')[1];
+                        show = grade.includes(gradeNum);
+                    }
                 }
 
                 rows[i].style.display = show ? '' : 'none';
@@ -172,34 +135,53 @@ $scores = [
         }
         </script>
 
-        <h2 class='heading users'>All Scores</h2>
-
         <section class="table-card">
             <?php if (empty($scores)): ?>
-                <p style="text-align: center; color: #6b7280; padding: 40px;">No scores found. Add scores to get started.</p>
+                <div class="empty-state">
+                    <div class="empty-state-content" style="text-align: center; padding: 40px;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <h3 style="color: #4b5563; margin-top: 16px;">No scores recorded yet</h3>
+                        <p style="color: #6b7280;">Student academic records will appear here once entered by teachers.</p>
+                        <a href="score_create.php" class="create-btn" style="display: inline-block; margin-top: 20px;">+ Add First Score</a>
+                    </div>
+                </div>
             <?php else: ?>
                 <table>
                     <thead>
                         <tr>
                             <th>Student Name</th>
                             <th>Subject</th>
-                            <th>Term</th>
+                            <th>Term / Year</th>
                             <th>Score</th>
-                            <th>Grade</th>
+                            <th>Grade Level</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($scores as $s): ?>
                         <tr>
-                            <td><?php echo e($s['student_name']); ?></td>
+                            <td><strong><?php echo e($s['student_name']); ?></strong></td>
                             <td><?php echo e($s['subject_name']); ?></td>
-                            <td><?php echo e($s['term']); ?></td>
-                            <td><strong><?php echo e($s['score']); ?></strong></td>
-                            <td><?php echo e($s['grade']); ?></td>
                             <td>
-                                <a href="score_edit.php?id=<?php echo urlencode($s['id']); ?>" class="action-btn edit-btn">Edit</a>
-                                <a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this score?');">Delete</a>
+                                <div style="font-size: 0.9em;"><?php echo e($s['term_name']); ?></div>
+                                <div style="font-size: 0.8em; color: #6b7280;"><?php echo e($s['year_name']); ?></div>
+                            </td>
+                            <td>
+                                <span class="score-value" style="font-weight: 600; font-size: 1.1em;">
+                                    <?php echo e($s['score']); ?>%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">Grade <?php echo e($s['grade_name']); ?></span>
+                            </td>
+                            <td>
+                                <a href="score_edit.php?id=<?php echo urlencode($s['score_id']); ?>" class="action-btn edit-btn">Edit</a>
+                                <a href="<?php echo $projectRoot; ?>/controllers/ScoreController.php?action=delete&id=<?php echo $s['score_id']; ?>" 
+                                   class="action-btn delete-btn" 
+                                   onclick="return confirm('Are you sure you want to delete this score?');">Delete</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
