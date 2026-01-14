@@ -1,5 +1,5 @@
 <?php
-// Session handled by header or controller
+// session stuff IS handled by header... hopefully
 ?>
 </div> <!-- end main content wrapper -->
 <footer style="clear:both;padding:12px;border-top:1px solid #eee;margin-top:16px;text-align:center">

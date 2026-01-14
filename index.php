@@ -1,17 +1,18 @@
 <?php
-// index.php — Main entry point for the application
+// main entry point file
 require_once __DIR__ . '/config/app.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Check if user is logged in
+// seeing if user is logged in
 if (isset($_SESSION['username']) && isset($_SESSION['role'])) {
-    // User is logged in, redirect to dashboard
+    // user logged in? dashboard time
     header('Location: views/dashboard/index.php');
 } else {
-    // User not logged in, redirect to login page
+    // nope, go to login
+    
     header('Location: views/auth/loginPage.php');
 }
 exit;

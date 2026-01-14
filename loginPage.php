@@ -1,4 +1,4 @@
 <?php
-// loginPage.php — Compatibility redirect to new MVC location
+// just a redirect to the real login page
 header('Location: views/auth/loginPage.php');
 exit;

@@ -1,4 +1,4 @@
 <?php
-// dashboard.php — Compatibility redirect to new MVC location
+// just a redirect to the real dashboard
 header('Location: views/dashboard/index.php');
 exit;
