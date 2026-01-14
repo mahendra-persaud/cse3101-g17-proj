@@ -25,27 +25,28 @@
     gap: 12px;
 }
 
-.sidebar-header::before {
-    content: 'S';
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #06b6d4, #0891b2);
-    border-radius: 8px;
+.sidebar-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.sidebar-header .header-text {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 700;
-    font-size: 20px;
+    flex-direction: column;
 }
 
 .sidebar-header h2 {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 18px;
+    color: #111827;
     margin: 0;
     letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #0891b2, #0e7490);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .sidebar-header p {
@@ -102,16 +103,19 @@
 
 /* Icon Styling */
 .sidebar .icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    flex: 0 0 20px;
+    flex: 0 0 24px;
     opacity: 1;
     transition: all 0.2s ease;
-    /* Make icons visible with a default teal color */
+}
+
+/* Default filter for SVG icons only */
+.sidebar .icon:not([class*="-new"]) {
     filter: brightness(0) saturate(100%) invert(52%) sepia(85%) saturate(1217%) hue-rotate(156deg) brightness(92%) contrast(91%);
 }
 
@@ -127,49 +131,50 @@
 }
 
 /* Icon Colors */
-.sidebar a:hover .icon {
+/* Icon Colors */
+.sidebar a:hover .icon:not([class*="-new"]) {
     filter: brightness(0) saturate(100%) invert(52%) sepia(85%) saturate(1217%) hue-rotate(156deg) brightness(92%) contrast(91%);
 }
 
-.sidebar a.active .icon {
+.sidebar a.active .icon:not([class*="-new"]) {
     filter: brightness(0) saturate(100%) invert(52%) sepia(85%) saturate(1217%) hue-rotate(156deg) brightness(92%) contrast(91%);
 }
 
 /* Icon Images */
-.icon-dashboard {
-    background-image: url('../icons/dashboard.svg');
+.icon-dashboard-new {
+    background-image: url('../img/dashboard_new.png');
 }
 
-.icon-users {
-    background-image: url('../icons/users.svg');
+.icon-users-new {
+    background-image: url('../img/users_new.png');
 }
 
-.icon-students {
-    background-image: url('../icons/students.svg');
+.icon-students-new {
+    background-image: url('../img/students_new.png');
 }
 
-.icon-classes {
-    background-image: url('../icons/classes.svg');
+.icon-classes-new {
+    background-image: url('../img/classes_new.png');
 }
 
-.icon-subjects {
-    background-image: url('../icons/subjects.svg');
+.icon-subjects-new {
+    background-image: url('../img/subjects_new.png');
 }
 
-.icon-years {
-    background-image: url('../icons/years.svg');
+.icon-years-new {
+    background-image: url('../img/years_new.png');
 }
 
-.icon-terms {
-    background-image: url('../icons/terms.svg');
+.icon-terms-new {
+    background-image: url('../img/terms_new.png');
 }
 
-.icon-score {
-    background-image: url('../icons/score.svg');
+.icon-score-new {
+    background-image: url('../img/scores_new.png');
 }
 
-.icon-reports {
-    background-image: url('../icons/reports.svg');
+.icon-reports-new {
+    background-image: url('../img/reports_new.png');
 }
 
 .icon-logout {

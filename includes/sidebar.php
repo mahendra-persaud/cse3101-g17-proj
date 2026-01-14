@@ -21,47 +21,50 @@ function isActive($pagePatterns) {
 <div class="sidebar">
     <!-- Sidebar Header -->
     <div class="sidebar-header">
-        <h2>SMS</h2>
-        <p>School Management</p>
+        <img src="<?php echo $projectRoot; ?>/public/assets/img/logo.png" alt="SMS Logo" class="sidebar-logo">
+        <div class="header-text">
+            <h2>SchoolStream</h2>
+            <p>School Management</p>
+        </div>
     </div>
 
     <?php if ($role === 'office_admin'): ?>
         <div class="sidebar-role-badge">Administrator</div>
 
         <a href="<?php echo $projectRoot; ?>/views/dashboard/index.php" class="<?php echo isActive(['dashboard', 'index.php']); ?>">
-            <span class="icon icon-dashboard" aria-hidden="true"></span>
+            <span class="icon icon-dashboard-new" aria-hidden="true"></span>
             <span class="label">Dashboard</span>
         </a>
 
         <a href="<?php echo $projectRoot; ?>/views/users/userManagement.php" class="<?php echo isActive(['users/', 'userManagement', 'userPage', 'userProfile']); ?>">
-            <span class="icon icon-users" aria-hidden="true"></span>
+            <span class="icon icon-users-new" aria-hidden="true"></span>
             <span class="label">Users</span>
         </a>
 
         <a href="<?php echo $projectRoot; ?>/views/students/studentManagement.php" class="<?php echo isActive(['students/', 'studentManagement', 'studentPage', 'studentProfile']); ?>">
-            <span class="icon icon-students" aria-hidden="true"></span>
+            <span class="icon icon-students-new" aria-hidden="true"></span>
             <span class="label">Students</span>
         </a>
 
         <a href="<?php echo $projectRoot; ?>/views/classes/classManagement.php" class="<?php echo isActive(['classes/', 'classManagement', 'classPage']); ?>">
-            <span class="icon icon-classes" aria-hidden="true"></span>
+            <span class="icon icon-classes-new" aria-hidden="true"></span>
             <span class="label">Classes</span>
         </a>
 
         <a href="<?php echo $projectRoot; ?>/views/subjects/subjects_list.php" class="<?php echo isActive(['subjects/', 'subject']); ?>">
-            <span class="icon icon-subjects" aria-hidden="true"></span>
+            <span class="icon icon-subjects-new" aria-hidden="true"></span>
             <span class="label">Subjects</span>
         </a>
 
         <div class="sidebar-divider"></div>
 
         <a href="<?php echo $projectRoot; ?>/views/school/school_years_list.php" class="<?php echo isActive(['school_years', 'school_year', 'years_terms']); ?>">
-            <span class="icon icon-years" aria-hidden="true"></span>
+            <span class="icon icon-years-new" aria-hidden="true"></span>
             <span class="label">School Years</span>
         </a>
 
         <a href="<?php echo $projectRoot; ?>/views/school/term_manage.php" class="<?php echo isActive(['term_manage', 'term_create', 'terms.php']); ?>">
-            <span class="icon icon-terms" aria-hidden="true"></span>
+            <span class="icon icon-terms-new" aria-hidden="true"></span>
             <span class="label">Terms</span>
         </a>
 
@@ -71,12 +74,12 @@ function isActive($pagePatterns) {
         <div class="sidebar-role-badge">Teacher</div>
 
         <a href="<?php echo $projectRoot; ?>/views/scores/scores_entry.php" class="<?php echo isActive(['scores_entry', 'score.php']); ?>">
-            <span class="icon icon-score" aria-hidden="true"></span>
+            <span class="icon icon-score-new" aria-hidden="true"></span>
             <span class="label">Enter Scores</span>
         </a>
 
         <a href="<?php echo $projectRoot; ?>/views/scores/scores_list.php" class="<?php echo isActive('scores_list'); ?>">
-            <span class="icon icon-score" aria-hidden="true"></span>
+            <span class="icon icon-score-new" aria-hidden="true"></span>
             <span class="label">View Scores</span>
         </a>
     <?php endif; ?>
@@ -84,7 +87,7 @@ function isActive($pagePatterns) {
     <div class="sidebar-divider"></div>
 
     <a href="<?php echo $projectRoot; ?>/views/reports/report_student_card.php" class="<?php echo isActive(['reports/', 'report_']); ?>">
-        <span class="icon icon-reports" aria-hidden="true"></span>
+        <span class="icon icon-reports-new" aria-hidden="true"></span>
         <span class="label">Reports</span>
     </a>
 

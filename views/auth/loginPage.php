@@ -32,40 +32,43 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 800;
       color: #1a1a1a;
+      letter-spacing: -0.5px;
     }
 
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, #06b6d4, #0891b2);
-      border-radius: 6px;
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logo span {
+      background: linear-gradient(135deg, #0891b2, #0e7490);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-tagline {
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 40px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: #6b7280;
-      font-size: 15px;
+      color: #9ca3af;
+      font-size: 14px;
       font-weight: 500;
-      transition: color 0.2s;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-style: italic;
     }
 
-    .nav-links a:hover {
+    .nav-tagline span::before,
+    .nav-tagline span::after {
+      content: '•';
+      margin: 0 10px;
       color: #0891b2;
+      font-style: normal;
     }
 
     .nav-buttons {
@@ -111,53 +114,11 @@
       transform: translateY(-1px);
     }
 
-    /* Hero Section */
-    .hero-section {
-      text-align: center;
-      padding: 80px 60px 60px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .hero-title {
-      font-size: 56px;
-      font-weight: 700;
-      line-height: 1.2;
-      color: #1a1a1a;
-      margin-bottom: 16px;
-    }
-
-    .hero-brand {
-      color: #0891b2;
-    }
-
-    .hero-subtitle {
-      font-size: 18px;
-      color: #6b7280;
-      max-width: 700px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin-bottom: 60px;
-    }
-
-    .btn-large {
-      padding: 14px 32px;
-      font-size: 16px;
-      border-radius: 10px;
-      font-weight: 600;
-    }
-
     /* Main Content - Login Section */
     .main-content {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 40px 60px 80px;
+      padding: 80px 60px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 80px;
@@ -166,7 +127,7 @@
 
     /* Left Side - Benefits */
     .benefits-section {
-      padding-top: 40px;
+      /* No additional padding needed */
     }
 
     .benefits-section h2 {
@@ -397,16 +358,8 @@
         padding: 20px 30px;
       }
 
-      .nav-links {
+      .nav-tagline {
         display: none;
-      }
-
-      .hero-section {
-        padding: 60px 30px 40px;
-      }
-
-      .hero-title {
-        font-size: 36px;
       }
 
       .main-content {
@@ -423,13 +376,11 @@
   <!-- Navigation -->
   <nav class="navbar">
     <div class="logo">
-      <div class="logo-icon">S</div>
-      <span>SMS</span>
+      <img src="<?php echo $projectRoot; ?>/public/assets/img/logo.png" alt="Logo" class="logo-img">
+      <span>SchoolStream</span>
     </div>
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#features">Features</a>
-      <a href="#contact">Contact</a>
+    <div class="nav-tagline">
+      <span>Academic Excellence through Innovation</span>
     </div>
     <div class="nav-buttons">
       <a href="<?php echo $projectRoot; ?>/views/auth/register.php" class="btn-secondary">Sign Up</a>
@@ -437,24 +388,8 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
-    <h1 class="hero-title">
-      Revolutionizing School Activities &<br>
-      Management with <span class="hero-brand">SMS</span>
-    </h1>
-    <p class="hero-subtitle">
-      The ultimate school management solution designed to streamline your institution's operations,
-      managing students, teachers, classes, and academic performance efficiently.
-    </p>
-    <div class="hero-buttons">
-      <a href="#login" class="btn-primary btn-large">Get Started</a>
-      <a href="#features" class="btn-secondary btn-large">Learn More</a>
-    </div>
-  </section>
-
   <!-- Main Content - Login -->
-  <main class="main-content" id="login">
+  <main class="main-content">
     <!-- Left Side - Benefits -->
     <div class="benefits-section">
       <h2>Start managing your school efficiently today</h2>
