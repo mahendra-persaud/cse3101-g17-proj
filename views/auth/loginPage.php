@@ -243,6 +243,7 @@
       margin-bottom: 8px;
     }
 
+    .form-group input[type="text"],
     .form-group input[type="email"],
     .form-group input[type="password"] {
       width: 100%;
@@ -498,8 +499,8 @@
 
       <form method="post" action="login.php">
         <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Enter your username" required>
         </div>
 
         <div class="form-group">

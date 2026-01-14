@@ -8,7 +8,7 @@
 
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'school_management');
+define('DB_NAME', 'School_Management');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');

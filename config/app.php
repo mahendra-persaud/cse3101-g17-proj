@@ -6,7 +6,7 @@
  */
 
 // Application name
-define('APP_NAME', 'St. Joseph Primary School Management System');
+define('APP_NAME', 'School Management System');
 
 // Application version
 define('APP_VERSION', '1.0.0');

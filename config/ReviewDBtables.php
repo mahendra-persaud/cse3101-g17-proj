@@ -190,7 +190,7 @@ try{
         PRIMARY KEY (teacher_id, subject_id),
         /*link teacher to subject*/
         CONSTRAINT fk_ts_teacher
-            FOREIGN KEY (teacher_id) REFERENCES teachers(teacherid)
+            FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
             ON DELETE CASCADE,
             /*link subject to this table*/
         CONSTRAINT fk_ts_subject
