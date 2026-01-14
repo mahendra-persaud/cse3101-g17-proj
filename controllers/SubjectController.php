@@ -64,6 +64,10 @@ class SubjectController extends BaseController {
         ]);
 
         if ($id) {
+            // sync classes if provided
+            if (isset($data['classes']) && is_array($data['classes'])) {
+                $this->subjectModel->syncClasses($id, $data['classes']);
+            }
             $this->setFlash('success', 'Subject created successfully.');
             return [
                 'success' => true,
@@ -105,6 +109,10 @@ class SubjectController extends BaseController {
         ]);
 
         if ($success) {
+            // sync classes if provided
+            if (isset($data['classes']) && is_array($data['classes'])) {
+                $this->subjectModel->syncClasses($id, $data['classes']);
+            }
             $this->setFlash('success', 'Subject updated successfully.');
             return ['success' => true];
         }
@@ -138,6 +146,16 @@ class SubjectController extends BaseController {
      */
     public function getGrades() {
         return $this->classModel->getGrades();
+    }
+
+    // helper to get classes for a grade
+    public function getClassesByGrade($gradeId) {
+        return $this->classModel->getByGrade($gradeId);
+    }
+
+    // get current classes for a subject
+    public function getAssignedClasses($subjectId) {
+        return $this->subjectModel->getClasses($subjectId);
     }
 }
 

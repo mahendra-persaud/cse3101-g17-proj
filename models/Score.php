@@ -278,6 +278,7 @@ class Score extends Model {
 
     // checks if the score is valid
     // makes sure its between 0 and 100
+    // and ALSO makes sure the student's class actually takes that subject
     public function validateScore($data) {
         $errors = $this->validate($data, [
             'student_id' => 'required|numeric',
@@ -291,7 +292,35 @@ class Score extends Model {
             $errors['score'] = 'Score must be between 0 and 100';
         }
 
+        // Check if subject is valid for student's class
+        if (empty($errors)) {
+            if (!$this->isSubjectValidForStudent($data['student_id'], $data['subject_id'])) {
+                $errors['subject_id'] = 'This subject is not assigned to the student\'s class.';
+            }
+        }
+
         return $errors;
+    }
+
+    // checks if a subject is assigned to a student's class
+    public function isSubjectValidForStudent($studentId, $subjectId) {
+        $sql = "SELECT COUNT(*) as count 
+                FROM students s 
+                JOIN class_subjects cs ON s.class_id = cs.class_id 
+                WHERE s.student_id = ? AND cs.subject_id = ?";
+        $result = $this->queryOne($sql, [$studentId, $subjectId]);
+        return ($result['count'] ?? 0) > 0;
+    }
+
+    // gets all subjects assigned to a student's class
+    public function getSubjectsForStudent($studentId) {
+        $sql = "SELECT sub.* 
+                FROM students s 
+                JOIN class_subjects cs ON s.class_id = cs.class_id 
+                JOIN subjects sub ON cs.subject_id = sub.subject_id 
+                WHERE s.student_id = ? 
+                ORDER BY sub.subject_name";
+        return $this->query($sql, [$studentId]);
     }
 
     /**

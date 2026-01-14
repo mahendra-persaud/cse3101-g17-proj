@@ -63,4 +63,29 @@ class Subject extends Model {
         $result = $this->queryOne($sql, $params);
         return ($result['count'] ?? 0) > 0;
     }
+
+    // links this subject to multiple classes
+    public function syncClasses($subjectId, array $classIds) {
+        $pdo = $this->getConnection();
+        // first clear old ones
+        $sql = "DELETE FROM class_subjects WHERE subject_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$subjectId]);
+
+        // add new ones
+        if (!empty($classIds)) {
+            $sql = "INSERT INTO class_subjects (class_id, subject_id) VALUES (?, ?)";
+            $stmt = $pdo->prepare($sql);
+            foreach ($classIds as $classId) {
+                $stmt->execute([$classId, $subjectId]);
+            }
+        }
+    }
+
+    // gets classes linked to this subject
+    public function getClasses($subjectId) {
+        $sql = "SELECT class_id FROM class_subjects WHERE subject_id = ?";
+        $results = $this->query($sql, [$subjectId]);
+        return array_column($results, 'class_id');
+    }
 }

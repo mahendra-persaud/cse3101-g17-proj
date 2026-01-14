@@ -10,10 +10,11 @@ $errors = [];
 $grades = $subjectController->getGrades();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // expecting subject name and grade id
+    // expecting subject name, grade id, and optionally classes
     $data = [
         'subject_name' => $_POST['subject_name'] ?? '',
-        'grade_id' => $_POST['grade_id'] ?? ''
+        'grade_id' => $_POST['grade_id'] ?? '',
+        'classes' => $_POST['classes'] ?? []
     ];
     
     $result = $subjectController->store($data);

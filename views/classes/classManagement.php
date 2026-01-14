@@ -4,6 +4,9 @@ if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../../includes/header.p
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+require_once __DIR__ . '/../../controllers/ClassController.php';
+$controller = new ClassController();
+$classes = $controller->index();
 require_once $headerPath;
 ?>
 <div class="Main-Container">
@@ -159,55 +162,25 @@ require_once $headerPath;
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><input type="checkbox" name="class[]" value="1"></td>
-                            <td>Grade 1A</td>
-                            <td>Grade 1</td>
-                            <td>Mrs. Smith</td>
-                            <td>25</td>
-                            <td><a href="#" class="action-btn edit-btn">Edit</a><a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this class?');">Delete</a></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="class[]" value="1"></td>
-                            <td>Grade 1A</td>
-                            <td>Grade 1</td>
-                            <td>Mrs. Smith</td>
-                            <td>25</td>
-                            <td><a href="#" class="action-btn edit-btn">Edit</a><a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this class?');">Delete</a></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="class[]" value="1"></td>
-                            <td>Grade 1A</td>
-                            <td>Grade 1</td>
-                            <td>Mrs. Smith</td>
-                            <td>25</td>
-                            <td><a href="#" class="action-btn edit-btn">Edit</a><a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this class?');">Delete</a></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="class[]" value="1"></td>
-                            <td>Grade 1A</td>
-                            <td>Grade 1</td>
-                            <td>Mrs. Smith</td>
-                            <td>25</td>
-                            <td><a href="#" class="action-btn edit-btn">Edit</a><a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this class?');">Delete</a></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="class[]" value="1"></td>
-                            <td>Grade 1A</td>
-                            <td>Grade 1</td>
-                            <td>Mrs. Smith</td>
-                            <td>25</td>
-                            <td><a href="#" class="action-btn edit-btn">Edit</a><a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this class?');">Delete</a></td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" name="class[]" value="1"></td>
-                            <td>Grade 1A</td>
-                            <td>Grade 1</td>
-                            <td>Mrs. Smith</td>
-                            <td>25</td>
-                            <td><a href="#" class="action-btn edit-btn">Edit</a><a href="#" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this class?');">Delete</a></td>
-                        </tr>
-                        <!-- More rows -->
+                        <?php if (empty($classes)): ?>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">No classes found.</td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($classes as $class): ?>
+                                <tr>
+                                    <td><input type="checkbox" name="class[]" value="<?php echo $class['class_id']; ?>"></td>
+                                    <td><?php echo htmlspecialchars($class['class_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($class['grade_name']); ?></td>
+                                    <td><em>Not assigned</em></td>
+                                    <td><?php echo $class['student_count']; ?></td>
+                                    <td>
+                                        <a href="class_edit.php?id=<?php echo $class['class_id']; ?>" class="action-btn edit-btn">Edit</a>
+                                        <a href="#" class="action-btn delete-btn" onclick="if(confirm('Are you sure?')) window.location.href='class_delete.php?id=<?php echo $class['class_id']; ?>'">Delete</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
                 <!-- <button type="submit" class="delete-btn">Delete Selected</button> -->

@@ -24,7 +24,8 @@ $grades = $subjectController->getGrades();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'subject_name' => $_POST['subject_name'] ?? '',
-        'grade_id' => $_POST['grade_id'] ?? ''
+        'grade_id' => $_POST['grade_id'] ?? '',
+        'classes' => $_POST['classes'] ?? []
     ];
     
     $result = $subjectController->update($id, $data);
@@ -87,14 +88,59 @@ require_once __DIR__ . '/../../includes/header.php';
 
                 <div class="form-group">
                     <label for="grade_id">Grade</label>
-                    <select id="grade_id" name="grade_id" required>
-                        <?php foreach ($grades as $grade): ?>
-                            <option value="<?php echo $grade['grade_id']; ?>" <?php echo ($subject['grade_id'] == $grade['grade_id']) ? 'selected' : ''; ?>>
-                                Grade <?php echo e($grade['grade_name']); ?>
-                            </option>
-                        <?php endforeach; ?>
                     </select>
                 </div>
+
+                <div class="form-group" id="class-selection-container">
+                    <label>Assigned Classes</label>
+                    <div id="class-checkboxes" style="border: 1px solid #d1d5db; border-radius: 6px; padding: 10px; max-height: 200px; overflow-y: auto; background: #fff;">
+                        <!-- JS will fill this -->
+                    </div>
+                </div>
+
+                <script>
+                const gradesData = <?php 
+                    $allClasses = [];
+                    foreach ($grades as $grade) {
+                        $allClasses[$grade['grade_id']] = $subjectController->getClassesByGrade($grade['grade_id']);
+                    }
+                    echo json_encode($allClasses); 
+                ?>;
+                const assignedClasses = <?php echo json_encode($subjectController->getAssignedClasses($id)); ?>;
+
+                function updateClasses() {
+                    const gradeId = document.getElementById('grade_id').value;
+                    const container = document.getElementById('class-selection-container');
+                    const checkboxDiv = document.getElementById('class-checkboxes');
+                    
+                    checkboxDiv.innerHTML = '';
+                    
+                    if (gradeId && gradesData[gradeId] && gradesData[gradeId].length > 0) {
+                        container.style.display = 'block';
+                        gradesData[gradeId].forEach(cls => {
+                            const isChecked = assignedClasses.includes(cls.class_id.toString()) || assignedClasses.includes(parseInt(cls.class_id)) ? 'checked' : '';
+                            const label = document.createElement('label');
+                            label.style.display = 'flex';
+                            label.style.alignItems = 'center';
+                            label.style.gap = '10px';
+                            label.style.padding = '6px 0';
+                            label.style.borderBottom = '1px solid #f3f4f6';
+                            label.style.cursor = 'pointer';
+                            
+                            label.innerHTML = `
+                                <input type="checkbox" name="classes[]" value="${cls.class_id}" ${isChecked}>
+                                <span style="font-size: 14px; color: #374151;">Class ${cls.class_name}</span>
+                            `;
+                            checkboxDiv.appendChild(label);
+                        });
+                    } else {
+                        container.style.display = 'none';
+                    }
+                }
+
+                document.getElementById('grade_id').addEventListener('change', updateClasses);
+                window.addEventListener('DOMContentLoaded', updateClasses);
+                </script>
 
                 <div class="form-actions">
                     <button type="submit" class="create-btn">Update Subject</button>

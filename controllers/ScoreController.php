@@ -216,6 +216,15 @@ class ScoreController extends BaseController {
     }
 
     /**
+     * Get subjects specifically assigned to a student's class
+     * @param int $studentId
+     * @return array
+     */
+    public function getSubjectsForStudent($studentId) {
+        return $this->scoreModel->getSubjectsForStudent($studentId);
+    }
+
+    /**
      * Get letter grade for score
      * @param int $score
      * @return string
