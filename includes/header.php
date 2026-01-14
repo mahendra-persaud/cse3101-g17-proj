@@ -4,6 +4,9 @@ require_once __DIR__ . '/../config/app.php';
 
 // start session if not started
 // so we know who is logged in
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); } // cleaning input stuff
 // checks if they are allowed here
 // redirects them if they are not allowed
