@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../controllers/BaseController.php';
 $projectRoot = '/cse3101-g17-proj';
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
 $no_container = true;
+$body_class = 'management-page';
 require_once __DIR__ . '/../../includes/header.php';
 require_role(['office_admin']);
 

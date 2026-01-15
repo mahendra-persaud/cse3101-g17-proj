@@ -3,41 +3,109 @@
    Shared CSS for consistent light theme
    ======================================== */
 
-/* Reset global styles from style.css */
-.Main-Container label,
-.form-card label,
-.form-group label {
-    display: block;
-    margin-top: 0 !important;
-    font-weight: 500;
-    font-size: 14px;
-    color: #374151;
-}
+/* ========================================
+   CRITICAL: Override global style.css
+   These must come first with high specificity
+   ======================================== */
 
-.Main-Container button,
-.form-card button,
-.form-actions button {
-    margin-top: 0 !important;
-    width: auto !important;
-}
-
+/* Reset ALL inputs in management pages - override style.css */
+.Main-Container input,
 .Main-Container input[type="text"],
 .Main-Container input[type="password"],
 .Main-Container input[type="email"],
 .Main-Container input[type="number"],
 .Main-Container input[type="date"],
 .Main-Container select,
-.Main-Container textarea {
+.Main-Container textarea,
+.form-card input,
+.form-card input[type="text"],
+.form-card input[type="password"],
+.form-card input[type="email"],
+.form-card input[type="number"],
+.form-card input[type="date"],
+.form-card select,
+.form-card textarea,
+.form-group input,
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
     background: #ffffff !important;
+    background-color: #ffffff !important;
     color: #1a1a1a !important;
     border: 1px solid #d1d5db !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    opacity: 1 !important;
 }
 
-/* Body reset for management pages */
+.Main-Container input::placeholder,
+.form-card input::placeholder,
+.form-group input::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+/* Reset labels - override style.css margin-top: 15px */
+.Main-Container label,
+.form-card label,
+.form-group label {
+    display: block !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+}
+
+/* Reset buttons - override style.css width: 100% and margin-top */
+.Main-Container button,
+.form-card button,
+.form-actions button,
+.Main-Container .btn,
+.form-card .btn,
+.form-actions .btn {
+    margin-top: 0 !important;
+    width: auto !important;
+}
+
+/* Reset headings */
+.Main-Container h1,
+.Main-Container h2,
+.Main-Container h3,
+.main-dashboard h1,
+.main-dashboard h2,
+.form-card h2,
+.table-card h2 {
+    color: #1a1a1a !important;
+}
+
+/* Body reset for management pages - using class selector for browser compatibility */
+body.management-page,
 body:has(.Main-Container) {
-    margin: 0;
-    padding: 0;
-    background: #f9fafb;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #f9fafb !important;
+    height: auto !important;
+    display: block !important;
+    align-items: initial !important;
+    justify-content: initial !important;
+}
+
+/* Override glass-bg styles if accidentally applied */
+body.management-page.glass-bg,
+body.glass-bg:has(.Main-Container) {
+    background: #f9fafb !important;
+    height: auto !important;
+    display: block !important;
+    align-items: initial !important;
+    justify-content: initial !important;
 }
 
 /* Main Container */

@@ -5,6 +5,7 @@ $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
 $no_container = true;
+$body_class = 'management-page';
 require_once $headerPath;
 ?>
 <?php

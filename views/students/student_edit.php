@@ -7,6 +7,8 @@ if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../../includes/header.p
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+$body_class = 'management-page';
+$no_container = true;
 
 $pdo = getDBConnection();
 $success = '';
