@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $projectRoot = '/cse3101-g17-proj';
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+$no_container = true;
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 

@@ -2,28 +2,32 @@
 // page to make a new school year
 
 require_once __DIR__ . '/../../models/School.php';
+require_once __DIR__ . '/../../controllers/BaseController.php';
+
+$projectRoot = '/cse3101-g17-proj';
+$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
 $no_container = true;
 require_once __DIR__ . '/../../includes/header.php';
 require_role(['office_admin']);
 
 $errors = [];
-require_once __DIR__ . '/../../controllers/BaseController.php';
 $schoolModel = new School();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $baseController = new BaseController();
-    if (!$baseController->validateCsrf()) {
-        $errors[] = 'Invalid security token (CSRF).';
-    } else {
-        $label = trim($_POST['label'] ?? '');
-        if ($label === '') {
-            $errors[] = 'Label required.';
+        if (!$baseController->validateCsrf()) {
+            $errors[] = 'Invalid security token (CSRF).';
         } else {
-            // saving the new year
-            header('Location: school_years_list.php');
-            exit;
+            $label = trim($_POST['label'] ?? '');
+            if ($label === '') {
+                $errors[] = 'Label required.';
+            } else {
+                // saving the new year
+                $schoolModel->createYear(['year_name' => $label]);
+                header('Location: school_years_list.php');
+                exit;
+            }
         }
-    }
 }
 ?>
 

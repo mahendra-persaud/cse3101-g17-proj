@@ -2,12 +2,15 @@
 // create a new term for a school year
 
 require_once __DIR__ . '/../../models/School.php';
+require_once __DIR__ . '/../../controllers/BaseController.php';
+
+$projectRoot = '/cse3101-g17-proj';
+$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
 $no_container = true;
 require_once __DIR__ . '/../../includes/header.php';
 require_role(['office_admin']);
 
 $errors = [];
-require_once __DIR__ . '/../../controllers/BaseController.php';
 $schoolModel = new School();
 $years = $schoolModel->getYears();
 

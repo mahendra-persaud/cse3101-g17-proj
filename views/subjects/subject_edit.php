@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $projectRoot = '/cse3101-g17-proj';
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+$no_container = true;
 require_once __DIR__ . '/../../includes/header.php';
 ?>
 
@@ -88,6 +89,13 @@ require_once __DIR__ . '/../../includes/header.php';
 
                 <div class="form-group">
                     <label for="grade_id">Grade</label>
+                    <select id="grade_id" name="grade_id" required>
+                        <option value="">Select Grade</option>
+                        <?php foreach ($grades as $grade): ?>
+                            <option value="<?php echo $grade['grade_id']; ?>" <?php echo ($subject['grade_id'] == $grade['grade_id']) ? 'selected' : ''; ?>>
+                                Grade <?php echo e($grade['grade_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 

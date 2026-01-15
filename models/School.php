@@ -65,10 +65,52 @@ class School extends Model {
 
     // gets terms and puts the year next to them
     public function getTermsWithYears() {
-        $sql = "SELECT t.*, y.year_name 
-                FROM terms t 
-                JOIN school_years y ON t.school_year_id = y.school_year_id 
+        $sql = "SELECT t.*, y.year_name
+                FROM terms t
+                JOIN school_years y ON t.school_year_id = y.school_year_id
                 ORDER BY y.year_name DESC, t.term_name ASC";
         return $this->query($sql);
+    }
+
+    // gets a single term by id
+    public function getTerm($id) {
+        $this->table = 'terms';
+        $this->primaryKey = 'term_id';
+        return $this->find($id);
+    }
+
+    // updates a term
+    public function updateTerm($id, $data) {
+        $this->table = 'terms';
+        $this->primaryKey = 'term_id';
+        return $this->update($id, $data);
+    }
+
+    // deletes a term
+    public function deleteTerm($id) {
+        $this->table = 'terms';
+        $this->primaryKey = 'term_id';
+        return $this->delete($id);
+    }
+
+    // gets a single year by id
+    public function getYear($id) {
+        $this->table = 'school_years';
+        $this->primaryKey = 'school_year_id';
+        return $this->find($id);
+    }
+
+    // updates a year
+    public function updateYear($id, $data) {
+        $this->table = 'school_years';
+        $this->primaryKey = 'school_year_id';
+        return $this->update($id, $data);
+    }
+
+    // deletes a year
+    public function deleteYear($id) {
+        $this->table = 'school_years';
+        $this->primaryKey = 'school_year_id';
+        return $this->delete($id);
     }
 }
