@@ -24,6 +24,7 @@ $stmt = $pdo->query("
 ");
 $students = $stmt->fetchAll();
 
+$no_container = true;
 require_once $headerPath;
 ?>
 <div class="Main-Container">

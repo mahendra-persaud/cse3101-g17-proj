@@ -2,6 +2,7 @@
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/dashboard2.css?v=' . time() . '">';
+$no_container = true;
 require_once __DIR__ . '/../../includes/header.php';
 require_role(['office_admin']);
 ?>

@@ -7,6 +7,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
 require_once __DIR__ . '/../../controllers/ClassController.php';
 $controller = new ClassController();
 $classes = $controller->index();
+$no_container = true;
 require_once $headerPath;
 ?>
 <div class="Main-Container">

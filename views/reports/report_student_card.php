@@ -22,6 +22,7 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
     .grade-d { color: #fb923c; font-weight: 600; }
     .grade-f { color: #f87171; font-weight: 600; }
 </style>';
+$no_container = true;
 require_once $headerPath;
 require_role(['office_admin', 'teacher']);
 

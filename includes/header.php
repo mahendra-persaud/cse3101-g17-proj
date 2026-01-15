@@ -40,5 +40,7 @@ $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
     ?>
     <style>/* Minimal fallback styling */ body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:0} .container{padding:16px}</style>
 </head>
-<body>
+<body class="<?php echo isset($body_class) ? $body_class : ''; ?>">
+<?php if (!isset($no_container) || !$no_container): ?>
 <div class="container">
+<?php endif; ?>

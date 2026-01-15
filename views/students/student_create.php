@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$no_container = true;
 require_once $headerPath;
 ?>
 <div class="Main-Container">

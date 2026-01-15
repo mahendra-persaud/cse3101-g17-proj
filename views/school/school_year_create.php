@@ -2,9 +2,8 @@
 // page to make a new school year
 
 require_once __DIR__ . '/../../models/School.php';
+$no_container = true;
 require_once __DIR__ . '/../../includes/header.php';
-require_once __DIR__ . '/../../includes/sidebar.php';
-
 require_role(['office_admin']);
 
 $errors = [];
@@ -29,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="Main-Container">
+    <?php require_once __DIR__ . '/../../includes/sidebar.php'; ?>
     <main class="main-dashboard">
         <div class="header">
             <h2>School Settings</h2>
