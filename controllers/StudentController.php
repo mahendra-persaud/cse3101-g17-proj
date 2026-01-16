@@ -18,7 +18,7 @@ class StudentController extends BaseController {
 
     // gets all students
     public function index() {
-        $this->requireRole('office_admin');
+        $this->requireRole(['office_admin', 'teacher']);
         return $this->studentModel->getAll();
     }
 

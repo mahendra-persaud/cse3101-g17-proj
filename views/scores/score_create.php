@@ -23,7 +23,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $projectRoot = '/cse3101-g17-proj';
-$extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">';
+$extra_head = '
+<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container {
+        width: 100% !important;
+    }
+    .select2-container--default .select2-selection--single {
+        height: 48px !important;
+        padding: 10px 16px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        font-size: 15px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 26px !important;
+        color: #1a1a1a !important;
+        padding-left: 0 !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 46px !important;
+        right: 10px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #9ca3af !important;
+    }
+    .select2-dropdown {
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
+    }
+    .select2-search--dropdown .select2-search__field {
+        padding: 10px 12px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        font-size: 14px !important;
+    }
+    .select2-results__option {
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #7c3aed !important;
+    }
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #ede9fe !important;
+        color: #5b21b6 !important;
+    }
+    .select2-container--default.select2-container--disabled .select2-selection--single {
+        background-color: #f3f4f6 !important;
+        cursor: not-allowed !important;
+    }
+</style>';
 $no_container = true;
 $body_class = 'management-page';
 require_once __DIR__ . '/../../includes/header.php';
@@ -61,11 +114,11 @@ require_once __DIR__ . '/../../includes/header.php';
             <h2>Score Details</h2>
             <form method="POST" action="">
                 <?php echo ScoreController::csrfField(); ?>
-                
+
                 <div class="form-group">
                     <label for="student_id">Student</label>
-                    <select id="student_id" name="student_id" required>
-                        <option value="">Select Student</option>
+                    <select id="student_id" name="student_id" class="searchable-select" required>
+                        <option value="">Search or select student...</option>
                         <?php foreach ($students as $st): ?>
                             <option value="<?php echo $st['student_id']; ?>" <?php echo (isset($_POST['student_id']) && $_POST['student_id'] == $st['student_id']) ? 'selected' : ''; ?>>
                                 <?php echo e($st['first_name'] . ' ' . $st['last_name']); ?> (<?php echo e($st['class_name']); ?>)
@@ -76,14 +129,15 @@ require_once __DIR__ . '/../../includes/header.php';
 
                 <div class="form-group">
                     <label for="subject_id">Subject</label>
-                    <select id="subject_id" name="subject_id" required disabled>
+                    <select id="subject_id" name="subject_id" class="searchable-select" required disabled>
                         <option value="">Select Student First</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="term_id">Term</label>
-                    <select id="term_id" name="term_id" required>
+                    <select id="term_id" name="term_id" class="searchable-select" required>
+                        <option value="">Search or select term...</option>
                         <?php foreach ($terms as $term): ?>
                             <option value="<?php echo $term['term_id']; ?>" <?php echo (isset($_POST['term_id']) && $_POST['term_id'] == $term['term_id']) ? 'selected' : ''; ?>>
                                 <?php echo e($term['term_name']); ?> (<?php echo e($term['year_name']); ?>)
@@ -106,41 +160,63 @@ require_once __DIR__ . '/../../includes/header.php';
     </main>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-document.getElementById('student_id').addEventListener('change', function() {
-    const studentId = this.value;
-    const subjectSelect = document.getElementById('subject_id');
-    
-    subjectSelect.disabled = true;
-    subjectSelect.innerHTML = '<option value="">Loading subjects...</option>';
-    
-    if (!studentId) {
-        subjectSelect.innerHTML = '<option value="">Select Student First</option>';
-        return;
-    }
+$(document).ready(function() {
+    // Initialize Select2 on all searchable selects
+    $('#student_id').select2({
+        placeholder: 'Search or select student...',
+        allowClear: true
+    });
 
-    // Usually we would use a proper API endpoint, but let's use the controller direct check for now
-    // Actually, I'll just fetch them via a small helper script or AJAX
-    fetch(`../../api/get_student_subjects.php?student_id=${studentId}`)
-        .then(response => response.json())
-        .then(data => {
-            subjectSelect.innerHTML = '<option value="">Select Subject</option>';
-            if (data.length > 0) {
-                data.forEach(sub => {
-                    const opt = document.createElement('option');
-                    opt.value = sub.subject_id;
-                    opt.textContent = sub.subject_name;
-                    subjectSelect.appendChild(opt);
-                });
-                subjectSelect.disabled = false;
-            } else {
-                subjectSelect.innerHTML = '<option value="">No subjects assigned to this student\'s class</option>';
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            subjectSelect.innerHTML = '<option value="">Error loading subjects</option>';
-        });
+    $('#term_id').select2({
+        placeholder: 'Search or select term...',
+        allowClear: true
+    });
+
+    // Subject dropdown - initialize but keep disabled until student is selected
+    $('#subject_id').select2({
+        placeholder: 'Select Student First',
+        allowClear: true
+    });
+
+    // Handle student change to load subjects
+    $('#student_id').on('change', function() {
+        const studentId = this.value;
+        const $subjectSelect = $('#subject_id');
+
+        // Destroy and recreate to update properly
+        $subjectSelect.prop('disabled', true);
+        $subjectSelect.empty().append('<option value="">Loading subjects...</option>');
+        $subjectSelect.trigger('change');
+
+        if (!studentId) {
+            $subjectSelect.empty().append('<option value="">Select Student First</option>');
+            $subjectSelect.trigger('change');
+            return;
+        }
+
+        fetch(`../../api/get_student_subjects.php?student_id=${studentId}`)
+            .then(response => response.json())
+            .then(data => {
+                $subjectSelect.empty().append('<option value="">Search or select subject...</option>');
+                if (data.length > 0) {
+                    data.forEach(sub => {
+                        $subjectSelect.append(new Option(sub.subject_name, sub.subject_id, false, false));
+                    });
+                    $subjectSelect.prop('disabled', false);
+                } else {
+                    $subjectSelect.empty().append('<option value="">No subjects for this student\'s grade</option>');
+                }
+                $subjectSelect.trigger('change');
+            })
+            .catch(err => {
+                console.error(err);
+                $subjectSelect.empty().append('<option value="">Error loading subjects</option>');
+                $subjectSelect.trigger('change');
+            });
+    });
 });
 </script>
 

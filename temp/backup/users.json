@@ -1,8 +1,0 @@
-[
-    {
-        "username": "dave",
-        "email": "dave@example.com",
-        "password": "$2y$10$KsEo2YN/aDb9AEifni79l.PSWzQM2UaKChdrPz8bBrsmT9/jKsexG",
-        "role": "office_admin"
-    }
-]

@@ -302,23 +302,24 @@ class Score extends Model {
         return $errors;
     }
 
-    // checks if a subject is assigned to a student's class
+    // checks if a subject is assigned to a student's grade
     public function isSubjectValidForStudent($studentId, $subjectId) {
-        $sql = "SELECT COUNT(*) as count 
-                FROM students s 
-                JOIN class_subjects cs ON s.class_id = cs.class_id 
-                WHERE s.student_id = ? AND cs.subject_id = ?";
+        $sql = "SELECT COUNT(*) as count
+                FROM students s
+                JOIN classes c ON s.class_id = c.class_id
+                JOIN subjects sub ON c.grade_id = sub.grade_id
+                WHERE s.student_id = ? AND sub.subject_id = ?";
         $result = $this->queryOne($sql, [$studentId, $subjectId]);
         return ($result['count'] ?? 0) > 0;
     }
 
-    // gets all subjects assigned to a student's class
+    // gets all subjects for a student's grade (via their class)
     public function getSubjectsForStudent($studentId) {
-        $sql = "SELECT sub.* 
-                FROM students s 
-                JOIN class_subjects cs ON s.class_id = cs.class_id 
-                JOIN subjects sub ON cs.subject_id = sub.subject_id 
-                WHERE s.student_id = ? 
+        $sql = "SELECT sub.*
+                FROM students s
+                JOIN classes c ON s.class_id = c.class_id
+                JOIN subjects sub ON c.grade_id = sub.grade_id
+                WHERE s.student_id = ?
                 ORDER BY sub.subject_name";
         return $this->query($sql, [$studentId]);
     }
@@ -340,11 +341,58 @@ class Score extends Model {
      * @return array|null
      */
     public function getCurrentTerm() {
-        $sql = "SELECT t.*, sy.year_name 
-                FROM terms t 
-                JOIN school_years sy ON t.school_year_id = sy.school_year_id 
-                ORDER BY sy.school_year_id DESC, t.term_id DESC 
+        $sql = "SELECT t.*, sy.year_name
+                FROM terms t
+                JOIN school_years sy ON t.school_year_id = sy.school_year_id
+                ORDER BY sy.school_year_id DESC, t.term_id DESC
                 LIMIT 1";
         return $this->queryOne($sql);
+    }
+
+    /**
+     * Get class statistics for a grade (student count and average per class)
+     * @param int $gradeId
+     * @param int|null $termId
+     * @return array
+     */
+    public function getClassStatsByGrade($gradeId, $termId = null) {
+        $params = [$gradeId];
+
+        $sql = "SELECT c.class_id, c.class_name,
+                COUNT(DISTINCT s.student_id) as student_count,
+                COALESCE(ROUND(AVG(sc.score), 1), 0) as class_avg
+                FROM classes c
+                LEFT JOIN students s ON c.class_id = s.class_id
+                LEFT JOIN scores sc ON s.student_id = sc.student_id";
+
+        if ($termId !== null) {
+            $sql .= " AND sc.term_id = ?";
+            $params[] = $termId;
+        }
+
+        $sql .= " WHERE c.grade_id = ?
+                GROUP BY c.class_id, c.class_name
+                ORDER BY c.class_name";
+
+        // Fix param order: termId first (if exists), then gradeId
+        if ($termId !== null) {
+            $params = [$termId, $gradeId];
+        }
+
+        return $this->query($sql, $params);
+    }
+
+    /**
+     * Get total student count for a grade
+     * @param int $gradeId
+     * @return int
+     */
+    public function getStudentCountByGrade($gradeId) {
+        $sql = "SELECT COUNT(*) as count
+                FROM students s
+                JOIN classes c ON s.class_id = c.class_id
+                WHERE c.grade_id = ?";
+        $result = $this->queryOne($sql, [$gradeId]);
+        return (int)($result['count'] ?? 0);
     }
 }

@@ -4,6 +4,7 @@ if (!file_exists($headerPath)) $headerPath = __DIR__ . '/../../includes/header.p
 $parts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
 $projectRoot = (isset($parts[1]) ? '/' . $parts[0] : '');
 $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/css/darkManagement.css?v=' . time() . '">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     @media print {
         .no-print { display: none !important; }
@@ -21,17 +22,82 @@ $extra_head = '<link rel="stylesheet" href="' . $projectRoot . '/public/assets/c
     .grade-c { color: #fbbf24; font-weight: 600; }
     .grade-d { color: #fb923c; font-weight: 600; }
     .grade-f { color: #f87171; font-weight: 600; }
+
+    /* Select2 Styling */
+    .select2-container {
+        width: 100% !important;
+    }
+    .select2-container--default .select2-selection--single {
+        height: 48px !important;
+        padding: 10px 16px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        font-size: 15px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 26px !important;
+        color: #1a1a1a !important;
+        padding-left: 0 !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 46px !important;
+        right: 10px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #9ca3af !important;
+    }
+    .select2-dropdown {
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1) !important;
+    }
+    .select2-search--dropdown .select2-search__field {
+        padding: 10px 12px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        font-size: 14px !important;
+    }
+    .select2-results__option {
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #0d9488 !important;
+    }
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #ccfbf1 !important;
+        color: #0f766e !important;
+    }
+    .filter-note {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+    .form-card label {
+        color: #374151 !important;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+    .form-card .form-group {
+        margin-bottom: 20px;
+    }
 </style>';
 $no_container = true;
+$body_class = 'management-page';
 require_once $headerPath;
 require_role(['office_admin', 'teacher']);
 
 require_once __DIR__ . '/../../controllers/ReportController.php';
+require_once __DIR__ . '/../../controllers/ScoreController.php';
+
 $reportController = new ReportController();
-require_role(['office_admin', 'teacher']);
+$scoreController = new ScoreController();
 
 $students = $reportController->getStudents();
 $allTerms = $reportController->getTerms();
+$classes = $scoreController->getClasses();
 
 // get url params
 $student_id = isset($_GET['student_id']) ? (int)$_GET['student_id'] : 0;
@@ -41,9 +107,6 @@ $reportData = null;
 if ($student_id > 0 && $term_id > 0) {
     $reportData = $reportController->studentReportCard($student_id, $term_id);
 }
-
-// get url params
-// already handled above
 
 // check if student exists
 if ($reportData && $reportData['success']) {
@@ -60,46 +123,71 @@ if ($reportData && $reportData['success']) {
 
     <main class="main-dashboard">
         <div class="header no-print">
-            <h2>Student Report Card</h2></div>
+            <h2>Student Report Card</h2>
+        </div>
 
         <?php if (!$student): ?>
         <!-- form to pick student -->
+        <nav class="breadcrumb no-print">
+            <div class="breadcrumb-item"><a href="<?php echo $projectRoot; ?>/views/dashboard/index.php">Home</a></div>
+            <div class="breadcrumb-separator">></div>
+            <div class="breadcrumb-item"><span class="breadcrumb-current">Report Card</span></div>
+        </nav>
+
         <h1 class="no-print">Generate Student Report Card</h1>
 
         <section class="form-card no-print">
             <form method="GET" action="report_student_card.php">
-                <label style="color: #fff; font-weight: 600;">Select Student</label>
-                <select name="student_id" required style="grid-column: span 2;">
-                    <option value="">-- Choose a student --</option>
-                    <?php foreach ($students as $s): ?>
-                        <option value="<?php echo $s['student_id']; ?>" <?php echo $student_id == $s['student_id'] ? 'selected' : ''; ?>>
-                            <?php echo e($s['first_name'] . ' ' . $s['last_name']); ?> (Grade <?php echo e($s['grade_name']); ?> - <?php echo e($s['class_name']); ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="form-group">
+                    <label for="class_filter">Filter by Class</label>
+                    <select id="class_filter" class="searchable-select">
+                        <option value="">All Classes</option>
+                        <?php foreach ($classes as $class): ?>
+                            <option value="<?php echo $class['class_id']; ?>">
+                                <?php echo e($class['grade_name'] . ' - ' . $class['class_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p class="filter-note">Optional: Select a class to filter students</p>
+                </div>
 
-                <label style="color: #fff; font-weight: 600;">Select Term</label>
-                <select name="term_id" required style="grid-column: span 2;">
-                    <?php foreach ($allTerms as $t): ?>
-                        <option value="<?php echo $t['term_id']; ?>" <?php echo $term_id == $t['term_id'] ? 'selected' : ''; ?>>
-                            <?php echo e($t['term_name']); ?> (<?php echo e($t['year_name']); ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="form-group">
+                    <label for="student_id">Select Student</label>
+                    <select id="student_id" name="student_id" class="searchable-select" required>
+                        <option value="">Search or select student...</option>
+                        <?php foreach ($students as $s): ?>
+                            <option value="<?php echo $s['student_id']; ?>" data-class-id="<?php echo $s['class_id']; ?>" <?php echo $student_id == $s['student_id'] ? 'selected' : ''; ?>>
+                                <?php echo e($s['first_name'] . ' ' . $s['last_name']); ?> (Grade <?php echo e($s['grade_name']); ?> - <?php echo e($s['class_name']); ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <button type="submit" style="grid-column: span 2;">Generate Report Card</button>
+                <div class="form-group">
+                    <label for="term_id">Select Term</label>
+                    <select id="term_id" name="term_id" class="searchable-select" required>
+                        <option value="">Search or select term...</option>
+                        <?php foreach ($allTerms as $t): ?>
+                            <option value="<?php echo $t['term_id']; ?>" <?php echo $term_id == $t['term_id'] ? 'selected' : ''; ?>>
+                                <?php echo e($t['term_name']); ?> (<?php echo e($t['year_name']); ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="create-btn">Generate Report Card</button>
+                </div>
             </form>
         </section>
 
-        <?php else:
-            $stats = calculateStats($scores, $term);
-        ?>
+        <?php else: ?>
 
         <!-- showing the actual card -->
         <div class="no-print" style="margin: 30px; display: flex; gap: 15px;">
-            <button onclick="window.print()" style="background: rgba(35, 140, 246, 0.8); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">🖨️ Print Report Card</button>
-            <button onclick="exportPDF()" style="background: rgba(220, 38, 38, 0.8); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">📄 Export as PDF</button>
-            <a href="report_student_card.php" style="background: rgba(107, 114, 128, 0.8); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500;">← Back to Selection</a>
+            <button onclick="window.print()" style="background: rgba(35, 140, 246, 0.8); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">Print Report Card</button>
+            <button onclick="exportPDF()" style="background: rgba(220, 38, 38, 0.8); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 500;">Export as PDF</button>
+            <a href="report_student_card.php" style="background: rgba(107, 114, 128, 0.8); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500;">Back to Selection</a>
         </div>
 
         <section class="table-card report-card" style="margin: 30px; max-width: 900px;">
@@ -147,7 +235,7 @@ if ($reportData && $reportData['success']) {
                             <td colspan="4" style="text-align: center; padding: 30px; color: #999;">No scores recorded for this term.</td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($scores as $score): 
+                        <?php foreach ($scores as $score):
                             $grade = $score['letter_grade'];
                             $gradeClass = 'grade-' . strtolower($grade);
 
@@ -228,11 +316,65 @@ if ($reportData && $reportData['success']) {
     </main>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+$(document).ready(function() {
+    // Store all students data for filtering
+    const allStudents = [];
+    $('#student_id option').each(function() {
+        if (this.value) {
+            allStudents.push({
+                id: this.value,
+                text: this.text,
+                classId: $(this).data('class-id')
+            });
+        }
+    });
+
+    // Initialize Select2 on class filter
+    $('#class_filter').select2({
+        placeholder: 'All Classes',
+        allowClear: true
+    });
+
+    // Initialize Select2 on student dropdown
+    $('#student_id').select2({
+        placeholder: 'Search or select student...',
+        allowClear: true
+    });
+
+    $('#term_id').select2({
+        placeholder: 'Search or select term...',
+        allowClear: true
+    });
+
+    // Handle class filter change
+    $('#class_filter').on('change', function() {
+        const selectedClassId = this.value;
+        const $studentSelect = $('#student_id');
+
+        // Clear current selection
+        $studentSelect.val(null).trigger('change');
+
+        // Clear and rebuild student options
+        $studentSelect.empty().append('<option value="">Search or select student...</option>');
+
+        allStudents.forEach(student => {
+            if (!selectedClassId || student.classId == selectedClassId) {
+                const option = new Option(student.text, student.id, false, false);
+                $(option).data('class-id', student.classId);
+                $studentSelect.append(option);
+            }
+        });
+
+        $studentSelect.trigger('change');
+    });
+});
+
 function exportPDF() {
     alert('PDF export functionality would integrate with a library like jsPDF or server-side PDF generation (e.g., TCPDF, FPDF). For now, please use the Print function and save as PDF.');
 }
 </script>
 
-</body>
-</html>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>

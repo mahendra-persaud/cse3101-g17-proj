@@ -238,6 +238,25 @@ class ReportController extends BaseController {
     public function getSubjectsByGrade($gradeId) {
         return $this->subjectModel->getByGrade($gradeId);
     }
+
+    /**
+     * Get class statistics for a grade
+     * @param int $gradeId
+     * @param int|null $termId
+     * @return array
+     */
+    public function getClassStatsByGrade($gradeId, $termId = null) {
+        return $this->scoreModel->getClassStatsByGrade($gradeId, $termId);
+    }
+
+    /**
+     * Get student count for a grade
+     * @param int $gradeId
+     * @return int
+     */
+    public function getStudentCountByGrade($gradeId) {
+        return $this->scoreModel->getStudentCountByGrade($gradeId);
+    }
 }
 
 // Handle direct requests

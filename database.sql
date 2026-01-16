@@ -119,6 +119,19 @@ CREATE TABLE IF NOT EXISTS teacher_subjects (
         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- ===================== TEACHER CLASSES =====================
+CREATE TABLE IF NOT EXISTS teacher_classes (
+    teacher_id INT NOT NULL,
+    class_id INT NOT NULL,
+    PRIMARY KEY (teacher_id, class_id),
+    CONSTRAINT fk_tc_teacher
+        FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_tc_class
+        FOREIGN KEY (class_id) REFERENCES classes(class_id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 -- ===================== SCORES =====================
 -- Includes audit columns for tracking who modified scores
 CREATE TABLE IF NOT EXISTS scores (
@@ -186,10 +199,17 @@ INSERT INTO roles (role_name) VALUES
 INSERT INTO users (username, password_hash, role_id) VALUES
 ('admin', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 1),
 ('john_admin', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 1),
+-- Teachers (user_id 3-12)
 ('sarah_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
 ('mike_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
 ('emily_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
-('david_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2);
+('david_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('lisa_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('james_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('anna_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('robert_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('maria_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2),
+('kevin_teacher', '$2y$10$e0MYzXyjpJS7Pd0RVvHwHeFVNfFPqI0tPGF4gEaGRZCe0lDCHWtfC', 2);
 
 -- ===================== GRADES =====================
 INSERT INTO grades (grade_name) VALUES
@@ -289,23 +309,66 @@ INSERT INTO subjects (subject_name, grade_id) VALUES
 ('Physical Education', 6), ('Arts and Crafts', 6), ('Music', 6), ('Spanish', 6), ('Information Technology', 6);
 
 -- ===================== TEACHERS =====================
+-- teacher_id maps to user_id: 1->3, 2->4, 3->5, etc.
 INSERT INTO teachers (user_id, first_name, last_name, email) VALUES
 (3, 'Sarah', 'Johnson', 'sarah.johnson@school.gy'),
 (4, 'Mike', 'Thompson', 'mike.thompson@school.gy'),
 (5, 'Emily', 'Rodriguez', 'emily.rodriguez@school.gy'),
-(6, 'David', 'Chen', 'david.chen@school.gy');
+(6, 'David', 'Chen', 'david.chen@school.gy'),
+(7, 'Lisa', 'Williams', 'lisa.williams@school.gy'),
+(8, 'James', 'Brown', 'james.brown@school.gy'),
+(9, 'Anna', 'Martinez', 'anna.martinez@school.gy'),
+(10, 'Robert', 'Taylor', 'robert.taylor@school.gy'),
+(11, 'Maria', 'Garcia', 'maria.garcia@school.gy'),
+(12, 'Kevin', 'Anderson', 'kevin.anderson@school.gy');
 
 -- ===================== TEACHER SUBJECTS =====================
 -- Assign teachers to subjects
 INSERT INTO teacher_subjects (teacher_id, subject_id) VALUES
--- Sarah teaches Mathematics for Grades 1-3
+-- Sarah teaches Mathematics for Grades 1-3 (subject_id 1, 7, 13)
 (1, 1), (1, 7), (1, 13),
--- Mike teaches English for Grades 4-6
-(2, 20), (2, 29), (2, 38),
--- Emily teaches Science for Grades 1-6
-(3, 3), (3, 9), (3, 15), (3, 21), (3, 30), (3, 39),
--- David teaches Social Studies for Grades 1-6
-(4, 4), (4, 10), (4, 16), (4, 22), (4, 31), (4, 40);
+-- Mike teaches English for Grades 4-6 (subject_id 21, 30, 39)
+(2, 21), (2, 30), (2, 39),
+-- Emily teaches Science for Grades 1-6 (subject_id 3, 9, 15, 22, 31, 40)
+(3, 3), (3, 9), (3, 15), (3, 22), (3, 31), (3, 40),
+-- David teaches Social Studies for Grades 1-6 (subject_id 4, 10, 16, 23, 32, 41)
+(4, 4), (4, 10), (4, 16), (4, 23), (4, 32), (4, 41),
+-- Lisa teaches Physical Education for all grades (subject_id 5, 11, 17, 24, 33, 42)
+(5, 5), (5, 11), (5, 17), (5, 24), (5, 33), (5, 42),
+-- James teaches Arts and Crafts for all grades (subject_id 6, 12, 18, 25, 34, 43)
+(6, 6), (6, 12), (6, 18), (6, 25), (6, 34), (6, 43),
+-- Anna teaches Music for Grades 3-6 (subject_id 19, 26, 35, 44)
+(7, 19), (7, 26), (7, 35), (7, 44),
+-- Robert teaches Mathematics for Grades 4-6 (subject_id 20, 29, 38)
+(8, 20), (8, 29), (8, 38),
+-- Maria teaches Spanish for Grades 4-6 (subject_id 27, 36, 45)
+(9, 27), (9, 36), (9, 45),
+-- Kevin teaches IT for Grades 5-6 (subject_id 37, 46)
+(10, 37), (10, 46);
+
+-- ===================== TEACHER CLASSES =====================
+-- Assign teachers to classes
+INSERT INTO teacher_classes (teacher_id, class_id) VALUES
+-- Sarah assigned to Grade 1 classes (class_id 1-3)
+(1, 1), (1, 2), (1, 3),
+-- Mike assigned to Grade 4-6 classes (class_id 10-18)
+(2, 10), (2, 11), (2, 12), (2, 13), (2, 14), (2, 15), (2, 16), (2, 17), (2, 18),
+-- Emily assigned to Grade 2-3 classes (class_id 4-9)
+(3, 4), (3, 5), (3, 6), (3, 7), (3, 8), (3, 9),
+-- David assigned to Grade 1-2 classes (class_id 1-6)
+(4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6),
+-- Lisa (PE) assigned to all classes (class_id 1-18)
+(5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7), (5, 8), (5, 9), (5, 10), (5, 11), (5, 12), (5, 13), (5, 14), (5, 15), (5, 16), (5, 17), (5, 18),
+-- James (Arts) assigned to all classes (class_id 1-18)
+(6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (6, 7), (6, 8), (6, 9), (6, 10), (6, 11), (6, 12), (6, 13), (6, 14), (6, 15), (6, 16), (6, 17), (6, 18),
+-- Anna (Music) assigned to Grade 3-6 classes (class_id 7-18)
+(7, 7), (7, 8), (7, 9), (7, 10), (7, 11), (7, 12), (7, 13), (7, 14), (7, 15), (7, 16), (7, 17), (7, 18),
+-- Robert (Math 4-6) assigned to Grade 4-6 classes (class_id 10-18)
+(8, 10), (8, 11), (8, 12), (8, 13), (8, 14), (8, 15), (8, 16), (8, 17), (8, 18),
+-- Maria (Spanish) assigned to Grade 4-6 classes (class_id 10-18)
+(9, 10), (9, 11), (9, 12), (9, 13), (9, 14), (9, 15), (9, 16), (9, 17), (9, 18),
+-- Kevin (IT) assigned to Grade 5-6 classes (class_id 13-18)
+(10, 13), (10, 14), (10, 15), (10, 16), (10, 17), (10, 18);
 
 -- ===================== SCORES =====================
 -- Sample scores for Term 2 of 2024-2025 (term_id = 5)

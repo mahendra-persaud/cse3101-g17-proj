@@ -41,6 +41,11 @@ function isActive($pagePatterns) {
             <span class="label">Users</span>
         </a>
 
+        <a href="<?php echo $projectRoot; ?>/views/teachers/teacher_list.php" class="<?php echo isActive(['teachers/', 'teacher_']); ?>">
+            <span class="icon icon-users-new" aria-hidden="true"></span>
+            <span class="label">Teachers</span>
+        </a>
+
         <a href="<?php echo $projectRoot; ?>/views/students/studentManagement.php" class="<?php echo isActive(['students/', 'studentManagement', 'studentPage', 'studentProfile']); ?>">
             <span class="icon icon-students-new" aria-hidden="true"></span>
             <span class="label">Students</span>
