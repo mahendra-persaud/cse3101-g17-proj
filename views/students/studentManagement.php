@@ -16,6 +16,8 @@ $stmt = $pdo->query("
         s.student_id,
         s.first_name,
         s.last_name,
+        s.date_of_birth,
+        s.gender,
         c.class_name,
         g.grade_name
     FROM students s
@@ -141,7 +143,7 @@ require_once $headerPath;
             const rows = table.getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                const gradeCell = rows[i].getElementsByTagName('td')[3]; // checking the grade
+                const gradeCell = rows[i].getElementsByTagName('td')[5]; // checking the grade (index 5 after adding DOB and Gender)
 
                 if (!gradeCell) continue;
 
@@ -191,6 +193,8 @@ require_once $headerPath;
                 <tr>
                     <th>Student ID</th>
                     <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
                     <th>Class</th>
                     <th>Grade</th>
                     <th>Actions</th>
@@ -199,7 +203,7 @@ require_once $headerPath;
                 <tbody>
                 <?php if (empty($students)): ?>
                     <tr>
-                        <td colspan="5" class="empty-state">
+                        <td colspan="7" class="empty-state">
                             <div class="empty-state-content">
                                 <svg class="empty-state-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -229,6 +233,8 @@ require_once $headerPath;
                         <tr>
                             <td><?php echo str_pad($student['student_id'], 3, '0', STR_PAD_LEFT); ?></td>
                             <td><strong><?php echo $fullName; ?></strong></td>
+                            <td><?php echo $student['date_of_birth'] ? date('M d, Y', strtotime($student['date_of_birth'])) : '-'; ?></td>
+                            <td><?php echo htmlspecialchars($student['gender'] ?? '-'); ?></td>
                             <td><?php echo htmlspecialchars($className); ?></td>
                             <td><?php echo htmlspecialchars($student['grade_name']); ?></td>
                             <td>

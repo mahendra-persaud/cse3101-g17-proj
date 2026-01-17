@@ -43,13 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $classId = $_POST['class_id'] ?? '';
+    $dateOfBirth = $_POST['date_of_birth'] ?? '';
+    $gender = $_POST['gender'] ?? '';
 
     if (empty($firstName) || empty($lastName) || empty($classId)) {
-        $error = 'All fields are required.';
+        $error = 'First name, last name, and class are required.';
     } else {
         try {
-            $stmt = $pdo->prepare("UPDATE students SET first_name = ?, last_name = ?, class_id = ? WHERE student_id = ?");
-            $stmt->execute([$firstName, $lastName, $classId, $studentId]);
+            $stmt = $pdo->prepare("UPDATE students SET first_name = ?, last_name = ?, class_id = ?, date_of_birth = ?, gender = ? WHERE student_id = ?");
+            $stmt->execute([$firstName, $lastName, $classId, $dateOfBirth ?: null, $gender ?: null, $studentId]);
 
             header('Location: studentManagement.php?success=Student+updated+successfully');
             exit;
@@ -61,6 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_POST['first_name'] = $student['first_name'];
     $_POST['last_name'] = $student['last_name'];
     $_POST['class_id'] = $student['class_id'];
+    $_POST['date_of_birth'] = $student['date_of_birth'] ?? '';
+    $_POST['gender'] = $student['gender'] ?? '';
 }
 
 require_once $headerPath;
@@ -122,6 +126,23 @@ require_once $headerPath;
                     <input type="text" name="last_name" required
                            style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
                            value="<?php echo htmlspecialchars($_POST['last_name']); ?>">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #374151;">Date of Birth</label>
+                    <input type="date" name="date_of_birth"
+                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                           value="<?php echo htmlspecialchars($_POST['date_of_birth']); ?>">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #374151;">Gender</label>
+                    <select name="gender"
+                            style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        <option value="">Select gender</option>
+                        <option value="Male" <?php echo ($_POST['gender'] === 'Male') ? 'selected' : ''; ?>>Male</option>
+                        <option value="Female" <?php echo ($_POST['gender'] === 'Female') ? 'selected' : ''; ?>>Female</option>
+                    </select>
                 </div>
 
                 <div style="margin-bottom: 20px;">
