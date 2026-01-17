@@ -1,6 +1,6 @@
 <?php
-// api/get_student_subjects.php
-// Returns subjects for a student based on their grade
+// api/get_subjects_by_grade.php
+// Returns all subjects for a specific grade
 
 require_once __DIR__ . '/../config/database.php';
 
@@ -17,30 +17,26 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$studentId = $_GET['student_id'] ?? null;
+$gradeId = $_GET['grade_id'] ?? null;
 
-if (!$studentId) {
+if (!$gradeId) {
     http_response_code(400);
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'Missing student_id']);
+    echo json_encode(['error' => 'Missing grade_id']);
     exit;
 }
 
 try {
     $pdo = getDBConnection();
 
-    // Get subjects assigned to the student's class
-    // This ensures students only get subjects that are assigned to their class
+    // Get all subjects for the grade
     $stmt = $pdo->prepare("
-        SELECT DISTINCT sub.subject_id, sub.subject_name
-        FROM students s
-        JOIN classes c ON s.class_id = c.class_id
-        JOIN class_subjects cs ON c.class_id = cs.class_id
-        JOIN subjects sub ON cs.subject_id = sub.subject_id
-        WHERE s.student_id = ?
-        ORDER BY sub.subject_name
+        SELECT subject_id, subject_name
+        FROM subjects
+        WHERE grade_id = ?
+        ORDER BY subject_name
     ");
-    $stmt->execute([$studentId]);
+    $stmt->execute([$gradeId]);
     $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header('Content-Type: application/json');

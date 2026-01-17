@@ -39,11 +39,18 @@ $availableSubjects = $subjectModel->getByGrade($class['grade_id']);
 $currentSubjects = $classModel->getSubjects($classId);
 $currentSubjectIds = array_column($currentSubjects, 'subject_id');
 
+// get all teachers for dropdown
+$availableTeachers = $classModel->getAllTeachers();
+
+// get currently assigned teacher
+$assignedTeacher = $class['teacher_id'] ?? null;
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $className = trim($_POST['class_name'] ?? '');
     $gradeId = $_POST['grade_id'] ?? '';
+    $teacherId = $_POST['teacher_id'] ?? null;
 
     // validation check
     if (empty($className)) {
@@ -66,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // update subjects
                 $selectedSubjects = $_POST['subjects'] ?? [];
                 $classModel->syncSubjects($classId, $selectedSubjects);
+
+                // update teacher assignment
+                $classModel->assignTeacher($classId, $teacherId);
 
                 header('Location: classManagement.php?success=Class+updated+successfully');
                 exit;
@@ -154,6 +164,23 @@ require_once $headerPath;
                         maxlength="10"
                         style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
                     <small style="color: #6b7280; font-size: 12px;">Enter a single letter or name for the class (e.g., A, B, C)</small>
+                </div>
+
+                <!-- Teacher Assignment Section -->
+                <div style="margin-bottom: 20px;">
+                    <label for="teacher_id" style="display: block; margin-bottom: 8px; font-weight: 500;">Assign Teacher</label>
+                    <select
+                        id="teacher_id"
+                        name="teacher_id"
+                        style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        <option value="">-- Select a teacher --</option>
+                        <?php foreach ($availableTeachers as $teacher): ?>
+                            <option value="<?php echo $teacher['teacher_id']; ?>"
+                                    <?php echo (isset($_POST['teacher_id']) ? ($_POST['teacher_id'] == $teacher['teacher_id'] ? 'selected' : '') : ($assignedTeacher == $teacher['teacher_id'] ? 'selected' : '')); ?>>
+                                <?php echo htmlspecialchars($teacher['first_name'] . ' ' . $teacher['last_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <!-- Subject Assignment Section -->

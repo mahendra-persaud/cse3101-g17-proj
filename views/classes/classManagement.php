@@ -159,6 +159,7 @@ require_once $headerPath;
                         <th>Class Name</th>
                         <th>Grade</th>
                         <th>Teacher</th>
+                        <th>Subjects</th>
                         <th>No. of Students</th>
                         <th>Actions</th>
                         </tr>
@@ -166,7 +167,7 @@ require_once $headerPath;
                     <tbody>
                         <?php if (empty($classes)): ?>
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 20px; color: #6b7280;">No classes found.</td>
+                                <td colspan="7" style="text-align: center; padding: 20px; color: #6b7280;">No classes found.</td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($classes as $class): ?>
@@ -174,7 +175,8 @@ require_once $headerPath;
                                     <td><input type="checkbox" name="class[]" value="<?php echo $class['class_id']; ?>"></td>
                                     <td><?php echo htmlspecialchars($class['class_name']); ?></td>
                                     <td><?php echo htmlspecialchars($class['grade_name']); ?></td>
-                                    <td><em>Not assigned</em></td>
+                                    <td><?php echo $class['teacher_name'] ? htmlspecialchars($class['teacher_name']) : '<em>Not assigned</em>'; ?></td>
+                                    <td><?php echo $class['subjects'] ? htmlspecialchars($class['subjects']) : '<em>None</em>'; ?></td>
                                     <td><?php echo $class['student_count']; ?></td>
                                     <td>
                                         <a href="class_edit.php?id=<?php echo $class['class_id']; ?>" class="action-btn edit-btn">Edit</a>

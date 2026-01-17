@@ -15,9 +15,17 @@ class SchoolClass extends Model {
     // get all classes and count how many students are in them
     public function getAll() {
         $sql = "SELECT c.*, g.grade_name,
-                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
+                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count,
+                CONCAT(t.first_name, ' ', t.last_name) as teacher_name,
+                t.teacher_id,
+                GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subjects
                 FROM classes c 
                 JOIN grades g ON c.grade_id = g.grade_id 
+                LEFT JOIN teacher_classes tc ON c.class_id = tc.class_id
+                LEFT JOIN teachers t ON tc.teacher_id = t.teacher_id
+                LEFT JOIN class_subjects cs ON c.class_id = cs.class_id
+                LEFT JOIN subjects s ON cs.subject_id = s.subject_id
+                GROUP BY c.class_id
                 ORDER BY g.grade_id, c.class_name";
         return $this->query($sql);
     }
@@ -25,9 +33,13 @@ class SchoolClass extends Model {
     // find class by id
     public function find($id) {
         $sql = "SELECT c.*, g.grade_name,
-                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
+                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count,
+                CONCAT(t.first_name, ' ', t.last_name) as teacher_name,
+                t.teacher_id
                 FROM classes c 
                 JOIN grades g ON c.grade_id = g.grade_id 
+                LEFT JOIN teacher_classes tc ON c.class_id = tc.class_id
+                LEFT JOIN teachers t ON tc.teacher_id = t.teacher_id
                 WHERE c.class_id = ?";
         return $this->queryOne($sql, [$id]);
     }
@@ -35,9 +47,13 @@ class SchoolClass extends Model {
     // get classes for a specific grade
     public function getByGrade($gradeId) {
         $sql = "SELECT c.*, g.grade_name,
-                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count
+                (SELECT COUNT(*) FROM students s WHERE s.class_id = c.class_id) as student_count,
+                CONCAT(t.first_name, ' ', t.last_name) as teacher_name,
+                t.teacher_id
                 FROM classes c 
                 JOIN grades g ON c.grade_id = g.grade_id 
+                LEFT JOIN teacher_classes tc ON c.class_id = tc.class_id
+                LEFT JOIN teachers t ON tc.teacher_id = t.teacher_id
                 WHERE c.grade_id = ? 
                 ORDER BY c.class_name";
         return $this->query($sql, [$gradeId]);
@@ -121,7 +137,7 @@ class SchoolClass extends Model {
     // updates the list of subjects for a class
     // deletes old ones and adds new ones
     public function syncSubjects($classId, $subjectIds) {
-        $pdo = $this->getPDO();
+        $pdo = $this->getConnection();
         $pdo->beginTransaction();
 
         try {
@@ -146,5 +162,50 @@ class SchoolClass extends Model {
             $pdo->rollBack();
             return false;
         }
+    }
+
+    // get all teachers (for assignment dropdown)
+    public function getAllTeachers() {
+        $sql = "SELECT t.*, u.username
+                FROM teachers t
+                JOIN users u ON t.user_id = u.user_id
+                ORDER BY t.last_name, t.first_name";
+        return $this->query($sql);
+    }
+
+    // assign a teacher to a class
+    public function assignTeacher($classId, $teacherId) {
+        $pdo = $this->getConnection();
+        $pdo->beginTransaction();
+
+        try {
+            // remove existing teacher assignment for this class
+            $sqlDelete = "DELETE FROM teacher_classes WHERE class_id = ?";
+            $stmtDelete = $pdo->prepare($sqlDelete);
+            $stmtDelete->execute([$classId]);
+
+            // assign new teacher
+            if (!empty($teacherId)) {
+                $sqlInsert = "INSERT INTO teacher_classes (teacher_id, class_id) VALUES (?, ?)";
+                $stmtInsert = $pdo->prepare($sqlInsert);
+                $stmtInsert->execute([$teacherId, $classId]);
+            }
+
+            $pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            return false;
+        }
+    }
+
+    // get the teacher assigned to this class
+    public function getTeacher($classId) {
+        $sql = "SELECT t.*, u.username
+                FROM teachers t
+                JOIN teacher_classes tc ON t.teacher_id = tc.teacher_id
+                JOIN users u ON t.user_id = u.user_id
+                WHERE tc.class_id = ?";
+        return $this->queryOne($sql, [$classId]);
     }
 }

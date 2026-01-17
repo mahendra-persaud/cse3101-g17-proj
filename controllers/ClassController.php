@@ -174,6 +174,33 @@ class ClassController extends BaseController {
     public function getDisplayName($classId) {
         return $this->classModel->getDisplayName($classId);
     }
+
+    // assign a teacher to a class
+    public function assignTeacher($classId, $teacherId) {
+        $this->requireRole('office_admin');
+
+        $success = $this->classModel->assignTeacher($classId, $teacherId);
+
+        if ($success) {
+            $this->setFlash('success', 'Teacher assigned successfully.');
+            return ['success' => true];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Failed to assign teacher.'
+        ];
+    }
+
+    // get teacher for a class
+    public function getTeacher($classId) {
+        return $this->classModel->getTeacher($classId);
+    }
+
+    // get all teachers
+    public function getAllTeachers() {
+        return $this->classModel->getAllTeachers();
+    }
 }
 
 // Handle direct requests
@@ -223,6 +250,27 @@ if (basename($_SERVER['PHP_SELF']) === 'ClassController.php') {
 
         case 'grades':
             $controller->json($controller->getGrades());
+            break;
+
+        case 'assign-teacher':
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $classId = $_POST['class_id'] ?? null;
+                $teacherId = $_POST['teacher_id'] ?? null;
+                if ($classId) {
+                    $result = $controller->assignTeacher($classId, $teacherId);
+                    $controller->json($result);
+                }
+            }
+            break;
+
+        case 'get-teacher':
+            if ($id) {
+                $controller->json($controller->getTeacher($id));
+            }
+            break;
+
+        case 'teachers':
+            $controller->json($controller->getAllTeachers());
             break;
     }
 }
