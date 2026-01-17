@@ -423,7 +423,6 @@
       <h2>Start managing your school efficiently today</h2>
 
       <div class="benefit-item">
-        <div class="benefit-icon">👥</div>
         <div class="benefit-text">
           <h3>Student Management</h3>
           <p>Easily manage student records, enrollment, and academic progress all in one place.</p>
@@ -431,7 +430,6 @@
       </div>
 
       <div class="benefit-item">
-        <div class="benefit-icon">📊</div>
         <div class="benefit-text">
           <h3>Grade & Score Tracking</h3>
           <p>Track student performance across subjects with comprehensive grading and reporting tools.</p>
@@ -439,7 +437,6 @@
       </div>
 
       <div class="benefit-item">
-        <div class="benefit-icon">🏫</div>
         <div class="benefit-text">
           <h3>Class Organization</h3>
           <p>Organize classes, assign teachers, and manage school terms seamlessly.</p>
@@ -447,7 +444,6 @@
       </div>
 
       <div class="benefit-item">
-        <div class="benefit-icon">📈</div>
         <div class="benefit-text">
           <h3>Detailed Reports</h3>
           <p>Generate comprehensive report cards and performance analytics with just a few clicks.</p>

@@ -459,7 +459,6 @@ function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
       <h2>Join SchoolStream and transform your school management</h2>
 
       <div class="benefit-item">
-        <div class="benefit-icon">&#128100;</div>
         <div class="benefit-text">
           <h3>Student Management</h3>
           <p>Easily manage student records, enrollment, and academic progress all in one place.</p>
@@ -467,7 +466,6 @@ function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
       </div>
 
       <div class="benefit-item">
-        <div class="benefit-icon">&#128202;</div>
         <div class="benefit-text">
           <h3>Grade & Score Tracking</h3>
           <p>Track student performance across subjects with comprehensive grading and reporting tools.</p>
@@ -475,7 +473,6 @@ function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
       </div>
 
       <div class="benefit-item">
-        <div class="benefit-icon">&#127979;</div>
         <div class="benefit-text">
           <h3>Class Organization</h3>
           <p>Organize classes, assign teachers, and manage school terms seamlessly.</p>
@@ -483,7 +480,6 @@ function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
       </div>
 
       <div class="benefit-item">
-        <div class="benefit-icon">&#128200;</div>
         <div class="benefit-text">
           <h3>Detailed Reports</h3>
           <p>Generate comprehensive report cards and performance analytics with just a few clicks.</p>
