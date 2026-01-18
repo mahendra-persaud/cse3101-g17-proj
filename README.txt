@@ -12,7 +12,7 @@ Installation Instructions:
 3. Start Apache and MySQL in the XAMPP Control Panel.
 4. Go to PHPMyAdmin and create a new database called "School_Management".
 5. Import the "database.sql" file that is in the project folder.
-6. Open your browser to: http://localhost/cse3101-g17-proj/
+6. Open your browser to: http://localhost/cse3101_Group17_project/
 
 Login Credentials:
 We created some default accounts for testing:
