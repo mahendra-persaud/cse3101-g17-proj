@@ -86,7 +86,7 @@ class Teacher extends Model {
      * @return bool
      */
     public function syncSubjects($teacherId, $subjectIds) {
-        $pdo = $this->getPDO();
+        $pdo = $this->getConnection();
         $pdo->beginTransaction();
 
         try {
@@ -148,7 +148,7 @@ class Teacher extends Model {
      * @return bool
      */
     public function syncClasses($teacherId, $classIds) {
-        $pdo = $this->getPDO();
+        $pdo = $this->getConnection();
         $pdo->beginTransaction();
 
         try {
@@ -223,7 +223,7 @@ class Teacher extends Model {
      * @return int|false Teacher ID on success, false on failure
      */
     public function createTeacher($data, $password) {
-        $pdo = $this->getPDO();
+        $pdo = $this->getConnection();
         $pdo->beginTransaction();
 
         try {
@@ -297,7 +297,7 @@ class Teacher extends Model {
     public function updateTeacher($teacherId, $data) {
         $sql = "UPDATE teachers SET first_name = ?, last_name = ?, email = ? WHERE teacher_id = ?";
         try {
-            $pdo = $this->getPDO();
+            $pdo = $this->getConnection();
             $stmt = $pdo->prepare($sql);
             return $stmt->execute([$data['first_name'], $data['last_name'], $data['email'], $teacherId]);
         } catch (Exception $e) {
